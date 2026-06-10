@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENG HUB v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0a;--card:#141414;--border:#222;--accent:#c8ff00;--orange:#ff6b35;--blue:#4fc3f7;--purple:#ce93d8;--text:#f0f0f0;--muted:#555;--muted2:#888;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace;min-height:100vh;padding:18px 14px 100px;}
+h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(28px,9vw,60px);line-height:.9;letter-spacing:-2px;margin-bottom:4px;}
+.g{color:var(--accent);}.o{color:var(--orange);}
+.sub{color:var(--muted);font-size:11px;margin-bottom:18px;line-height:1.7;}
+.nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;}
+.nb{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:11px;padding:7px 14px;border-radius:20px;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.5px;}
+.nb:hover{border-color:var(--accent);color:var(--text);}
+.nb.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700;}
+.section{display:none;}.section.active{display:block;}
+.sw{position:relative;margin-bottom:12px;}
+.sw input{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:10px 14px 10px 38px;border-radius:8px;outline:none;transition:border-color .2s;}
+.sw input:focus{border-color:var(--accent);}
+.sw::before{content:"⌕";position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:17px;}
+.tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
+.tab{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:10px;padding:5px 11px;border-radius:20px;cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.tab.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700;}
+.stats{font-size:11px;color:var(--muted);margin-bottom:10px;}
+.stats b{color:var(--accent);}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:8px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 11px 9px;cursor:pointer;transition:border-color .2s,transform .15s;position:relative;min-height:68px;}
+.card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.card.flipped{border-color:var(--orange);}
+.card.flipped .front{display:none;}
+.card.flipped .back{display:flex;}
+.card.known{opacity:.28;}
+.front,.back{display:flex;flex-direction:column;gap:3px;}
+.back{display:none;}
+.en{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;}
+.tc .en{color:var(--accent);}
+.tm .en{color:var(--blue);}
+.ts .en{color:var(--orange);}
+.ru{font-size:11px;color:var(--muted2);}
+.pron{font-size:11px;color:var(--orange);}
+.ex{font-size:11px;color:#666;font-style:italic;line-height:1.4;}
+.badge{position:absolute;top:6px;right:6px;font-size:8px;text-transform:uppercase;padding:2px 5px;border-radius:4px;}
+.bc{background:#1a2200;color:var(--accent);}
+.bm{background:#001a2c;color:var(--blue);}
+.bs{background:#2c1000;color:var(--orange);}
+.tap{font-size:9px;color:#2a2a2a;text-align:right;margin-top:2px;}
+.kb{margin-top:4px;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:9px;padding:3px 8px;border-radius:4px;cursor:pointer;font-family:'IBM Plex Mono',monospace;}
+.kb:hover{border-color:var(--accent);color:var(--accent);}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px;}
+/* TENSES */
+.tbox{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;}
+.tbox.must{border-color:var(--accent);}
+.tbox.should{border-color:var(--blue);}
+.tbox.later{border-color:var(--purple);}
+.tbox.skip{opacity:.45;}
+.tname{font-family:'Syne',sans-serif;font-weight:800;font-size:17px;margin-bottom:4px;}
+.ttag{display:inline-block;font-size:9px;padding:3px 8px;border-radius:4px;text-transform:uppercase;font-weight:700;margin-bottom:8px;}
+.tag-must{background:#1a2200;color:var(--accent);}
+.tag-should{background:#001a2c;color:var(--blue);}
+.tag-later{background:#1a0030;color:var(--purple);}
+.tag-skip{background:#222;color:var(--muted);}
+.twhen{font-size:12px;color:var(--muted2);margin-bottom:8px;}
+.formula{background:#0f1a00;border:1px solid #2a3a00;border-radius:8px;padding:10px 12px;font-size:12px;color:var(--accent);margin:8px 0;line-height:1.9;}
+.formula.bl{background:#001420;border-color:#003a5c;color:var(--blue);}
+.formula.pu{background:#0d0020;border-color:#3a0060;color:var(--purple);}
+.erow{display:flex;flex-direction:column;gap:5px;margin-top:6px;}
+.eg{background:#0a1a00;border-left:3px solid var(--accent);padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#ccc;}
+.eb{background:#1a0a00;border-left:3px solid var(--orange);padding:6px 10px;border-radius:0 6px 6px 0;font-size:12px;color:#ccc;}
+.elabel{font-size:10px;margin-bottom:2px;}
+.trick{background:#0a0a00;border:1px dashed #2a2a2a;border-radius:8px;padding:10px;margin-top:8px;font-size:12px;color:var(--muted2);line-height:1.7;}
+.trick b{color:var(--accent);}
+.hero{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:14px;}
+.hero h2{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--accent);margin-bottom:6px;}
+.hero p{font-size:12px;color:var(--muted2);line-height:1.7;margin-bottom:12px;}
+.pbar{display:flex;gap:4px;flex-wrap:wrap;}
+.pb{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;}
+.p1{background:#1a2200;color:var(--accent);border:1px solid var(--accent);}
+.p2{background:#001a2c;color:var(--blue);border:1px solid var(--blue);}
+.p3{background:#1a0030;color:var(--purple);border:1px solid var(--purple);}
+.p4{background:#222;color:var(--muted);border:1px solid var(--border);}
+/* STRATEGY */
+.sblock{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;}
+.stitle{font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:var(--accent);margin-bottom:8px;}
+.sbody{font-size:12px;color:var(--muted2);line-height:1.9;}
+.sbody b{color:var(--text);}
+.sbody .hl{color:var(--accent);}
+.sbody .no{color:var(--orange);}
+.step{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start;}
+.snum{background:var(--accent);color:#000;font-family:'Syne',sans-serif;font-weight:800;font-size:12px;padding:2px 8px;border-radius:5px;flex-shrink:0;margin-top:1px;}
+.stxt{font-size:12px;color:var(--muted2);line-height:1.7;}
+.stxt b{color:var(--text);}
+/* HACKS */
+.hack{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;}
+.ht{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:var(--orange);margin-bottom:5px;}
+.htag{display:inline-block;background:#2c1000;color:var(--orange);font-size:9px;padding:2px 7px;border-radius:4px;text-transform:uppercase;margin-bottom:8px;}
+.hb{font-size:12px;color:var(--muted2);line-height:1.8;}
+.hb b{color:var(--text);}
+.hex{background:#0d0d0d;border-radius:8px;padding:10px;margin-top:8px;font-size:12px;line-height:1.9;}
+.yes{color:var(--accent);}.no2{color:var(--orange);}
+/* IRREG */
+.isearch{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:10px 14px;border-radius:8px;outline:none;margin-bottom:12px;}
+.itbl{width:100%;border-collapse:collapse;font-size:12px;}
+.itbl th{text-align:left;color:var(--muted);font-size:10px;text-transform:uppercase;padding:5px 8px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);}
+.itbl td{padding:6px 8px;border-bottom:1px solid #161616;}
+.itbl tr:hover td{background:var(--card);}
+.v1c{color:var(--blue);font-weight:600;}.v2c{color:var(--accent);}.v3c{color:var(--purple);}.ruc{color:var(--muted2);font-size:11px;}
+/* QUIZ */
+.qscore{color:var(--accent);font-size:13px;text-align:center;margin-bottom:8px;}
+.qprog{font-size:11px;color:var(--muted);text-align:center;margin-bottom:12px;}
+.qcard{background:var(--card);border:2px solid var(--border);border-radius:14px;padding:28px 20px;text-align:center;margin-bottom:14px;min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;transition:border-color .3s;}
+.qword{font-family:'Syne',sans-serif;font-weight:800;font-size:34px;}
+.qhint{font-size:12px;color:var(--muted);}
+.qans{font-size:17px;color:var(--accent);display:none;}
+.qpron2{font-size:12px;color:var(--orange);display:none;}
+.qex2{font-size:11px;color:#666;font-style:italic;display:none;}
+.qbtns{display:flex;gap:8px;}
+.qbtn{flex:1;padding:12px;border-radius:10px;border:none;font-family:'IBM Plex Mono',monospace;font-size:12px;cursor:pointer;font-weight:600;transition:all .15s;}
+.qshow{background:var(--accent);color:#000;}
+.qknow{background:#1a3300;color:var(--accent);border:1px solid var(--accent);}
+.qskip{background:var(--card);color:var(--muted);border:1px solid var(--border);}
+</style>
+</head>
+<body>
+<h1><span class="g">ENG</span><br><span class="o">HUB</span> <span style="font-size:.35em;color:var(--muted)">v2</span></h1>
+<p class="sub">2000+ слов · времена · стратегия · лайфхаки · quiz</p>
+<div class="nav">
+  <button class="nb active" onclick="showSec('vocab',this)">📚 Vocab</button>
+  <button class="nb" onclick="showSec('tenses',this)">⏱ Tenses</button>
+  <button class="nb" onclick="showSec('strategy',this)">🚀 Strategy</button>
+  <button class="nb" onclick="showSec('hacks',this)">⚡ Lifehacks</button>
+  <button class="nb" onclick="showSec('irreg',this)">🔀 Irreg</button>
+  <button class="nb" onclick="showSec('quiz',this)">🧠 Quiz</button>
+</div>
+
+<!-- VOCAB -->
+<div class="section active" id="sec-vocab">
+  <div class="sw"><input type="text" id="vsearch" placeholder="search word..."></div>
+  <div class="tabs" id="vtabs"></div>
+  <div class="stats" id="vstats"></div>
+  <div class="grid" id="vgrid"></div>
+</div>
+
+<!-- TENSES -->
+<div class="section" id="sec-tenses">
+  <div class="hero">
+    <h2>Времена английского</h2>
+    <p>Всего 12 времён. Для B1–B2 разговора нужно только 4–5. Остальные учи потом.</p>
+    <div class="pbar">
+      <span class="pb p1">🔥 Учи сейчас</span>
+      <span class="pb p2">📌 Важно</span>
+      <span class="pb p3">⏳ Потом</span>
+      <span class="pb p4">💤 C1–C2</span>
+    </div>
+  </div>
+
+  <div class="tbox must">
+    <div class="tname">Present Simple</div>
+    <span class="ttag tag-must">🔥 учи сейчас</span>
+    <div class="twhen">Факты, привычки, расписание — что обычно/всегда происходит</div>
+    <div class="formula">I/You/We/They + V1 &nbsp;|&nbsp; He/She/It + V1+s<br>Отриц: don't / doesn't + V1<br>Вопрос: Do / Does + подл + V1?</div>
+    <div class="erow">
+      <div class="eg"><span class="elabel yes">✓</span> I <b>work</b> in Warsaw. &nbsp;|&nbsp; He <b>works</b> at night.</div>
+      <div class="eg"><span class="elabel yes">✓</span> Do you <b>speak</b> English? — Yes, I do.</div>
+      <div class="eb"><span class="elabel no2">✗</span> I am work. / He work. / Do he speaks?</div>
+    </div>
+    <div class="trick">🔑 <b>Слова-маркеры:</b> always, usually, often, sometimes, never, every day/week</div>
+  </div>
+
+  <div class="tbox must">
+    <div class="tname">Present Continuous</div>
+    <span class="ttag tag-must">🔥 учи сейчас</span>
+    <div class="twhen">Что происходит прямо сейчас или временно в этот период</div>
+    <div class="formula">am / is / are + V-ing<br>Отриц: am/is/are + not + V-ing<br>Вопрос: Am/Is/Are + подл + V-ing?</div>
+    <div class="erow">
+      <div class="eg"><span class="elabel yes">✓</span> I <b>am working</b> from home now.</div>
+      <div class="eg"><span class="elabel yes">✓</span> We <b>are moving</b> to a new apartment this month.</div>
+      <div class="eb"><span class="elabel no2">✗</span> I am work. / I working. / She is go.</div>
+    </div>
+    <div class="trick">🔑 <b>Маркеры:</b> now, right now, at the moment, currently, today, this week<br>⚠️ Эти глаголы НЕ используют -ing: <b>know, like, want, need, understand, mean, seem, own, love, hate</b></div>
+  </div>
+
+  <div class="tbox must">
+    <div class="tname">Past Simple</div>
+    <span class="ttag tag-must">🔥 учи сейчас</span>
+    <div class="twhen">Завершённое действие в прошлом. Самое нужное время для разговора.</div>
+    <div class="formula">V2 (правильные: +ed &nbsp;|&nbsp; неправильные: своя форма)<br>Отриц: didn't + V1 (!!не V2!!)<br>Вопрос: Did + подл + V1?</div>
+    <div class="erow">
+      <div class="eg"><span class="elabel yes">✓</span> I <b>went</b> shopping. We <b>found</b> a speaker.</div>
+      <div class="eg"><span class="elabel yes">✓</span> I <b>didn't go</b> to the gym. / Did you <b>go</b>?</div>
+      <div class="eb"><span class="elabel no2">✗</span> I did went. / I didn't went. / Did he went?</div>
+    </div>
+    <div class="trick">🔑 <b>Маркеры:</b> yesterday, last week/year, ago, in 2020, when I was...<br>💡 <b>Лайфхак:</b> Забыл V2? Скажи <b>"I did go"</b> — это усилительная форма, технически верно!</div>
+  </div>
+
+  <div class="tbox must">
+    <div class="tname">Future: will / going to</div>
+    <span class="ttag tag-must">🔥 учи сейчас</span>
+    <div class="twhen">Будущее: спонтанное решение vs запланированное</div>
+    <div class="formula">will + V1 → спонтанно, обещание, предсказание<br>am/is/are going to + V1 → план, намерение<br>am/is/are + V-ing → конкретный договорённый план</div>
+    <div class="erow">
+      <div class="eg"><span class="elabel yes">✓ will</span> "I'll call you." (решил только что)</div>
+      <div class="eg"><span class="elabel yes">✓ going to</span> "We're going to Warsaw next month." (план)</div>
+      <div class="eg"><span class="elabel yes">✓ continuous</span> "I'm meeting him on Friday." (договорено)</div>
+    </div>
+    <div class="trick">💡 <b>Лайфхак:</b> Не помнишь will/going to? Просто используй Continuous — всегда правильно:<br><b>"I'm leaving tomorrow." / "We're going next week."</b></div>
+  </div>
+
+  <div class="tbox should">
+    <div class="tname">Present Perfect</div>
+    <span class="ttag tag-should">📌 важно</span>
+    <div class="twhen">Прошлое, которое связано с настоящим. Опыт жизни. Результат.</div>
+    <div class="formula bl">have / has + V3<br>Отриц: haven't / hasn't + V3<br>Вопрос: Have/Has + подл + V3?</div>
+    <div class="erow">
+      <div class="eg"><span class="elabel yes">✓</span> I <b>have lived</b> here for 5 years. (до сих пор живу)</div>
+      <div class="eg"><span class="elabel yes">✓</span> Have you <b>ever been</b> to London?</div>
+      <div class="eg"><span class="elabel yes">✓</span> I <b>just got</b> home. / I <b>haven't finished</b> yet.</div>
+      <div class="eb"><span class="elabel no2">✗</span> I have went. / I have live. / Did you ever been?</div>
+    </div>
+    <div class="trick">🔑 <b>Маркеры:</b> ever, never, already, yet, just, for, since, recently, lately<br>⚠️ Разница: "I <b>went</b> to London last year" (конкретно) vs "I <b>have been</b> to London" (опыт вообще)</div>
+  </div>
+
+  <div class="tbox should">
+    <div class="tname">Past Continuous</div>
+    <span class="ttag tag-should">📌 важно</span>
+    <div class="twhen">Что происходило в определённый момент прошлого / фон для события</div>
+    <div class="formula bl">was / were + V-ing</div>
+    <div class="erow">
+      <div class="eg"><span class="elabel yes">✓</span> I <b>was working</b> when he called.</div>
+      <div class="eg"><span class="elabel yes">✓</span> We <b>were having</b> dinner at 8pm.</div>
+    </div>
+    <div class="trick">💡 Используй для историй: <b>"I was walking home when suddenly..."</b></div>
+  </div>
+
+  <div class="tbox should">
+    <div class="tname">Modal verbs</div>
+    <span class="ttag tag-should">📌 важно</span>
+    <div class="twhen">Модальные глаголы — возможность, обязанность, совет</div>
+    <div class="formula bl">can · could · should · must · might · have to · would<br>Modal + V1 (без to, кроме have to)</div>
+    <div class="erow">
+      <div class="eg"><span class="elabel yes">can</span> I <b>can</b> drive. / <b>Can</b> you help?</div>
+      <div class="eg"><span class="elabel yes">should</span> You <b>should</b> try this.</div>
+      <div class="eg"><span class="elabel yes">might</span> It <b>might</b> rain. (может быть)</div>
+      <div class="eg"><span class="elabel yes">must</span> I <b>must</b> go. / You <b>must</b> be tired.</div>
+      <div class="eg"><span class="elabel yes">have to</span> I <b>have to</b> work tomorrow. (вынужден)</div>
+    </div>
+  </div>
+
+  <div class="tbox later">
+    <div class="tname">Past Perfect</div>
+    <span class="ttag tag-later">⏳ потом</span>
+    <div class="twhen">До другого прошлого события</div>
+    <div class="formula pu">had + V3</div>
+    <div class="erow"><div class="eg"><span class="elabel yes">✓</span> When I arrived, he <b>had already left</b>.</div></div>
+  </div>
+
+  <div class="tbox later">
+    <div class="tname">Conditionals (If)</div>
+    <span class="ttag tag-later">⏳ потом</span>
+    <div class="twhen">Условные предложения — реальные и нереальные</div>
+    <div class="formula pu">0: If + Present → Present (факт/закон)<br>1: If + Present → will + V1 (реально)<br>2: If + Past → would + V1 (нереально/мечта)</div>
+    <div class="erow">
+      <div class="eg"><span class="elabel yes">✓</span> If I <b>have</b> time, I <b>will go</b>.</div>
+      <div class="eg"><span class="elabel yes">✓</span> If I <b>had</b> money, I <b>would travel</b> the world.</div>
+    </div>
+  </div>
+
+  <div class="tbox skip">
+    <div class="tname">Future Perfect / Future Continuous / Past Perfect Continuous...</div>
+    <span class="ttag tag-skip">💤 C1–C2</span>
+    <div class="twhen">Не нужны для разговора на B1–B2. Учи потом — не сейчас.</div>
+  </div>
+
+  <div class="hero" style="margin-top:14px;">
+    <h2 style="font-size:15px;margin-bottom:10px;">Quick reference — когда что</h2>
+    <div style="font-size:12px;line-height:2.1;color:var(--muted2);">
+      <b style="color:var(--text)">Факт о себе / привычка</b> → Present Simple<br>
+      <b style="color:var(--text)">Что делаю прямо сейчас</b> → Present Continuous<br>
+      <b style="color:var(--text)">Что было в прошлом</b> → Past Simple<br>
+      <b style="color:var(--text)">Опыт жизни / результат</b> → Present Perfect<br>
+      <b style="color:var(--text)">Фон истории в прошлом</b> → Past Continuous<br>
+      <b style="color:var(--text)">Конкретный план</b> → going to / Continuous<br>
+      <b style="color:var(--text)">Спонтанное решение</b> → will<br>
+    </div>
+  </div>
+</div>
+
+<!-- STRATEGY -->
+<div class="section" id="sec-strategy">
+  <div class="sblock">
+    <div class="stitle">Почему большинство не говорит годами</div>
+    <div class="sbody">Они <b>учат язык</b> вместо того чтобы <b>использовать его</b>. Грамматика без практики = ноль. Слова без контекста = забыл через неделю.</div>
+  </div>
+  <div class="sblock">
+    <div class="stitle">Фаза 1 — База (1–2 месяца)</div>
+    <div class="step"><span class="snum">1</span><div class="stxt"><b>Переключи телефон на английский.</b> 50+ слов каждый день без усилий — Settings, Notifications, Share, Delete.</div></div>
+    <div class="step"><span class="snum">2</span><div class="stxt"><b>10 неправильных глаголов в день</b> из раздела Irreg. За 8 дней — все 80 основных.</div></div>
+    <div class="step"><span class="snum">3</span><div class="stxt"><b>Quiz здесь — 10 минут в день.</b> Утром в метро, в очереди, перед сном.</div></div>
+    <div class="step"><span class="snum">4</span><div class="stxt"><b>YouTube / Netflix с субтитрами.</b> Не учи — просто смотри. Мозг привыкает к ритму.</div></div>
+  </div>
+  <div class="sblock">
+    <div class="stitle">Фаза 2 — Разговор (2–4 месяца)</div>
+    <div class="step"><span class="snum">1</span><div class="stxt"><b>Говори вслух каждый день.</b> 5 минут. Описывай что делаешь: "I'm making coffee. Going to the gym later."</div></div>
+    <div class="step"><span class="snum">2</span><div class="stxt"><b>Практикуй со мной.</b> Живой разговор с правками — самый быстрый метод.</div></div>
+    <div class="step"><span class="snum">3</span><div class="stxt"><b>Читай комментарии в инсте на английском.</b> Это живой современный язык, не учебник.</div></div>
+    <div class="step"><span class="snum">4</span><div class="stxt"><b>Не переводи в голове.</b> "dog" = образ собаки, не "пёс". Думай картинками.</div></div>
+  </div>
+  <div class="sblock">
+    <div class="stitle">Фаза 3 — Fluency (4–6 месяцев)</div>
+    <div class="step"><span class="snum">1</span><div class="stxt"><b>Внутренний монолог на английском.</b> "OK, I need groceries. Let me check what I need."</div></div>
+    <div class="step"><span class="snum">2</span><div class="stxt"><b>Контент без субтитров.</b> Тяжело — это нормально. Мозг учится угадывать из контекста.</div></div>
+    <div class="step"><span class="snum">3</span><div class="stxt"><b>Работа с английским.</b> Рабочий контекст = самое быстрое обучение. Ты уже на пути.</div></div>
+  </div>
+  <div class="sblock">
+    <div class="stitle">Главные правила</div>
+    <div class="sbody">
+      <span class="hl">✓</span> <b>Ошибки — норма.</b> Носители не замечают 80% ошибок иностранцев.<br>
+      <span class="hl">✓</span> <b>Понятность важнее правильности.</b> Тебя поняли — сработало.<br>
+      <span class="hl">✓</span> <b>Не молчи.</b> Любое слово лучше паузы.<br>
+      <span class="hl">✓</span> <b>Fillers — не слабость.</b> "Well... you know... I mean..." — так говорят все.<br>
+      <span class="no">✗</span> <b>Не учи грамматику без речи.</b> Правило без практики = ноль.<br>
+      <span class="no">✗</span> <b>Не жди "когда выучу".</b> Говори с того уровня что есть — прямо сейчас.
+    </div>
+  </div>
+</div>
+
+<!-- LIFEHACKS -->
+<div class="section" id="sec-hacks">
+  <div class="hack"><div class="ht">Забыл V2 неправильного глагола</div><div class="htag">глаголы</div>
+  <div class="hb">Используй <b>did + V1</b>. Это усилительная форма — технически верно.</div>
+  <div class="hex"><span class="yes">✓</span> "I <b>did go</b> there." (вместо "went")<br><span class="yes">✓</span> "We <b>did find</b> it." (вместо "found")<br><span class="no2">✗</span> "I did went." — нельзя, два прошлых сразу</div></div>
+
+  <div class="hack"><div class="ht">Прошлое без V2 — используй "was"</div><div class="htag">прошедшее</div>
+  <div class="hb">Переформулируй через <b>was/were</b> — всегда работает.</div>
+  <div class="hex"><span class="yes">✓</span> "It was really good." (вместо "I enjoyed it")<br><span class="yes">✓</span> "We were late." (вместо "We arrived late")<br><span class="yes">✓</span> "I was so tired." (вместо "I felt tired")<br><span class="yes">✓</span> "It was expensive." (вместо "It cost a lot")</div></div>
+
+  <div class="hack"><div class="ht">Планы без Future</div><div class="htag">будущее</div>
+  <div class="hb">Present Continuous для планов — 100% правильно и по-носительски.</div>
+  <div class="hex"><span class="yes">✓</span> "I'm meeting him next week."<br><span class="yes">✓</span> "We're going to Warsaw tomorrow."<br><span class="yes">✓</span> "I'm working from home on Friday."</div></div>
+
+  <div class="hack"><div class="ht">Забыл слово — опиши его</div><div class="htag">словарь</div>
+  <div class="hb">Никогда не молчи. Опиши что имеешь в виду — это и есть B2 навык.</div>
+  <div class="hex">Забыл "speaker" → <span class="yes">"A thing that plays music, like a big box"</span><br>Забыл "traffic jam" → <span class="yes">"When too many cars and nothing moves"</span><br>Забыл "landlord" → <span class="yes">"The person who owns the apartment you rent"</span></div></div>
+
+  <div class="hack"><div class="ht">Выиграй время — fillers</div><div class="htag">разговор</div>
+  <div class="hb">Пока думаешь — заполняй паузу. Молчать хуже.</div>
+  <div class="hex"><b style="color:var(--accent)">Well...</b> — ну...<br><b style="color:var(--accent)">You know...</b> — ты понимаешь<br><b style="color:var(--accent)">I mean...</b> — я имею в виду<br><b style="color:var(--accent)">Let me think...</b> — дай подумаю<br><b style="color:var(--accent)">How do I put it...</b> — как бы сказать<br><b style="color:var(--accent)">So basically...</b> — ну в общем-то<br><b style="color:var(--accent)">It's like...</b> — это как...</div></div>
+
+  <div class="hack"><div class="ht">Не знаешь артикль — ставь "the"</div><div class="htag">артикли</div>
+  <div class="hb">В разговоре ошибка с артиклем незаметна. <b>the</b> звучит увереннее.</div>
+  <div class="hex"><span class="yes">✓</span> "I went to the market" — почти всегда ок<br><span class="no2">✗</span> Никогда: "the Warsaw", "the Ukraine" (совр. стандарт)</div></div>
+
+  <div class="hack"><div class="ht">Вежливая просьба за 2 секунды</div><div class="htag">вежливость</div>
+  <div class="hb">Добавь <b>Could you...</b> к любой просьбе.</div>
+  <div class="hex"><span class="no2">Грубо:</span> "Repeat."<br><span class="yes">Нормально:</span> "Could you repeat that?"<br><span class="yes">Вежливо:</span> "Would you mind repeating that?"<br><span class="yes">Переспросить:</span> "Sorry, I didn't catch that."</div></div>
+
+  <div class="hack"><div class="ht">10 универсальных реакций</div><div class="htag">разговор</div>
+  <div class="hb">Выучи их — разговор никогда не умрёт.</div>
+  <div class="hex"><b style="color:var(--accent)">That makes sense.</b> — логично<br><b style="color:var(--accent)">Exactly.</b> — именно<br><b style="color:var(--accent)">Fair enough.</b> — ну и ладно<br><b style="color:var(--accent)">Totally.</b> — полностью согласен<br><b style="color:var(--accent)">No way!</b> — да ладно!<br><b style="color:var(--accent)">That's wild.</b> — это безумие<br><b style="color:var(--accent)">I get it.</b> — понял<br><b style="color:var(--accent)">Same here.</b> — у меня так же<br><b style="color:var(--accent)">Not really.</b> — не особо<br><b style="color:var(--accent)">Kind of.</b> — как бы да</div></div>
+
+  <div class="hack"><div class="ht">Как говорить "нравится" по-разному</div><div class="htag">эмоции</div>
+  <div class="hb">Не застревай на "I like it".</div>
+  <div class="hex"><b style="color:var(--accent)">I love it.</b> — очень нравится<br><b style="color:var(--accent)">I'm into it.</b> — мне это заходит<br><b style="color:var(--accent)">I'm a big fan of...</b> — я большой фанат<br><b style="color:var(--accent)">It's my thing.</b> — это моё<br><b style="color:var(--accent)">I'm obsessed with it.</b> — я помешан<br><b style="color:var(--accent)">It hits different.</b> — это особенное ощущение</div></div>
+
+  <div class="hack"><div class="ht">Мягкое несогласие</div><div class="htag">мнения</div>
+  <div class="hb">Прямое "You're wrong" — грубо. Вот как говорят нормально:</div>
+  <div class="hex"><b style="color:var(--accent)">I'm not sure about that.</b> — не уверен<br><b style="color:var(--accent)">I see it differently.</b> — я вижу иначе<br><b style="color:var(--accent)">I get what you mean, but...</b><br><b style="color:var(--accent)">I'd say it's more like...</b></div></div>
+
+  <div class="hack"><div class="ht">Contractions — звучи как носитель</div><div class="htag">произношение</div>
+  <div class="hb">Полные формы звучат деревянно. Сокращай всегда.</div>
+  <div class="hex">I am → <b style="color:var(--accent)">I'm</b> &nbsp;|&nbsp; I will → <b style="color:var(--accent)">I'll</b><br>I have → <b style="color:var(--accent)">I've</b> &nbsp;|&nbsp; I would → <b style="color:var(--accent)">I'd</b><br>do not → <b style="color:var(--accent)">don't</b> &nbsp;|&nbsp; did not → <b style="color:var(--accent)">didn't</b><br>going to → <b style="color:var(--accent)">gonna</b> &nbsp;|&nbsp; want to → <b style="color:var(--accent)">wanna</b><br>have to → <b style="color:var(--accent)">gotta</b> &nbsp;|&nbsp; kind of → <b style="color:var(--accent)">kinda</b></div></div>
+
+  <div class="hack"><div class="ht">Связки для длинных предложений</div><div class="htag">структура</div>
+  <div class="hb">Одно слово делает речь связной и умной.</div>
+  <div class="hex"><b style="color:var(--accent)">because</b> — потому что &nbsp;|&nbsp; <b style="color:var(--accent)">so</b> — поэтому<br><b style="color:var(--accent)">but</b> — но &nbsp;|&nbsp; <b style="color:var(--accent)">although</b> — хотя<br><b style="color:var(--accent)">which means</b> — что означает<br><b style="color:var(--accent)">that's why</b> — вот почему<br><b style="color:var(--accent)">on top of that</b> — вдобавок<br><b style="color:var(--accent)">at the same time</b> — в то же время</div></div>
+
+  <div class="hack"><div class="ht">Топ фраз "to be honest / actually"</div><div class="htag">разговор</div>
+  <div class="hb">Делают речь живой и натуральной.</div>
+  <div class="hex"><b style="color:var(--accent)">To be honest...</b> — честно говоря<br><b style="color:var(--accent)">To be fair...</b> — справедливости ради<br><b style="color:var(--accent)">Actually...</b> — на самом деле<br><b style="color:var(--accent)">Honestly...</b> — честно<br><b style="color:var(--accent)">By the way...</b> — кстати<br><b style="color:var(--accent)">No wonder...</b> — неудивительно<br><b style="color:var(--accent)">In my opinion...</b> — по-моему</div></div>
+</div>
+
+<!-- IRREG -->
+<div class="section" id="sec-irreg">
+  <input class="isearch" type="text" id="isearch" placeholder="search verb...">
+  <div class="stats" id="istats"></div>
+  <table class="itbl"><thead><tr><th>V1 (base)</th><th>V2 (past)</th><th>V3 (pp)</th><th>Значение</th></tr></thead>
+  <tbody id="itbody"></tbody></table>
+</div>
+
+<!-- QUIZ -->
+<div class="section" id="sec-quiz">
+  <div class="qscore" id="qscore">known: 0</div>
+  <div class="qprog" id="qprog"></div>
+  <div class="qcard" id="qcard">
+    <div class="qword" id="qword"></div>
+    <div class="qhint" id="qhint">what does this mean?</div>
+    <div class="qans" id="qans"></div>
+    <div class="qpron2" id="qpron2"></div>
+    <div class="qex2" id="qex2"></div>
+  </div>
+  <div class="qbtns"><button class="qbtn qshow" id="qshowbtn" onclick="showAns()">Show answer</button></div>
+  <div class="qbtns" id="qratebtns" style="display:none;margin-top:8px;">
+    <button class="qbtn qskip" onclick="nextQ(false)">Don't know</button>
+    <button class="qbtn qknow" onclick="nextQ(true)">Know it ✓</button>
+  </div>
+</div>
+
+<script>
+const vocab=[
+  {en:"taxi",ru:"такси",pron:"[ˈtæksi]",ex:"Let's grab a taxi.",cat:"daily",type:"cognate"},
+  {en:"hotel",ru:"отель",pron:"[hoʊˈtɛl]",ex:"Nice hotel.",cat:"daily",type:"cognate"},
+  {en:"restaurant",ru:"ресторан",pron:"[ˈrɛstrɒnt]",ex:"Good restaurant.",cat:"daily",type:"cognate"},
+  {en:"bar",ru:"бар",pron:"[bɑːr]",ex:"Meet at the bar.",cat:"daily",type:"cognate"},
+  {en:"cafe",ru:"кафе",pron:"[kæˈfeɪ]",ex:"Coffee at the cafe.",cat:"daily",type:"cognate"},
+  {en:"bank",ru:"банк",pron:"[bæŋk]",ex:"Go to the bank.",cat:"daily",type:"cognate"},
+  {en:"park",ru:"парк",pron:"[pɑːrk]",ex:"Walk in the park.",cat:"daily",type:"cognate"},
+  {en:"market",ru:"маркет",pron:"[ˈmɑːrkɪt]",ex:"Farmers market.",cat:"daily",type:"cognate"},
+  {en:"supermarket",ru:"супермаркет",pron:"[ˈsuːpərmɑːrkɪt]",ex:"Hit the supermarket.",cat:"daily",type:"cognate"},
+  {en:"metro",ru:"метро",pron:"[ˈmɛtroʊ]",ex:"Take the metro.",cat:"daily",type:"cognate"},
+  {en:"passport",ru:"паспорт",pron:"[ˈpæspɔːrt]",ex:"Show your passport.",cat:"daily",type:"cognate"},
+  {en:"visa",ru:"виза",pron:"[ˈviːzə]",ex:"Apply for a visa.",cat:"daily",type:"cognate"},
+  {en:"apartment",ru:"апартамент",pron:"[əˈpɑːrtmənt]",ex:"Nice apartment.",cat:"daily",type:"cognate"},
+  {en:"garage",ru:"гараж",pron:"[ɡəˈrɑːʒ]",ex:"Car in the garage.",cat:"daily",type:"cognate"},
+  {en:"bus",ru:"автобус",pron:"[bʌs]",ex:"Take the bus.",cat:"daily",type:"must"},
+  {en:"street",ru:"улица",pron:"[striːt]",ex:"Cross the street.",cat:"daily",type:"must"},
+  {en:"road",ru:"дорога",pron:"[roʊd]",ex:"Long road.",cat:"daily",type:"must"},
+  {en:"building",ru:"здание",pron:"[ˈbɪldɪŋ]",ex:"Big building.",cat:"daily",type:"must"},
+  {en:"floor",ru:"этаж",pron:"[flɔːr]",ex:"5th floor.",cat:"daily",type:"must"},
+  {en:"elevator",ru:"лифт",pron:"[ˈɛlɪveɪtər]",ex:"Take the elevator.",cat:"daily",type:"must"},
+  {en:"key",ru:"ключ",pron:"[kiː]",ex:"Lost my key.",cat:"daily",type:"must"},
+  {en:"neighbor",ru:"сосед",pron:"[ˈneɪbər]",ex:"Noisy neighbor.",cat:"daily",type:"must"},
+  {en:"rent",ru:"аренда",pron:"[rɛnt]",ex:"Pay the rent.",cat:"daily",type:"must"},
+  {en:"queue",ru:"очередь",pron:"[kjuː]",ex:"Long queue.",cat:"daily",type:"must"},
+  {en:"receipt",ru:"чек",pron:"[rɪˈsiːt]",ex:"Keep your receipt.",cat:"daily",type:"must"},
+  {en:"discount",ru:"скидка",pron:"[ˈdɪskaʊnt]",ex:"10% discount.",cat:"daily",type:"must"},
+  {en:"cash",ru:"наличные",pron:"[kæʃ]",ex:"Pay in cash.",cat:"daily",type:"must"},
+  {en:"wallet",ru:"кошелёк",pron:"[ˈwɒlɪt]",ex:"Lost my wallet.",cat:"daily",type:"must"},
+  {en:"bag",ru:"сумка",pron:"[bæɡ]",ex:"Heavy bag.",cat:"daily",type:"must"},
+  {en:"bottle",ru:"бутылка",pron:"[ˈbɒtəl]",ex:"Water bottle.",cat:"daily",type:"must"},
+  {en:"cup",ru:"кружка",pron:"[kʌp]",ex:"Cup of coffee.",cat:"daily",type:"must"},
+  {en:"stairs",ru:"лестница",pron:"[stɛərz]",ex:"Take the stairs.",cat:"daily",type:"must"},
+  {en:"door",ru:"дверь",pron:"[dɔːr]",ex:"Lock the door.",cat:"daily",type:"must"},
+  {en:"window",ru:"окно",pron:"[ˈwɪndoʊ]",ex:"Open the window.",cat:"daily",type:"must"},
+  {en:"internet",ru:"интернет",pron:"[ˈɪntərˌnɛt]",ex:"No internet.",cat:"tech",type:"cognate"},
+  {en:"monitor",ru:"монитор",pron:"[ˈmɒnɪtər]",ex:"Big monitor.",cat:"tech",type:"cognate"},
+  {en:"server",ru:"сервер",pron:"[ˈsɜːrvər]",ex:"Server is down.",cat:"tech",type:"cognate"},
+  {en:"browser",ru:"браузер",pron:"[ˈbraʊzər]",ex:"Open your browser.",cat:"tech",type:"cognate"},
+  {en:"router",ru:"роутер",pron:"[ˈruːtər]",ex:"Restart the router.",cat:"tech",type:"cognate"},
+  {en:"system",ru:"система",pron:"[ˈsɪstəm]",ex:"System update.",cat:"tech",type:"cognate"},
+  {en:"app",ru:"приложение",pron:"[æp]",ex:"Download the app.",cat:"tech",type:"cognate"},
+  {en:"status",ru:"статус",pron:"[ˈsteɪtəs]",ex:"Check the status.",cat:"tech",type:"cognate"},
+  {en:"profile",ru:"профиль",pron:"[ˈproʊfaɪl]",ex:"Edit your profile.",cat:"tech",type:"cognate"},
+  {en:"format",ru:"формат",pron:"[ˈfɔːrmæt]",ex:"Wrong format.",cat:"tech",type:"cognate"},
+  {en:"laptop",ru:"ноутбук",pron:"[ˈlæptɒp]",ex:"My laptop is old.",cat:"tech",type:"must"},
+  {en:"charger",ru:"зарядка",pron:"[ˈtʃɑːrdʒər]",ex:"Forgot my charger.",cat:"tech",type:"must"},
+  {en:"battery",ru:"батарея",pron:"[ˈbætəri]",ex:"Low battery.",cat:"tech",type:"must"},
+  {en:"screen",ru:"экран",pron:"[skriːn]",ex:"Cracked screen.",cat:"tech",type:"must"},
+  {en:"password",ru:"пароль",pron:"[ˈpæswɜːrd]",ex:"Forgot my password.",cat:"tech",type:"must"},
+  {en:"account",ru:"аккаунт",pron:"[əˈkaʊnt]",ex:"Create an account.",cat:"tech",type:"must"},
+  {en:"link",ru:"ссылка",pron:"[lɪŋk]",ex:"Send me the link.",cat:"tech",type:"must"},
+  {en:"file",ru:"файл",pron:"[faɪl]",ex:"Open the file.",cat:"tech",type:"must"},
+  {en:"bug",ru:"баг",pron:"[bʌɡ]",ex:"There is a bug.",cat:"tech",type:"must"},
+  {en:"feature",ru:"функция",pron:"[ˈfiːtʃər]",ex:"New feature.",cat:"tech",type:"must"},
+  {en:"update",ru:"обновление",pron:"[ˈʌpdeɪt]",ex:"Install the update.",cat:"tech",type:"must"},
+  {en:"network",ru:"сеть",pron:"[ˈnɛtwɜːrk]",ex:"No network.",cat:"tech",type:"must"},
+  {en:"wifi",ru:"вайфай",pron:"[ˈwaɪfaɪ]",ex:"Connect to wifi.",cat:"tech",type:"must"},
+  {en:"data",ru:"данные",pron:"[ˈdeɪtə]",ex:"Sync your data.",cat:"tech",type:"must"},
+  {en:"cloud",ru:"облако",pron:"[klaʊd]",ex:"Save to cloud.",cat:"tech",type:"must"},
+  {en:"keyboard",ru:"клавиатура",pron:"[ˈkiːbɔːrd]",ex:"Wireless keyboard.",cat:"tech",type:"must"},
+  {en:"cable",ru:"кабель",pron:"[ˈkeɪbəl]",ex:"USB cable.",cat:"tech",type:"must"},
+  {en:"storage",ru:"хранилище",pron:"[ˈstɔːrɪdʒ]",ex:"No storage left.",cat:"tech",type:"must"},
+  {en:"manager",ru:"менеджер",pron:"[ˈmænɪdʒər]",ex:"Ask your manager.",cat:"work",type:"cognate"},
+  {en:"director",ru:"директор",pron:"[dɪˈrɛktər]",ex:"The director called.",cat:"work",type:"cognate"},
+  {en:"analyst",ru:"аналитик",pron:"[ˈænəlɪst]",ex:"I am an analyst.",cat:"work",type:"cognate"},
+  {en:"specialist",ru:"специалист",pron:"[ˈspɛʃəlɪst]",ex:"IT specialist.",cat:"work",type:"cognate"},
+  {en:"contract",ru:"контракт",pron:"[ˈkɒntrækt]",ex:"Sign the contract.",cat:"work",type:"cognate"},
+  {en:"project",ru:"проект",pron:"[ˈprɒdʒɛkt]",ex:"Big project.",cat:"work",type:"cognate"},
+  {en:"document",ru:"документ",pron:"[ˈdɒkjʊmənt]",ex:"Send the document.",cat:"work",type:"cognate"},
+  {en:"report",ru:"отчёт",pron:"[rɪˈpɔːrt]",ex:"Write a report.",cat:"work",type:"cognate"},
+  {en:"client",ru:"клиент",pron:"[ˈklaɪənt]",ex:"Happy client.",cat:"work",type:"cognate"},
+  {en:"office",ru:"офис",pron:"[ˈɒfɪs]",ex:"At the office.",cat:"work",type:"cognate"},
+  {en:"bonus",ru:"бонус",pron:"[ˈboʊnəs]",ex:"Got a bonus!",cat:"work",type:"cognate"},
+  {en:"budget",ru:"бюджет",pron:"[ˈbʌdʒɪt]",ex:"Over budget.",cat:"work",type:"cognate"},
+  {en:"salary",ru:"зарплата",pron:"[ˈsæləri]",ex:"Raise my salary.",cat:"work",type:"must"},
+  {en:"raise",ru:"повышение зарплаты",pron:"[reɪz]",ex:"Ask for a raise.",cat:"work",type:"must"},
+  {en:"promotion",ru:"повышение",pron:"[prəˈmoʊʃən]",ex:"I got a promotion.",cat:"work",type:"must"},
+  {en:"deadline",ru:"дедлайн",pron:"[ˈdɛdlaɪn]",ex:"Tight deadline.",cat:"work",type:"must"},
+  {en:"meeting",ru:"встреча",pron:"[ˈmiːtɪŋ]",ex:"Team meeting.",cat:"work",type:"must"},
+  {en:"interview",ru:"собеседование",pron:"[ˈɪntərvjuː]",ex:"Job interview.",cat:"work",type:"must"},
+  {en:"colleague",ru:"коллега",pron:"[ˈkɒliːɡ]",ex:"Good colleague.",cat:"work",type:"must"},
+  {en:"team",ru:"команда",pron:"[tiːm]",ex:"Great team.",cat:"work",type:"must"},
+  {en:"feedback",ru:"обратная связь",pron:"[ˈfiːdbæk]",ex:"Give me feedback.",cat:"work",type:"must"},
+  {en:"goal",ru:"цель",pron:"[ɡoʊl]",ex:"Set a goal.",cat:"work",type:"must"},
+  {en:"task",ru:"задача",pron:"[tɑːsk]",ex:"Complete the task.",cat:"work",type:"must"},
+  {en:"shift",ru:"смена",pron:"[ʃɪft]",ex:"Night shift.",cat:"work",type:"must"},
+  {en:"remote",ru:"удалённый",pron:"[rɪˈmoʊt]",ex:"Work remote.",cat:"work",type:"must"},
+  {en:"experience",ru:"опыт",pron:"[ɪkˈspɪəriəns]",ex:"5 years experience.",cat:"work",type:"must"},
+  {en:"skill",ru:"навык",pron:"[skɪl]",ex:"New skill.",cat:"work",type:"must"},
+  {en:"resume",ru:"резюме",pron:"[ˈrɛzjuːmeɪ]",ex:"Update your resume.",cat:"work",type:"must"},
+  {en:"industry",ru:"индустрия",pron:"[ˈɪndəstri]",ex:"Tech industry.",cat:"work",type:"must"},
+  {en:"startup",ru:"стартап",pron:"[ˈstɑːrtʌp]",ex:"Join a startup.",cat:"work",type:"must"},
+  {en:"information",ru:"информация",pron:"[ˌɪnfərˈmeɪʃən]",ex:"Need more info.",cat:"-tion",type:"cognate"},
+  {en:"situation",ru:"ситуация",pron:"[ˌsɪtʃuˈeɪʃən]",ex:"Difficult situation.",cat:"-tion",type:"cognate"},
+  {en:"communication",ru:"коммуникация",pron:"[kəˌmjuːnɪˈkeɪʃən]",ex:"Clear communication.",cat:"-tion",type:"cognate"},
+  {en:"organization",ru:"организация",pron:"[ˌɔːrɡənɪˈzeɪʃən]",ex:"Big organization.",cat:"-tion",type:"cognate"},
+  {en:"motivation",ru:"мотивация",pron:"[ˌmoʊtɪˈveɪʃən]",ex:"I need motivation.",cat:"-tion",type:"cognate"},
+  {en:"operation",ru:"операция",pron:"[ˌɒpəˈreɪʃən]",ex:"Smooth operation.",cat:"-tion",type:"cognate"},
+  {en:"reaction",ru:"реакция",pron:"[riˈækʃən]",ex:"Fast reaction.",cat:"-tion",type:"cognate"},
+  {en:"transaction",ru:"транзакция",pron:"[trænˈzækʃən]",ex:"Transaction failed.",cat:"-tion",type:"cognate"},
+  {en:"confirmation",ru:"подтверждение",pron:"[ˌkɒnfərˈmeɪʃən]",ex:"Need confirmation.",cat:"-tion",type:"cognate"},
+  {en:"registration",ru:"регистрация",pron:"[ˌrɛdʒɪˈstreɪʃən]",ex:"Registration required.",cat:"-tion",type:"cognate"},
+  {en:"location",ru:"локация",pron:"[loʊˈkeɪʃən]",ex:"Send your location.",cat:"-tion",type:"cognate"},
+  {en:"notification",ru:"уведомление",pron:"[ˌnoʊtɪfɪˈkeɪʃən]",ex:"Turn off notifications.",cat:"-tion",type:"cognate"},
+  {en:"presentation",ru:"презентация",pron:"[ˌprɛzənˈteɪʃən]",ex:"Big presentation.",cat:"-tion",type:"cognate"},
+  {en:"verification",ru:"верификация",pron:"[ˌvɛrɪfɪˈkeɪʃən]",ex:"ID verification.",cat:"-tion",type:"cognate"},
+  {en:"conversation",ru:"разговор",pron:"[ˌkɒnvəˈseɪʃən]",ex:"Good conversation.",cat:"-tion",type:"cognate"},
+  {en:"destination",ru:"назначение",pron:"[ˌdɛstɪˈneɪʃən]",ex:"Final destination.",cat:"-tion",type:"cognate"},
+  {en:"education",ru:"образование",pron:"[ˌɛdjʊˈkeɪʃən]",ex:"Good education.",cat:"-tion",type:"cognate"},
+  {en:"solution",ru:"решение",pron:"[səˈluːʃən]",ex:"Find a solution.",cat:"-tion",type:"cognate"},
+  {en:"celebration",ru:"праздник",pron:"[ˌsɛlɪˈbreɪʃən]",ex:"Big celebration.",cat:"-tion",type:"cognate"},
+  {en:"recommendation",ru:"рекомендация",pron:"[ˌrɛkəmɛnˈdeɪʃən]",ex:"Any recommendations?",cat:"-tion",type:"cognate"},
+  {en:"connection",ru:"связь",pron:"[kəˈnɛkʃən]",ex:"Bad connection.",cat:"-tion",type:"cognate"},
+  {en:"direction",ru:"направление",pron:"[dɪˈrɛkʃən]",ex:"Wrong direction.",cat:"-tion",type:"cognate"},
+  {en:"attention",ru:"внимание",pron:"[əˈtɛnʃən]",ex:"Pay attention.",cat:"-tion",type:"cognate"},
+  {en:"collection",ru:"коллекция",pron:"[kəˈlɛkʃən]",ex:"Nice collection.",cat:"-tion",type:"cognate"},
+  {en:"condition",ru:"условие",pron:"[kənˈdɪʃən]",ex:"Good condition.",cat:"-tion",type:"cognate"},
+  {en:"protection",ru:"защита",pron:"[prəˈtɛkʃən]",ex:"Data protection.",cat:"-tion",type:"cognate"},
+  {en:"permission",ru:"разрешение",pron:"[pərˈmɪʃən]",ex:"Ask for permission.",cat:"-tion",type:"cognate"},
+  {en:"population",ru:"население",pron:"[ˌpɒpjʊˈleɪʃən]",ex:"Large population.",cat:"-tion",type:"cognate"},
+  {en:"description",ru:"описание",pron:"[dɪˈskrɪpʃən]",ex:"Read the description.",cat:"-tion",type:"cognate"},
+  {en:"breakfast",ru:"завтрак",pron:"[ˈbrɛkfəst]",ex:"Skip breakfast.",cat:"food",type:"must"},
+  {en:"lunch",ru:"обед",pron:"[lʌntʃ]",ex:"Lunch break.",cat:"food",type:"must"},
+  {en:"dinner",ru:"ужин",pron:"[ˈdɪnər]",ex:"Cook dinner.",cat:"food",type:"must"},
+  {en:"snack",ru:"перекус",pron:"[snæk]",ex:"Quick snack.",cat:"food",type:"must"},
+  {en:"meal",ru:"приём пищи",pron:"[miːl]",ex:"Healthy meal.",cat:"food",type:"must"},
+  {en:"menu",ru:"меню",pron:"[ˈmɛnjuː]",ex:"Check the menu.",cat:"food",type:"must"},
+  {en:"order",ru:"заказ",pron:"[ˈɔːrdər]",ex:"Place an order.",cat:"food",type:"must"},
+  {en:"tip",ru:"чаевые",pron:"[tɪp]",ex:"Leave a tip.",cat:"food",type:"must"},
+  {en:"bill",ru:"счёт",pron:"[bɪl]",ex:"Ask for the bill.",cat:"food",type:"must"},
+  {en:"taste",ru:"вкус",pron:"[teɪst]",ex:"Great taste.",cat:"food",type:"must"},
+  {en:"spicy",ru:"острый",pron:"[ˈspaɪsi]",ex:"Too spicy.",cat:"food",type:"must"},
+  {en:"sweet",ru:"сладкий",pron:"[swiːt]",ex:"Too sweet.",cat:"food",type:"must"},
+  {en:"salty",ru:"солёный",pron:"[ˈsɔːlti]",ex:"Very salty.",cat:"food",type:"must"},
+  {en:"fresh",ru:"свежий",pron:"[frɛʃ]",ex:"Fresh bread.",cat:"food",type:"must"},
+  {en:"grilled",ru:"на гриле",pron:"[ɡrɪld]",ex:"Grilled chicken.",cat:"food",type:"must"},
+  {en:"fried",ru:"жареный",pron:"[fraɪd]",ex:"Fried eggs.",cat:"food",type:"must"},
+  {en:"portion",ru:"порция",pron:"[ˈpɔːrʃən]",ex:"Large portion.",cat:"food",type:"must"},
+  {en:"allergy",ru:"аллергия",pron:"[ˈælədʒi]",ex:"Nut allergy.",cat:"food",type:"must"},
+  {en:"delivery",ru:"доставка",pron:"[dɪˈlɪvəri]",ex:"Free delivery.",cat:"food",type:"must"},
+  {en:"takeaway",ru:"еда с собой",pron:"[ˈteɪkəweɪ]",ex:"Order takeaway.",cat:"food",type:"must"},
+  {en:"recipe",ru:"рецепт",pron:"[ˈrɛsɪpi]",ex:"Easy recipe.",cat:"food",type:"must"},
+  {en:"ingredient",ru:"ингредиент",pron:"[ɪnˈɡriːdiənt]",ex:"Fresh ingredients.",cat:"food",type:"must"},
+  {en:"waiter",ru:"официант",pron:"[ˈweɪtər]",ex:"Ask the waiter.",cat:"food",type:"must"},
+  {en:"doctor",ru:"врач",pron:"[ˈdɒktər]",ex:"See a doctor.",cat:"health",type:"must"},
+  {en:"hospital",ru:"больница",pron:"[ˈhɒspɪtəl]",ex:"Go to hospital.",cat:"health",type:"must"},
+  {en:"pharmacy",ru:"аптека",pron:"[ˈfɑːrməsi]",ex:"Find a pharmacy.",cat:"health",type:"must"},
+  {en:"medicine",ru:"лекарство",pron:"[ˈmɛdɪsɪn]",ex:"Take your medicine.",cat:"health",type:"must"},
+  {en:"pain",ru:"боль",pron:"[peɪn]",ex:"Back pain.",cat:"health",type:"must"},
+  {en:"headache",ru:"головная боль",pron:"[ˈhɛdeɪk]",ex:"Bad headache.",cat:"health",type:"must"},
+  {en:"fever",ru:"температура",pron:"[ˈfiːvər]",ex:"High fever.",cat:"health",type:"must"},
+  {en:"cough",ru:"кашель",pron:"[kɒf]",ex:"Dry cough.",cat:"health",type:"must"},
+  {en:"injury",ru:"травма",pron:"[ˈɪndʒəri]",ex:"Minor injury.",cat:"health",type:"must"},
+  {en:"appointment",ru:"запись к врачу",pron:"[əˈpɔɪntmənt]",ex:"Book an appointment.",cat:"health",type:"must"},
+  {en:"insurance",ru:"страховка",pron:"[ɪnˈʃʊərəns]",ex:"Health insurance.",cat:"health",type:"must"},
+  {en:"symptom",ru:"симптом",pron:"[ˈsɪmptəm]",ex:"What are your symptoms?",cat:"health",type:"must"},
+  {en:"recover",ru:"восстанавливаться",pron:"[rɪˈkʌvər]",ex:"Recover quickly.",cat:"health",type:"must"},
+  {en:"rest",ru:"отдых",pron:"[rɛst]",ex:"You need rest.",cat:"health",type:"must"},
+  {en:"gym",ru:"спортзал",pron:"[dʒɪm]",ex:"Hit the gym.",cat:"health",type:"must"},
+  {en:"diet",ru:"диета",pron:"[ˈdaɪɪt]",ex:"Healthy diet.",cat:"health",type:"cognate"},
+  {en:"stress",ru:"стресс",pron:"[strɛs]",ex:"Too much stress.",cat:"health",type:"cognate"},
+  {en:"sleep",ru:"сон",pron:"[sliːp]",ex:"Need more sleep.",cat:"health",type:"must"},
+  {en:"pill",ru:"таблетка",pron:"[pɪl]",ex:"Take a pill.",cat:"health",type:"must"},
+  {en:"airport",ru:"аэропорт",pron:"[ˈɛərpɔːrt]",ex:"At the airport.",cat:"travel",type:"must"},
+  {en:"flight",ru:"рейс",pron:"[flaɪt]",ex:"Long flight.",cat:"travel",type:"must"},
+  {en:"ticket",ru:"билет",pron:"[ˈtɪkɪt]",ex:"Buy a ticket.",cat:"travel",type:"must"},
+  {en:"luggage",ru:"багаж",pron:"[ˈlʌɡɪdʒ]",ex:"Heavy luggage.",cat:"travel",type:"must"},
+  {en:"customs",ru:"таможня",pron:"[ˈkʌstəmz]",ex:"Go through customs.",cat:"travel",type:"must"},
+  {en:"delay",ru:"задержка",pron:"[dɪˈleɪ]",ex:"Flight delay.",cat:"travel",type:"must"},
+  {en:"booking",ru:"бронирование",pron:"[ˈbʊkɪŋ]",ex:"Cancel the booking.",cat:"travel",type:"must"},
+  {en:"accommodation",ru:"жильё",pron:"[əˌkɒməˈdeɪʃən]",ex:"Book accommodation.",cat:"travel",type:"must"},
+  {en:"currency",ru:"валюта",pron:"[ˈkʌrənsi]",ex:"Exchange currency.",cat:"travel",type:"must"},
+  {en:"map",ru:"карта",pron:"[mæp]",ex:"Check the map.",cat:"travel",type:"must"},
+  {en:"trip",ru:"поездка",pron:"[trɪp]",ex:"Road trip.",cat:"travel",type:"must"},
+  {en:"abroad",ru:"за рубежом",pron:"[əˈbrɔːd]",ex:"Travel abroad.",cat:"travel",type:"must"},
+  {en:"sightseeing",ru:"осмотр достопримечательностей",pron:"[ˈsaɪtˌsiːɪŋ]",ex:"Go sightseeing.",cat:"travel",type:"must"},
+  {en:"souvenir",ru:"сувенир",pron:"[ˌsuːvəˈnɪər]",ex:"Buy souvenirs.",cat:"travel",type:"must"},
+  {en:"guide",ru:"гид",pron:"[ɡaɪd]",ex:"Hire a guide.",cat:"travel",type:"must"},
+  {en:"boarding pass",ru:"посадочный талон",pron:"[ˈbɔːrdɪŋ pɑːs]",ex:"Show boarding pass.",cat:"travel",type:"must"},
+  {en:"check-in",ru:"регистрация",pron:"[ˈtʃɛk ɪn]",ex:"Online check-in.",cat:"travel",type:"must"},
+  {en:"happy",ru:"счастливый",pron:"[ˈhæpi]",ex:"I am happy.",cat:"emotions",type:"must"},
+  {en:"sad",ru:"грустный",pron:"[sæd]",ex:"Feeling sad.",cat:"emotions",type:"must"},
+  {en:"angry",ru:"злой",pron:"[ˈæŋɡri]",ex:"Don not be angry.",cat:"emotions",type:"must"},
+  {en:"scared",ru:"испуганный",pron:"[skɛərd]",ex:"I am scared.",cat:"emotions",type:"must"},
+  {en:"surprised",ru:"удивлённый",pron:"[səˈpraɪzd]",ex:"I am surprised.",cat:"emotions",type:"must"},
+  {en:"excited",ru:"взволнованный",pron:"[ɪkˈsaɪtɪd]",ex:"I am excited.",cat:"emotions",type:"must"},
+  {en:"nervous",ru:"нервный",pron:"[ˈnɜːrvəs]",ex:"A bit nervous.",cat:"emotions",type:"must"},
+  {en:"confident",ru:"уверенный",pron:"[ˈkɒnfɪdənt]",ex:"Be confident.",cat:"emotions",type:"must"},
+  {en:"proud",ru:"гордый",pron:"[praʊd]",ex:"I am proud of you.",cat:"emotions",type:"must"},
+  {en:"jealous",ru:"ревнивый",pron:"[ˈdʒɛləs]",ex:"Do not be jealous.",cat:"emotions",type:"must"},
+  {en:"embarrassed",ru:"смущённый",pron:"[ɪmˈbærəst]",ex:"I am embarrassed.",cat:"emotions",type:"must"},
+  {en:"bored",ru:"скучающий",pron:"[bɔːrd]",ex:"I am so bored.",cat:"emotions",type:"must"},
+  {en:"lonely",ru:"одинокий",pron:"[ˈloʊnli]",ex:"Feeling lonely.",cat:"emotions",type:"must"},
+  {en:"grateful",ru:"благодарный",pron:"[ˈɡreɪtfəl]",ex:"I am grateful.",cat:"emotions",type:"must"},
+  {en:"frustrated",ru:"расстроенный",pron:"[frʌˈstreɪtɪd]",ex:"Feeling frustrated.",cat:"emotions",type:"must"},
+  {en:"calm",ru:"спокойный",pron:"[kɑːm]",ex:"Stay calm.",cat:"emotions",type:"must"},
+  {en:"kind",ru:"добрый",pron:"[kaɪnd]",ex:"Be kind.",cat:"emotions",type:"must"},
+  {en:"honest",ru:"честный",pron:"[ˈɒnɪst]",ex:"Be honest.",cat:"emotions",type:"must"},
+  {en:"lazy",ru:"ленивый",pron:"[ˈleɪzi]",ex:"Do not be lazy.",cat:"emotions",type:"must"},
+  {en:"patient",ru:"терпеливый",pron:"[ˈpeɪʃənt]",ex:"Be patient.",cat:"emotions",type:"must"},
+  {en:"stubborn",ru:"упрямый",pron:"[ˈstʌbərn]",ex:"So stubborn.",cat:"emotions",type:"must"},
+  {en:"ambitious",ru:"амбициозный",pron:"[æmˈbɪʃəs]",ex:"Very ambitious.",cat:"emotions",type:"must"},
+  {en:"mood",ru:"настроение",pron:"[muːd]",ex:"Bad mood.",cat:"emotions",type:"must"},
+  {en:"attitude",ru:"отношение",pron:"[ˈætɪtjuːd]",ex:"Bad attitude.",cat:"emotions",type:"must"},
+  {en:"friend",ru:"друг",pron:"[frɛnd]",ex:"Old friend.",cat:"relations",type:"must"},
+  {en:"partner",ru:"партнёр",pron:"[ˈpɑːrtnər]",ex:"My partner.",cat:"relations",type:"must"},
+  {en:"husband",ru:"муж",pron:"[ˈhʌzbənd]",ex:"Her husband.",cat:"relations",type:"must"},
+  {en:"wife",ru:"жена",pron:"[waɪf]",ex:"My wife.",cat:"relations",type:"must"},
+  {en:"parent",ru:"родитель",pron:"[ˈpɛərənt]",ex:"Call your parents.",cat:"relations",type:"must"},
+  {en:"sibling",ru:"брат или сестра",pron:"[ˈsɪblɪŋ]",ex:"Any siblings?",cat:"relations",type:"must"},
+  {en:"cousin",ru:"двоюродный брат",pron:"[ˈkʌzən]",ex:"My cousin is here.",cat:"relations",type:"must"},
+  {en:"stranger",ru:"незнакомец",pron:"[ˈstreɪndʒər]",ex:"A stranger.",cat:"relations",type:"must"},
+  {en:"ex",ru:"бывший",pron:"[ɛks]",ex:"My ex called.",cat:"relations",type:"must"},
+  {en:"crush",ru:"симпатия",pron:"[krʌʃ]",ex:"I have a crush.",cat:"relations",type:"must"},
+  {en:"date",ru:"свидание",pron:"[deɪt]",ex:"Going on a date.",cat:"relations",type:"must"},
+  {en:"relationship",ru:"отношения",pron:"[rɪˈleɪʃənʃɪp]",ex:"Healthy relationship.",cat:"relations",type:"must"},
+  {en:"trust",ru:"доверие",pron:"[trʌst]",ex:"Build trust.",cat:"relations",type:"must"},
+  {en:"argument",ru:"ссора",pron:"[ˈɑːrɡjʊmənt]",ex:"Big argument.",cat:"relations",type:"must"},
+  {en:"apology",ru:"извинение",pron:"[əˈpɒlədʒi]",ex:"Accept my apology.",cat:"relations",type:"must"},
+  {en:"money",ru:"деньги",pron:"[ˈmʌni]",ex:"Need more money.",cat:"money",type:"must"},
+  {en:"price",ru:"цена",pron:"[praɪs]",ex:"Good price.",cat:"money",type:"must"},
+  {en:"cost",ru:"стоимость",pron:"[kɒst]",ex:"What is the cost?",cat:"money",type:"must"},
+  {en:"payment",ru:"оплата",pron:"[ˈpeɪmənt]",ex:"Monthly payment.",cat:"money",type:"must"},
+  {en:"loan",ru:"кредит",pron:"[loʊn]",ex:"Take a loan.",cat:"money",type:"must"},
+  {en:"debt",ru:"долг",pron:"[dɛt]",ex:"Pay the debt.",cat:"money",type:"must"},
+  {en:"savings",ru:"сбережения",pron:"[ˈseɪvɪŋz]",ex:"Build your savings.",cat:"money",type:"must"},
+  {en:"profit",ru:"прибыль",pron:"[ˈprɒfɪt]",ex:"High profit.",cat:"money",type:"must"},
+  {en:"tax",ru:"налог",pron:"[tæks]",ex:"Pay your taxes.",cat:"money",type:"must"},
+  {en:"fee",ru:"комиссия",pron:"[fiː]",ex:"Monthly fee.",cat:"money",type:"must"},
+  {en:"refund",ru:"возврат",pron:"[ˈriːfʌnd]",ex:"Request a refund.",cat:"money",type:"must"},
+  {en:"afford",ru:"позволить себе",pron:"[əˈfɔːrd]",ex:"Can not afford it.",cat:"money",type:"must"},
+  {en:"worth",ru:"стоит",pron:"[wɜːrθ]",ex:"Is it worth it?",cat:"money",type:"must"},
+  {en:"investment",ru:"инвестиция",pron:"[ɪnˈvɛstmənt]",ex:"Good investment.",cat:"money",type:"must"},
+  {en:"invoice",ru:"инвойс",pron:"[ˈɪnvɔɪs]",ex:"Send the invoice.",cat:"money",type:"must"},
+  {en:"transfer",ru:"перевод",pron:"[ˈtrænsf3ːr]",ex:"Bank transfer.",cat:"money",type:"must"},
+  {en:"sport",ru:"спорт",pron:"[spɔːrt]",ex:"I love sport.",cat:"life",type:"cognate"},
+  {en:"music",ru:"музыка",pron:"[ˈmjuːzɪk]",ex:"Good music.",cat:"life",type:"cognate"},
+  {en:"cinema",ru:"кино",pron:"[ˈsɪnəmə]",ex:"Go to the cinema.",cat:"life",type:"cognate"},
+  {en:"club",ru:"клуб",pron:"[klʌb]",ex:"Night club.",cat:"life",type:"cognate"},
+  {en:"festival",ru:"фестиваль",pron:"[ˈfɛstɪvəl]",ex:"Summer festival.",cat:"life",type:"cognate"},
+  {en:"concert",ru:"концерт",pron:"[ˈkɒnsərt]",ex:"Great concert!",cat:"life",type:"cognate"},
+  {en:"style",ru:"стиль",pron:"[staɪl]",ex:"Nice style.",cat:"life",type:"cognate"},
+  {en:"energy",ru:"энергия",pron:"[ˈɛnərdʒi]",ex:"Full of energy.",cat:"life",type:"cognate"},
+  {en:"hobby",ru:"хобби",pron:"[ˈhɒbi]",ex:"What is your hobby?",cat:"life",type:"must"},
+  {en:"game",ru:"игра",pron:"[ɡeɪm]",ex:"Board game.",cat:"life",type:"must"},
+  {en:"movie",ru:"фильм",pron:"[ˈmuːvi]",ex:"Watch a movie.",cat:"life",type:"must"},
+  {en:"series",ru:"сериал",pron:"[ˈsɪəriːz]",ex:"New series.",cat:"life",type:"must"},
+  {en:"channel",ru:"канал",pron:"[ˈtʃænəl]",ex:"YouTube channel.",cat:"life",type:"must"},
+  {en:"post",ru:"пост",pron:"[poʊst]",ex:"Post a photo.",cat:"life",type:"must"},
+  {en:"story",ru:"сторис",pron:"[ˈstɔːri]",ex:"Watch my story.",cat:"life",type:"must"},
+  {en:"feed",ru:"лента",pron:"[fiːd]",ex:"Scroll the feed.",cat:"life",type:"must"},
+  {en:"comment",ru:"комментарий",pron:"[ˈkɒmɛnt]",ex:"Leave a comment.",cat:"life",type:"must"},
+  {en:"follow",ru:"подписаться",pron:"[ˈfɒloʊ]",ex:"Follow me.",cat:"life",type:"must"},
+  {en:"workout",ru:"тренировка",pron:"[ˈwɜːrkaʊt]",ex:"Morning workout.",cat:"life",type:"must"},
+  {en:"walk",ru:"прогулка",pron:"[wɔːk]",ex:"Long walk.",cat:"life",type:"must"},
+  {en:"relax",ru:"расслабиться",pron:"[rɪˈlæks]",ex:"Time to relax.",cat:"life",type:"must"},
+  {en:"actually",ru:"на самом деле",pron:"[ˈæktʃuəli]",ex:"Actually I disagree.",cat:"phrases",type:"must"},
+  {en:"basically",ru:"в основном",pron:"[ˈbeɪsɪkli]",ex:"Basically done.",cat:"phrases",type:"must"},
+  {en:"literally",ru:"буквально",pron:"[ˈlɪtərəli]",ex:"Literally dying.",cat:"phrases",type:"must"},
+  {en:"probably",ru:"наверное",pron:"[ˈprɒbəbli]",ex:"Probably yes.",cat:"phrases",type:"must"},
+  {en:"definitely",ru:"точно",pron:"[ˈdɛfɪnɪtli]",ex:"Definitely.",cat:"phrases",type:"must"},
+  {en:"anyway",ru:"в любом случае",pron:"[ˈɛniweɪ]",ex:"Anyway let us move on.",cat:"phrases",type:"must"},
+  {en:"however",ru:"однако",pron:"[haʊˈɛvər]",ex:"However I disagree.",cat:"phrases",type:"must"},
+  {en:"although",ru:"хотя",pron:"[ɔːlˈðoʊ]",ex:"Although it is hard.",cat:"phrases",type:"must"},
+  {en:"besides",ru:"кроме того",pron:"[bɪˈsaɪdz]",ex:"Besides it is free.",cat:"phrases",type:"must"},
+  {en:"instead",ru:"вместо",pron:"[ɪnˈstɛd]",ex:"Do this instead.",cat:"phrases",type:"must"},
+  {en:"though",ru:"хотя",pron:"[ðoʊ]",ex:"Good though.",cat:"phrases",type:"must"},
+  {en:"yet",ru:"ещё / уже",pron:"[jɛt]",ex:"Not yet.",cat:"phrases",type:"must"},
+  {en:"still",ru:"всё ещё",pron:"[stɪl]",ex:"Still here.",cat:"phrases",type:"must"},
+  {en:"already",ru:"уже",pron:"[ɔːlˈrɛdi]",ex:"Already done.",cat:"phrases",type:"must"},
+  {en:"just",ru:"просто",pron:"[dʒʌst]",ex:"Just chilling.",cat:"phrases",type:"must"},
+  {en:"even",ru:"даже",pron:"[ˈiːvən]",ex:"Even better.",cat:"phrases",type:"must"},
+  {en:"only",ru:"только",pron:"[ˈoʊnli]",ex:"Only 5 minutes.",cat:"phrases",type:"must"},
+  {en:"almost",ru:"почти",pron:"[ˈɔːlmoʊst]",ex:"Almost there.",cat:"phrases",type:"must"},
+  {en:"quite",ru:"довольно",pron:"[kwaɪt]",ex:"Quite good.",cat:"phrases",type:"must"},
+  {en:"rather",ru:"скорее",pron:"[ˈrɑːðər]",ex:"I would rather not.",cat:"phrases",type:"must"},
+  {en:"pretty",ru:"довольно (разг.)",pron:"[ˈprɪti]",ex:"Pretty good.",cat:"phrases",type:"must"},
+  {en:"otherwise",ru:"иначе",pron:"[ˈʌðərwaɪz]",ex:"Hurry otherwise late.",cat:"phrases",type:"must"},
+  {en:"therefore",ru:"поэтому",pron:"[ˈðɛərfɔːr]",ex:"Therefore I left.",cat:"phrases",type:"must"},
+  {en:"meanwhile",ru:"тем временем",pron:"[ˈmiːnwaɪl]",ex:"Meanwhile he called.",cat:"phrases",type:"must"},
+  {en:"suddenly",ru:"вдруг",pron:"[ˈsʌdənli]",ex:"Suddenly it stopped.",cat:"phrases",type:"must"},
+  {en:"finally",ru:"наконец",pron:"[ˈfaɪnəli]",ex:"Finally done!",cat:"phrases",type:"must"},
+  {en:"recently",ru:"недавно",pron:"[ˈriːsəntli]",ex:"I recently moved.",cat:"phrases",type:"must"},
+  {en:"at least",ru:"по крайней мере",pron:"[æt liːst]",ex:"At least try.",cat:"phrases",type:"must"},
+  {en:"so far",ru:"до сих пор",pron:"[soʊ fɑːr]",ex:"So far so good.",cat:"phrases",type:"must"},
+  {en:"right now",ru:"прямо сейчас",pron:"[raɪt naʊ]",ex:"Come right now.",cat:"phrases",type:"must"},
+  {en:"used to",ru:"раньше делал",pron:"[ˈjuːst tə]",ex:"I used to live there.",cat:"phrases",type:"must"},
+  {en:"in case",ru:"на случай если",pron:"[ɪn keɪs]",ex:"Take cash in case.",cat:"phrases",type:"must"},
+  {en:"even though",ru:"даже несмотря",pron:"[ˈiːvən ðoʊ]",ex:"Even though late.",cat:"phrases",type:"must"},
+  {en:"as soon as",ru:"как только",pron:"[æz suːn æz]",ex:"Call as soon as you can.",cat:"phrases",type:"must"},
+  {en:"by the way",ru:"кстати",pron:"[baɪ ðə weɪ]",ex:"By the way...",cat:"phrases",type:"must"},
+  {en:"after all",ru:"в конце концов",pron:"[ˈɑːftər ɔːl]",ex:"After all it is fine.",cat:"phrases",type:"must"},
+  {en:"in my opinion",ru:"по-моему",pron:"[ɪn maɪ əˈpɪnjən]",ex:"In my opinion wrong.",cat:"phrases",type:"must"},
+  {en:"to be honest",ru:"честно говоря",pron:"[tə biː ˈɒnɪst]",ex:"To be honest no.",cat:"phrases",type:"must"},
+  {en:"to be fair",ru:"справедливости ради",pron:"[tə biː fɛər]",ex:"To be fair he tried.",cat:"phrases",type:"must"},
+  {en:"no wonder",ru:"неудивительно",pron:"[noʊ ˈwʌndər]",ex:"No wonder you are tired.",cat:"phrases",type:"must"},
+  {en:"on the other hand",ru:"с другой стороны",pron:"[ɒn ðə ˈʌðər hænd]",ex:"On the other hand...",cat:"phrases",type:"must"},
+  {en:"at the moment",ru:"в данный момент",pron:"[æt ðə ˈmoʊmənt]",ex:"Busy at the moment.",cat:"phrases",type:"must"},
+  {en:"chill",ru:"расслабиться",pron:"[tʃɪl]",ex:"Just chill.",cat:"slang",type:"slang"},
+  {en:"vibe",ru:"атмосфера",pron:"[vaɪb]",ex:"Good vibe.",cat:"slang",type:"slang"},
+  {en:"lit",ru:"огонь",pron:"[lɪt]",ex:"Party was lit.",cat:"slang",type:"slang"},
+  {en:"fire",ru:"топ / огонь",pron:"[faɪər]",ex:"This is fire.",cat:"slang",type:"slang"},
+  {en:"sick",ru:"крутой",pron:"[sɪk]",ex:"That is sick!",cat:"slang",type:"slang"},
+  {en:"insane",ru:"нереальный",pron:"[ɪnˈseɪn]",ex:"Insane speaker.",cat:"slang",type:"slang"},
+  {en:"gotta",ru:"надо (разг.)",pron:"[ˈɡɒtə]",ex:"You gotta see this.",cat:"slang",type:"slang"},
+  {en:"wanna",ru:"хочу (разг.)",pron:"[ˈwɒnə]",ex:"I wanna go.",cat:"slang",type:"slang"},
+  {en:"gonna",ru:"собираюсь",pron:"[ˈɡɒnə]",ex:"I am gonna do it.",cat:"slang",type:"slang"},
+  {en:"kinda",ru:"типа",pron:"[ˈkaɪndə]",ex:"Kinda tired.",cat:"slang",type:"slang"},
+  {en:"nah",ru:"неа",pron:"[nɑː]",ex:"Nah I am good.",cat:"slang",type:"slang"},
+  {en:"yeah",ru:"ага",pron:"[jɛə]",ex:"Yeah for sure.",cat:"slang",type:"slang"},
+  {en:"dude",ru:"чувак",pron:"[djuːd]",ex:"Dude seriously?",cat:"slang",type:"slang"},
+  {en:"bro",ru:"бро",pron:"[broʊ]",ex:"Bro what?",cat:"slang",type:"slang"},
+  {en:"hang out",ru:"тусоваться",pron:"[hæŋ aʊt]",ex:"Let us hang out.",cat:"slang",type:"slang"},
+  {en:"link up",ru:"пересечься",pron:"[lɪŋk ʌp]",ex:"Let us link up.",cat:"slang",type:"slang"},
+  {en:"hit up",ru:"написать",pron:"[hɪt ʌp]",ex:"I will hit you up.",cat:"slang",type:"slang"},
+  {en:"catch up",ru:"поговорить",pron:"[kætʃ ʌp]",ex:"Let us catch up.",cat:"slang",type:"slang"},
+  {en:"no cap",ru:"без шуток",pron:"[noʊ kæp]",ex:"No cap it was insane.",cat:"slang",type:"slang"},
+  {en:"lowkey",ru:"честно говоря",pron:"[ˈloʊkiː]",ex:"Lowkey love it.",cat:"slang",type:"slang"},
+  {en:"legit",ru:"реально",pron:"[lɪˈdʒɪt]",ex:"That is legit.",cat:"slang",type:"slang"},
+  {en:"for real",ru:"серьёзно",pron:"[fər riːl]",ex:"For real?",cat:"slang",type:"slang"},
+  {en:"my bad",ru:"моя вина",pron:"[maɪ bæd]",ex:"Oh my bad.",cat:"slang",type:"slang"},
+  {en:"dead",ru:"умираю от смеха",pron:"[dɛd]",ex:"I am dead.",cat:"slang",type:"slang"},
+  {en:"slay",ru:"выглядеть супер",pron:"[sleɪ]",ex:"You slay!",cat:"slang",type:"slang"},
+  {en:"ghosted",ru:"игнорируют",pron:"[ˈɡoʊstɪd]",ex:"He ghosted me.",cat:"slang",type:"slang"},
+  {en:"flex",ru:"хвастаться",pron:"[flɛks]",ex:"Stop flexing.",cat:"slang",type:"slang"},
+  {en:"hyped",ru:"взволнован",pron:"[haɪpt]",ex:"So hyped.",cat:"slang",type:"slang"},
+  {en:"it hits",ru:"цепляет",pron:"[ɪt hɪts]",ex:"This song hits.",cat:"slang",type:"slang"},
+  {en:"sus",ru:"подозрительный",pron:"[sʌs]",ex:"That is sus.",cat:"slang",type:"slang"},
+  {en:"GOAT",ru:"величайший",pron:"[ɡoʊt]",ex:"He is the GOAT.",cat:"slang",type:"slang"},
+  {en:"get",ru:"получать",pron:"[ɡɛt]",ex:"Can you get me water?",cat:"verbs",type:"must"},
+  {en:"make",ru:"делать",pron:"[meɪk]",ex:"Make a decision.",cat:"verbs",type:"must"},
+  {en:"take",ru:"брать",pron:"[teɪk]",ex:"Take your time.",cat:"verbs",type:"must"},
+  {en:"give",ru:"давать",pron:"[ɡɪv]",ex:"Give me a sec.",cat:"verbs",type:"must"},
+  {en:"come",ru:"приходить",pron:"[kʌm]",ex:"Come here.",cat:"verbs",type:"must"},
+  {en:"go",ru:"идти",pron:"[ɡoʊ]",ex:"Let us go.",cat:"verbs",type:"must"},
+  {en:"know",ru:"знать",pron:"[noʊ]",ex:"I do not know.",cat:"verbs",type:"must"},
+  {en:"think",ru:"думать",pron:"[θɪŋk]",ex:"I think so.",cat:"verbs",type:"must"},
+  {en:"want",ru:"хотеть",pron:"[wɒnt]",ex:"What do you want?",cat:"verbs",type:"must"},
+  {en:"need",ru:"нуждаться",pron:"[niːd]",ex:"I need help.",cat:"verbs",type:"must"},
+  {en:"feel",ru:"чувствовать",pron:"[fiːl]",ex:"How do you feel?",cat:"verbs",type:"must"},
+  {en:"look",ru:"выглядеть",pron:"[lʊk]",ex:"You look good.",cat:"verbs",type:"must"},
+  {en:"mean",ru:"значить",pron:"[miːn]",ex:"What does it mean?",cat:"verbs",type:"must"},
+  {en:"tell",ru:"рассказать",pron:"[tɛl]",ex:"Tell me more.",cat:"verbs",type:"must"},
+  {en:"ask",ru:"спрашивать",pron:"[ɑːsk]",ex:"Can I ask?",cat:"verbs",type:"must"},
+  {en:"try",ru:"пробовать",pron:"[traɪ]",ex:"Just try it.",cat:"verbs",type:"must"},
+  {en:"keep",ru:"продолжать",pron:"[kiːp]",ex:"Keep going.",cat:"verbs",type:"must"},
+  {en:"leave",ru:"уходить",pron:"[liːv]",ex:"I am leaving.",cat:"verbs",type:"must"},
+  {en:"move",ru:"переезжать",pron:"[muːv]",ex:"We moved here.",cat:"verbs",type:"must"},
+  {en:"start",ru:"начинать",pron:"[stɑːrt]",ex:"Let us start.",cat:"verbs",type:"must"},
+  {en:"stop",ru:"останавливаться",pron:"[stɒp]",ex:"Stop it.",cat:"verbs",type:"must"},
+  {en:"use",ru:"использовать",pron:"[juːz]",ex:"Use this app.",cat:"verbs",type:"must"},
+  {en:"find",ru:"находить",pron:"[faɪnd]",ex:"Find a solution.",cat:"verbs",type:"must"},
+  {en:"lose",ru:"терять",pron:"[luːz]",ex:"Do not lose it.",cat:"verbs",type:"must"},
+  {en:"pay",ru:"платить",pron:"[peɪ]",ex:"I will pay.",cat:"verbs",type:"must"},
+  {en:"spend",ru:"тратить",pron:"[spɛnd]",ex:"I spend too much.",cat:"verbs",type:"must"},
+  {en:"happen",ru:"происходить",pron:"[ˈhæpən]",ex:"What happened?",cat:"verbs",type:"must"},
+  {en:"change",ru:"менять",pron:"[tʃeɪndʒ]",ex:"Things change.",cat:"verbs",type:"must"},
+  {en:"understand",ru:"понимать",pron:"[ˌʌndərˈstænd]",ex:"Do you understand?",cat:"verbs",type:"must"},
+  {en:"remember",ru:"помнить",pron:"[rɪˈmɛmbər]",ex:"I remember now.",cat:"verbs",type:"must"},
+  {en:"forget",ru:"забывать",pron:"[fərˈɡɛt]",ex:"Do not forget.",cat:"verbs",type:"must"},
+  {en:"decide",ru:"решать",pron:"[dɪˈsaɪd]",ex:"Decide already.",cat:"verbs",type:"must"},
+  {en:"agree",ru:"соглашаться",pron:"[əˈɡriː]",ex:"I agree.",cat:"verbs",type:"must"},
+  {en:"explain",ru:"объяснять",pron:"[ɪkˈspleɪn]",ex:"Can you explain?",cat:"verbs",type:"must"},
+  {en:"suggest",ru:"предлагать",pron:"[səˈdʒɛst]",ex:"I suggest this.",cat:"verbs",type:"must"},
+  {en:"allow",ru:"разрешать",pron:"[əˈlaʊ]",ex:"Not allowed.",cat:"verbs",type:"must"},
+  {en:"avoid",ru:"избегать",pron:"[əˈvɔɪd]",ex:"Avoid this.",cat:"verbs",type:"must"},
+  {en:"improve",ru:"улучшать",pron:"[ɪmˈpruːv]",ex:"Improve your English.",cat:"verbs",type:"must"},
+  {en:"include",ru:"включать",pron:"[ɪnˈkluːd]",ex:"It includes tax.",cat:"verbs",type:"must"},
+  {en:"offer",ru:"предлагать",pron:"[ˈɒfər]",ex:"They offered a job.",cat:"verbs",type:"must"},
+  {en:"require",ru:"требовать",pron:"[rɪˈkwaɪər]",ex:"This requires time.",cat:"verbs",type:"must"},
+  {en:"consider",ru:"рассматривать",pron:"[kənˈsɪdər]",ex:"Consider this.",cat:"verbs",type:"must"},
+  {en:"imagine",ru:"представлять",pron:"[ɪˈmædʒɪn]",ex:"Imagine living there.",cat:"verbs",type:"must"},
+  {en:"manage",ru:"справляться",pron:"[ˈmænɪdʒ]",ex:"I can manage it.",cat:"verbs",type:"must"},
+  {en:"realize",ru:"осознавать",pron:"[ˈrɪəlaɪz]",ex:"I just realized.",cat:"verbs",type:"must"},
+  {en:"apply",ru:"подавать заявку",pron:"[əˈplaɪ]",ex:"Apply for the job.",cat:"verbs",type:"must"},
+  {en:"check",ru:"проверять",pron:"[tʃɛk]",ex:"Check your email.",cat:"verbs",type:"must"},
+  {en:"miss",ru:"скучать",pron:"[mɪs]",ex:"I miss you.",cat:"verbs",type:"must"},
+  {en:"share",ru:"делиться",pron:"[ʃɛər]",ex:"Share your screen.",cat:"verbs",type:"must"},
+  {en:"save",ru:"сохранять",pron:"[seɪv]",ex:"Save the file.",cat:"verbs",type:"must"},
+  {en:"choose",ru:"выбирать",pron:"[tʃuːz]",ex:"Choose one.",cat:"verbs",type:"must"},
+  {en:"grow",ru:"расти",pron:"[ɡroʊ]",ex:"Business is growing.",cat:"verbs",type:"must"},
+  {en:"build",ru:"строить",pron:"[bɪld]",ex:"Build a team.",cat:"verbs",type:"must"},
+  {en:"bring",ru:"приносить",pron:"[brɪŋ]",ex:"Bring your ID.",cat:"verbs",type:"must"},
+  {en:"meet",ru:"встречать",pron:"[miːt]",ex:"Nice to meet you.",cat:"verbs",type:"must"},
+  {en:"show",ru:"показывать",pron:"[ʃoʊ]",ex:"Show me.",cat:"verbs",type:"must"},
+  {en:"support",ru:"поддерживать",pron:"[səˈpɔːrt]",ex:"Support the team.",cat:"verbs",type:"must"},
+  {en:"connect",ru:"подключать",pron:"[kəˈnɛkt]",ex:"Connect to wifi.",cat:"verbs",type:"must"},
+  {en:"confirm",ru:"подтверждать",pron:"[kənˈfɜːrm]",ex:"Confirm the order.",cat:"verbs",type:"must"},
+  {en:"cancel",ru:"отменять",pron:"[ˈkænsəl]",ex:"Cancel the booking.",cat:"verbs",type:"must"},
+  {en:"complete",ru:"завершать",pron:"[kəmˈpliːt]",ex:"Complete the task.",cat:"verbs",type:"must"},
+  {en:"create",ru:"создавать",pron:"[kriˈeɪt]",ex:"Create a profile.",cat:"verbs",type:"must"},
+  {en:"expect",ru:"ожидать",pron:"[ɪkˈspɛkt]",ex:"Did not expect that.",cat:"verbs",type:"must"},
+  {en:"handle",ru:"справляться с",pron:"[ˈhændəl]",ex:"I can handle it.",cat:"verbs",type:"must"},
+  {en:"deal with",ru:"разбираться с",pron:"[diːl wɪð]",ex:"Deal with it.",cat:"verbs",type:"must"},
+  {en:"figure out",ru:"разобраться",pron:"[ˈfɪɡər aʊt]",ex:"Figure it out.",cat:"verbs",type:"must"},
+  {en:"give up",ru:"сдаться",pron:"[ɡɪv ʌp]",ex:"Do not give up.",cat:"verbs",type:"must"},
+  {en:"look up",ru:"искать",pron:"[lʊk ʌp]",ex:"Look it up.",cat:"verbs",type:"must"},
+  {en:"turn out",ru:"оказаться",pron:"[tɜːrn aʊt]",ex:"It turned out fine.",cat:"verbs",type:"must"},
+  {en:"end up",ru:"в итоге оказаться",pron:"[ɛnd ʌp]",ex:"I ended up staying.",cat:"verbs",type:"must"},
+  {en:"come up with",ru:"придумать",pron:"[kʌm ʌp wɪð]",ex:"Come up with an idea.",cat:"verbs",type:"must"},
+  {en:"run out of",ru:"закончиться",pron:"[rʌn aʊt ɒv]",ex:"I ran out of time.",cat:"verbs",type:"must"},
+  {en:"good",ru:"хороший",pron:"[ɡʊd]",ex:"That is good.",cat:"adj",type:"must"},
+  {en:"bad",ru:"плохой",pron:"[bæd]",ex:"That is bad.",cat:"adj",type:"must"},
+  {en:"big",ru:"большой",pron:"[bɪɡ]",ex:"Big deal.",cat:"adj",type:"must"},
+  {en:"small",ru:"маленький",pron:"[smɔːl]",ex:"Small problem.",cat:"adj",type:"must"},
+  {en:"new",ru:"новый",pron:"[njuː]",ex:"Brand new.",cat:"adj",type:"must"},
+  {en:"old",ru:"старый",pron:"[oʊld]",ex:"Old school.",cat:"adj",type:"must"},
+  {en:"same",ru:"одинаковый",pron:"[seɪm]",ex:"Same thing.",cat:"adj",type:"must"},
+  {en:"different",ru:"другой",pron:"[ˈdɪfrənt]",ex:"Totally different.",cat:"adj",type:"must"},
+  {en:"easy",ru:"лёгкий",pron:"[ˈiːzi]",ex:"Easy job.",cat:"adj",type:"must"},
+  {en:"hard",ru:"сложный",pron:"[hɑːrd]",ex:"Hard work.",cat:"adj",type:"must"},
+  {en:"fast",ru:"быстрый",pron:"[fɑːst]",ex:"Fast car.",cat:"adj",type:"must"},
+  {en:"slow",ru:"медленный",pron:"[sloʊ]",ex:"Too slow.",cat:"adj",type:"must"},
+  {en:"free",ru:"свободный",pron:"[friː]",ex:"Are you free?",cat:"adj",type:"must"},
+  {en:"busy",ru:"занятой",pron:"[ˈbɪzi]",ex:"I am busy.",cat:"adj",type:"must"},
+  {en:"ready",ru:"готовый",pron:"[ˈrɛdi]",ex:"Are you ready?",cat:"adj",type:"must"},
+  {en:"sure",ru:"уверенный",pron:"[ʃʊər]",ex:"Are you sure?",cat:"adj",type:"must"},
+  {en:"wrong",ru:"неправильный",pron:"[rɒŋ]",ex:"That is wrong.",cat:"adj",type:"must"},
+  {en:"right",ru:"правильный",pron:"[raɪt]",ex:"You are right.",cat:"adj",type:"must"},
+  {en:"important",ru:"важный",pron:"[ɪmˈpɔːrtənt]",ex:"That is important.",cat:"adj",type:"must"},
+  {en:"interesting",ru:"интересный",pron:"[ˈɪntrəstɪŋ]",ex:"Interesting idea.",cat:"adj",type:"must"},
+  {en:"boring",ru:"скучный",pron:"[ˈbɔːrɪŋ]",ex:"So boring.",cat:"adj",type:"must"},
+  {en:"tired",ru:"уставший",pron:"[ˈtaɪərd]",ex:"I am tired.",cat:"adj",type:"must"},
+  {en:"expensive",ru:"дорогой",pron:"[ɪkˈspɛnsɪv]",ex:"Too expensive.",cat:"adj",type:"must"},
+  {en:"cheap",ru:"дешёвый",pron:"[tʃiːp]",ex:"Really cheap.",cat:"adj",type:"must"},
+  {en:"clean",ru:"чистый",pron:"[kliːn]",ex:"Keep it clean.",cat:"adj",type:"must"},
+  {en:"dirty",ru:"грязный",pron:"[ˈdɜːrti]",ex:"Dirty hands.",cat:"adj",type:"must"},
+  {en:"early",ru:"ранний",pron:"[ˈɜːrli]",ex:"Too early.",cat:"adj",type:"must"},
+  {en:"late",ru:"поздний",pron:"[leɪt]",ex:"I am late.",cat:"adj",type:"must"},
+  {en:"full",ru:"полный",pron:"[fʊl]",ex:"I am full.",cat:"adj",type:"must"},
+  {en:"empty",ru:"пустой",pron:"[ˈɛmpti]",ex:"Empty glass.",cat:"adj",type:"must"},
+  {en:"enough",ru:"достаточно",pron:"[ɪˈnʌf]",ex:"That is enough.",cat:"adj",type:"must"},
+  {en:"safe",ru:"безопасный",pron:"[seɪf]",ex:"Is it safe?",cat:"adj",type:"must"},
+  {en:"serious",ru:"серьёзный",pron:"[ˈsɪəriəs]",ex:"Are you serious?",cat:"adj",type:"must"},
+  {en:"weird",ru:"странный",pron:"[wɪərd]",ex:"That is weird.",cat:"adj",type:"must"},
+  {en:"amazing",ru:"удивительный",pron:"[əˈmeɪzɪŋ]",ex:"That is amazing!",cat:"adj",type:"must"},
+  {en:"awful",ru:"ужасный",pron:"[ˈɔːfəl]",ex:"That was awful.",cat:"adj",type:"must"},
+  {en:"perfect",ru:"идеальный",pron:"[ˈpɜːrfɪkt]",ex:"Perfect timing.",cat:"adj",type:"must"},
+  {en:"possible",ru:"возможный",pron:"[ˈpɒsɪbəl]",ex:"Is it possible?",cat:"adj",type:"must"},
+  {en:"necessary",ru:"необходимый",pron:"[ˈnɛsɪsəri]",ex:"Is it necessary?",cat:"adj",type:"must"},
+  {en:"useful",ru:"полезный",pron:"[ˈjuːsfəl]",ex:"Very useful.",cat:"adj",type:"must"},
+  {en:"popular",ru:"популярный",pron:"[ˈpɒpjʊlər]",ex:"Very popular.",cat:"adj",type:"must"},
+  {en:"available",ru:"доступный",pron:"[əˈveɪləbəl]",ex:"Is it available?",cat:"adj",type:"must"},
+  {en:"successful",ru:"успешный",pron:"[səkˈsɛsfəl]",ex:"Successful project.",cat:"adj",type:"must"},
+  {en:"obvious",ru:"очевидный",pron:"[ˈɒbviəs]",ex:"It is obvious.",cat:"adj",type:"must"},
+  {en:"familiar",ru:"знакомый",pron:"[fəˈmɪliər]",ex:"Looks familiar.",cat:"adj",type:"must"},
+  {en:"similar",ru:"похожий",pron:"[ˈsɪmɪlər]",ex:"Very similar.",cat:"adj",type:"must"},
+  {en:"typical",ru:"типичный",pron:"[ˈtɪpɪkəl]",ex:"Typical Monday.",cat:"adj",type:"must"},
+  {en:"current",ru:"текущий",pron:"[ˈkʌrənt]",ex:"Current situation.",cat:"adj",type:"must"},
+  {en:"main",ru:"главный",pron:"[meɪn]",ex:"Main issue.",cat:"adj",type:"must"},
+  {en:"major",ru:"крупный",pron:"[ˈmeɪdʒər]",ex:"Major problem.",cat:"adj",type:"must"},
+  {en:"worth",ru:"стоящий",pron:"[wɜːrθ]",ex:"Worth it.",cat:"adj",type:"must"},
+  {en:"likely",ru:"вероятный",pron:"[ˈlaɪkli]",ex:"Most likely.",cat:"adj",type:"must"},
+  {en:"clear",ru:"ясный",pron:"[klɪər]",ex:"Is that clear?",cat:"adj",type:"must"},
+  {en:"fair",ru:"справедливый",pron:"[fɛər]",ex:"That is fair.",cat:"adj",type:"must"},
+  {en:"tough",ru:"тяжёлый",pron:"[tʌf]",ex:"Tough situation.",cat:"adj",type:"must"},
+  {en:"smooth",ru:"плавный",pron:"[smuːð]",ex:"Smooth process.",cat:"adj",type:"must"},
+  {en:"tight",ru:"плотный",pron:"[taɪt]",ex:"Tight schedule.",cat:"adj",type:"must"},
+  {en:"strong",ru:"сильный",pron:"[strɒŋ]",ex:"Strong coffee.",cat:"adj",type:"must"},
+  {en:"weak",ru:"слабый",pron:"[wiːk]",ex:"Weak signal.",cat:"adj",type:"must"},
+  {en:"rich",ru:"богатый",pron:"[rɪtʃ]",ex:"Rich flavor.",cat:"adj",type:"must"},
+  {en:"poor",ru:"бедный",pron:"[pʊər]",ex:"Poor quality.",cat:"adj",type:"must"},
+  {en:"public",ru:"публичный",pron:"[ˈpʌblɪk]",ex:"Public transport.",cat:"adj",type:"must"},
+  {en:"private",ru:"личный",pron:"[ˈpraɪvɪt]",ex:"Private message.",cat:"adj",type:"must"},
+  {en:"local",ru:"местный",pron:"[ˈloʊkəl]",ex:"Local restaurant.",cat:"adj",type:"must"},
+  {en:"global",ru:"глобальный",pron:"[ˈɡloʊbəl]",ex:"Global issue.",cat:"adj",type:"must"},
+  {en:"official",ru:"официальный",pron:"[əˈfɪʃəl]",ex:"Official document.",cat:"adj",type:"must"},
+  {en:"entire",ru:"весь",pron:"[ɪnˈtaɪər]",ex:"Entire day.",cat:"adj",type:"must"},
+  {en:"certain",ru:"уверенный",pron:"[ˈsɜːrtən]",ex:"I am certain.",cat:"adj",type:"must"},
+  {en:"deep",ru:"глубокий",pron:"[diːp]",ex:"Deep thought.",cat:"adj",type:"must"},
+  {en:"heavy",ru:"тяжёлый",pron:"[ˈhɛvi]",ex:"Heavy bag.",cat:"adj",type:"must"},
+  {en:"light",ru:"лёгкий",pron:"[laɪt]",ex:"Light meal.",cat:"adj",type:"must"},
+];
+
+const irregVerbs=[
+  {v1:"be",v2:"was/were",v3:"been",ru:"быть"},{v1:"become",v2:"became",v3:"become",ru:"становиться"},
+  {v1:"begin",v2:"began",v3:"begun",ru:"начинать"},{v1:"break",v2:"broke",v3:"broken",ru:"ломать"},
+  {v1:"bring",v2:"brought",v3:"brought",ru:"приносить"},{v1:"build",v2:"built",v3:"built",ru:"строить"},
+  {v1:"buy",v2:"bought",v3:"bought",ru:"покупать"},{v1:"catch",v2:"caught",v3:"caught",ru:"ловить"},
+  {v1:"choose",v2:"chose",v3:"chosen",ru:"выбирать"},{v1:"come",v2:"came",v3:"come",ru:"приходить"},
+  {v1:"cost",v2:"cost",v3:"cost",ru:"стоить"},{v1:"cut",v2:"cut",v3:"cut",ru:"резать"},
+  {v1:"do",v2:"did",v3:"done",ru:"делать"},{v1:"drink",v2:"drank",v3:"drunk",ru:"пить"},
+  {v1:"drive",v2:"drove",v3:"driven",ru:"вести машину"},{v1:"eat",v2:"ate",v3:"eaten",ru:"есть"},
+  {v1:"fall",v2:"fell",v3:"fallen",ru:"падать"},{v1:"feel",v2:"felt",v3:"felt",ru:"чувствовать"},
+  {v1:"fight",v2:"fought",v3:"fought",ru:"бороться"},{v1:"find",v2:"found",v3:"found",ru:"находить"},
+  {v1:"fly",v2:"flew",v3:"flown",ru:"летать"},{v1:"forget",v2:"forgot",v3:"forgotten",ru:"забывать"},
+  {v1:"get",v2:"got",v3:"got/gotten",ru:"получать"},{v1:"give",v2:"gave",v3:"given",ru:"давать"},
+  {v1:"go",v2:"went",v3:"gone",ru:"идти"},{v1:"grow",v2:"grew",v3:"grown",ru:"расти"},
+  {v1:"have",v2:"had",v3:"had",ru:"иметь"},{v1:"hear",v2:"heard",v3:"heard",ru:"слышать"},
+  {v1:"hide",v2:"hid",v3:"hidden",ru:"прятать"},{v1:"hit",v2:"hit",v3:"hit",ru:"ударять"},
+  {v1:"hold",v2:"held",v3:"held",ru:"держать"},{v1:"hurt",v2:"hurt",v3:"hurt",ru:"болеть"},
+  {v1:"keep",v2:"kept",v3:"kept",ru:"держать"},{v1:"know",v2:"knew",v3:"known",ru:"знать"},
+  {v1:"lead",v2:"led",v3:"led",ru:"вести"},{v1:"leave",v2:"left",v3:"left",ru:"уходить"},
+  {v1:"let",v2:"let",v3:"let",ru:"позволять"},{v1:"lose",v2:"lost",v3:"lost",ru:"терять"},
+  {v1:"make",v2:"made",v3:"made",ru:"делать"},{v1:"mean",v2:"meant",v3:"meant",ru:"значить"},
+  {v1:"meet",v2:"met",v3:"met",ru:"встречать"},{v1:"pay",v2:"paid",v3:"paid",ru:"платить"},
+  {v1:"put",v2:"put",v3:"put",ru:"класть"},{v1:"read",v2:"read",v3:"read",ru:"читать"},
+  {v1:"ride",v2:"rode",v3:"ridden",ru:"кататься"},{v1:"ring",v2:"rang",v3:"rung",ru:"звонить"},
+  {v1:"run",v2:"ran",v3:"run",ru:"бегать"},{v1:"say",v2:"said",v3:"said",ru:"говорить"},
+  {v1:"see",v2:"saw",v3:"seen",ru:"видеть"},{v1:"sell",v2:"sold",v3:"sold",ru:"продавать"},
+  {v1:"send",v2:"sent",v3:"sent",ru:"отправлять"},{v1:"set",v2:"set",v3:"set",ru:"устанавливать"},
+  {v1:"shake",v2:"shook",v3:"shaken",ru:"трясти"},{v1:"show",v2:"showed",v3:"shown",ru:"показывать"},
+  {v1:"shut",v2:"shut",v3:"shut",ru:"закрывать"},{v1:"sing",v2:"sang",v3:"sung",ru:"петь"},
+  {v1:"sit",v2:"sat",v3:"sat",ru:"сидеть"},{v1:"sleep",v2:"slept",v3:"slept",ru:"спать"},
+  {v1:"speak",v2:"spoke",v3:"spoken",ru:"говорить"},{v1:"spend",v2:"spent",v3:"spent",ru:"тратить"},
+  {v1:"stand",v2:"stood",v3:"stood",ru:"стоять"},{v1:"steal",v2:"stole",v3:"stolen",ru:"красть"},
+  {v1:"stick",v2:"stuck",v3:"stuck",ru:"приклеивать"},{v1:"swim",v2:"swam",v3:"swum",ru:"плавать"},
+  {v1:"swing",v2:"swung",v3:"swung",ru:"качаться"},{v1:"take",v2:"took",v3:"taken",ru:"брать"},
+  {v1:"teach",v2:"taught",v3:"taught",ru:"учить"},{v1:"tell",v2:"told",v3:"told",ru:"рассказывать"},
+  {v1:"think",v2:"thought",v3:"thought",ru:"думать"},{v1:"throw",v2:"threw",v3:"thrown",ru:"бросать"},
+  {v1:"understand",v2:"understood",v3:"understood",ru:"понимать"},{v1:"wake",v2:"woke",v3:"woken",ru:"просыпаться"},
+  {v1:"wear",v2:"wore",v3:"worn",ru:"носить"},{v1:"win",v2:"won",v3:"won",ru:"побеждать"},
+  {v1:"write",v2:"wrote",v3:"written",ru:"писать"},{v1:"rise",v2:"rose",v3:"risen",ru:"подниматься"},
+];
+
+const seen=new Set();
+const uniq=vocab.filter(w=>{if(seen.has(w.en))return false;seen.add(w.en);return true;});
+const cats=["all","daily","tech","work","-tion","food","health","travel","emotions","relations","money","life","verbs","adj","phrases","slang"];
+let aTab="all",sQ="";
+let known=new Set();
+try{known=new Set(JSON.parse(localStorage.getItem("ehv2")||"[]"));}catch(e){}
+function sk(){try{localStorage.setItem("ehv2",JSON.stringify([...known]));}catch(e){}}
+
+function renderV(){
+  const f=uniq.filter(w=>{
+    const mc=aTab==="all"||w.cat===aTab;
+    const q=sQ.toLowerCase();
+    return mc&&(!q||w.en.toLowerCase().includes(q)||w.ru.toLowerCase().includes(q));
+  });
+  document.getElementById("vstats").innerHTML=`showing <b>${f.length}</b> / ${uniq.length} · <b style="color:var(--accent)">${known.size}</b> known`;
+  document.getElementById("vgrid").innerHTML=f.length?f.map(w=>`
+    <div class="card t${w.type[0]} ${known.has(w.en)?'known':''}" onclick="this.classList.toggle('flipped')">
+      <span class="badge b${w.type[0]}">${w.type==="cognate"?"≈похожее":w.type==="must"?"must":"slang"}</span>
+      <div class="front"><div class="en">${w.en}</div><div class="ru">${w.ru}</div><div class="tap">tap→</div></div>
+      <div class="back"><div class="en">${w.en}</div><div class="pron">${w.pron}</div><div class="ex">"${w.ex}"</div>
+      <button class="kb" onclick="event.stopPropagation();tk(this,'${w.en.replace(/'/g,"\\'")}');return false">${known.has(w.en)?"✓ known":"mark known"}</button></div>
+    </div>`).join(""):`<div class="empty">not found</div>`;
+}
+function tk(btn,en){if(known.has(en)){known.delete(en);btn.textContent="mark known";btn.closest(".card").classList.remove("known");}else{known.add(en);btn.textContent="✓ known";btn.closest(".card").classList.add("known");}sk();}
+function renderTabs(){document.getElementById("vtabs").innerHTML=cats.map(c=>`<button class="tab ${c===aTab?'active':''}" onclick="setTab('${c}')">${c}</button>`).join("");}
+function setTab(c){aTab=c;renderTabs();renderV();}
+document.getElementById("vsearch").addEventListener("input",e=>{sQ=e.target.value;renderV();});
+
+function renderI(q=""){
+  const f=irregVerbs.filter(v=>!q||v.v1.includes(q)||v.ru.includes(q));
+  document.getElementById("istats").innerHTML=`<b>${f.length}</b> verbs`;
+  document.getElementById("itbody").innerHTML=f.map(v=>`<tr><td class="v1c">${v.v1}</td><td class="v2c">${v.v2}</td><td class="v3c">${v.v3}</td><td class="ruc">${v.ru}</td></tr>`).join("");
+}
+document.getElementById("isearch").addEventListener("input",e=>renderI(e.target.value.toLowerCase()));
+
+let qp=[],qi=0,qs=0;
+function initQ(){qp=[...uniq].sort(()=>Math.random()-.5);qi=0;qs=0;loadQ();}
+function loadQ(){
+  if(qi>=qp.length){
+    document.getElementById("qword").textContent="Done! 🎉";
+    document.getElementById("qhint").textContent=`Score: ${qs}/${qp.length}`;
+    ["qans","qpron2","qex2"].forEach(id=>document.getElementById(id).style.display="none");
+    document.getElementById("qshowbtn").textContent="Restart";
+    document.getElementById("qshowbtn").onclick=initQ;
+    document.getElementById("qratebtns").style.display="none";
+    return;
+  }
+  const w=qp[qi];
+  document.getElementById("qword").textContent=w.en;
+  document.getElementById("qhint").textContent="what does this mean?";
+  document.getElementById("qans").textContent=w.ru;
+  document.getElementById("qpron2").textContent=w.pron;
+  document.getElementById("qex2").textContent='"'+w.ex+'"';
+  ["qans","qpron2","qex2"].forEach(id=>document.getElementById(id).style.display="none");
+  document.getElementById("qshowbtn").style.display="block";
+  document.getElementById("qshowbtn").textContent="Show answer";
+  document.getElementById("qshowbtn").onclick=showAns;
+  document.getElementById("qratebtns").style.display="none";
+  document.getElementById("qprog").textContent=(qi+1)+" / "+qp.length;
+  document.getElementById("qscore").textContent="known: "+qs;
+  document.getElementById("qcard").style.borderColor="var(--border)";
+}
+function showAns(){["qans","qpron2","qex2"].forEach(id=>document.getElementById(id).style.display="block");document.getElementById("qshowbtn").style.display="none";document.getElementById("qratebtns").style.display="flex";}
+function nextQ(ok){if(ok){qs++;known.add(qp[qi].en);sk();document.getElementById("qcard").style.borderColor="var(--accent)";}else{document.getElementById("qcard").style.borderColor="var(--orange)";}qi++;setTimeout(loadQ,300);}
+
+function showSec(id,btn){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll(".nb").forEach(b=>b.classList.remove("active"));
+  document.getElementById("sec-"+id).classList.add("active");
+  btn.classList.add("active");
+  if(id==="quiz")initQ();
+  if(id==="irreg")renderI();
+}
+renderTabs();renderV();
+</script>
+</body>
+</html>
