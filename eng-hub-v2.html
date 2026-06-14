@@ -40,6 +40,11 @@ h1{font-family:"Syne",sans-serif;font-weight:800;font-size:clamp(24px,7vw,48px);
 .tab{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:9px;padding:4px 9px;border-radius:20px;cursor:pointer;transition:all .2s;text-transform:uppercase;}
 .tab.active{background:var(--accent);color:#000;font-weight:700;}
 .vstats{font-size:10px;color:var(--muted);margin-bottom:8px;}.vstats b{color:var(--accent);}
+.vfilters{display:flex;flex-direction:column;gap:7px;margin-bottom:9px;}
+.vselects{display:flex;gap:7px;}
+.vselects select{flex:1;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:12px;padding:9px 12px;border-radius:8px;outline:none;appearance:none;-webkit-appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23555' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;}
+.vselects select:focus{border-color:var(--accent);}
+.vselects select option{background:#111;color:var(--text);}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:7px;}
 .vcard{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;cursor:pointer;transition:all .2s;position:relative;min-height:72px;}
 .vcard:hover{border-color:var(--accent);transform:translateY(-1px);}
@@ -208,8 +213,41 @@ h1{font-family:"Syne",sans-serif;font-weight:800;font-size:clamp(24px,7vw,48px);
 </div>
 
 <div class="section active" id="sec-vocab">
-  <div class="sw"><input type="text" id="vsearch" placeholder="search English or Russian..."></div>
-  <div class="tabs" id="vtabs"></div>
+  <div class="vfilters">
+    <div class="sw"><input type="text" id="vsearch" placeholder="search English or Russian..."></div>
+    <div class="vselects">
+      <select id="vcat" onchange="renderV()">
+        <option value="all">Все темы</option>
+        <option value="daily">🏠 Daily Life</option>
+        <option value="food">🍕 Food</option>
+        <option value="time">⏰ Time</option>
+        <option value="relations">❤️ Relations</option>
+        <option value="tech">💻 Tech</option>
+        <option value="health">💊 Health</option>
+        <option value="travel">✈️ Travel</option>
+        <option value="emotions">😊 Emotions</option>
+        <option value="life">🎵 Lifestyle</option>
+        <option value="world">🌍 World</option>
+        <option value="adj">🎨 Adjectives</option>
+        <option value="-tion">📝 -tion</option>
+        <option value="work">💼 Work</option>
+        <option value="money">💰 Money</option>
+        <option value="comm">💬 Communication</option>
+        <option value="mind">🧠 Mind</option>
+        <option value="society">🏛️ Society</option>
+        <option value="verbs">⚡ Verbs</option>
+        <option value="phrases">🗣️ Phrases</option>
+        <option value="slang">😎 Slang</option>
+      </select>
+      <select id="vlevel" onchange="renderV()">
+        <option value="all">Все уровни</option>
+        <option value="a1">A1</option>
+        <option value="a2">A2</option>
+        <option value="b1">B1</option>
+        <option value="b2">B2</option>
+      </select>
+    </div>
+  </div>
   <div class="vstats" id="vstats"></div>
   <div class="grid" id="vgrid"></div>
 </div>
@@ -1244,6 +1282,509 @@ const irregVerbs=[
   {v1:"write",v2:"wrote",v3:"written",ru:"писать",e1:"Write it down.",e2:"She wrote a report.",e3:"It was written clearly."},
 ];
 
+// ═══ EXTRA VOCAB WORDS ═══
+var extraVocab=[
+// DAILY LIFE
+{en:"mailbox",ru:"почтовый ящик",pron:"[ˈmeɪlbɒks]",ex:"Check the mailbox.",cat:"daily",type:"must"},
+{en:"doorbell",ru:"звонок у двери",pron:"[ˈdɔːrbɛl]",ex:"Ring the doorbell.",cat:"daily",type:"must"},
+{en:"hallway",ru:"коридор",pron:"[ˈhɔːlweɪ]",ex:"Shoes in the hallway.",cat:"daily",type:"must"},
+{en:"balcony",ru:"балкон",pron:"[ˈbælkəni]",ex:"Sit on the balcony.",cat:"daily",type:"must"},
+{en:"ceiling",ru:"потолок",pron:"[ˈsiːlɪŋ]",ex:"High ceiling.",cat:"daily",type:"must"},
+{en:"carpet",ru:"ковёр",pron:"[ˈkɑːrpɪt]",ex:"Clean the carpet.",cat:"daily",type:"must"},
+{en:"curtain",ru:"штора",pron:"[ˈkɜːrtən]",ex:"Open the curtains.",cat:"daily",type:"must"},
+{en:"shelf",ru:"полка",pron:"[ʃɛlf]",ex:"Put it on the shelf.",cat:"daily",type:"must"},
+{en:"drawer",ru:"ящик стола",pron:"[drɔːr]",ex:"In the top drawer.",cat:"daily",type:"must"},
+{en:"fridge",ru:"холодильник",pron:"[frɪdʒ]",ex:"Check the fridge.",cat:"daily",type:"must"},
+{en:"microwave",ru:"микроволновка",pron:"[ˈmaɪkrəweɪv]",ex:"Heat in microwave.",cat:"daily",type:"must"},
+{en:"washing machine",ru:"стиральная машина",pron:"[ˈwɒʃɪŋ məˈʃiːn]",ex:"Run the washing machine.",cat:"daily",type:"must"},
+{en:"trash",ru:"мусор",pron:"[træʃ]",ex:"Take out the trash.",cat:"daily",type:"must"},
+{en:"sink",ru:"раковина",pron:"[sɪŋk]",ex:"Wash dishes in the sink.",cat:"daily",type:"must"},
+{en:"tap",ru:"кран",pron:"[tæp]",ex:"Turn off the tap.",cat:"daily",type:"must"},
+{en:"shower",ru:"душ",pron:"[ˈʃaʊər]",ex:"Take a shower.",cat:"daily",type:"must"},
+{en:"towel",ru:"полотенце",pron:"[ˈtaʊəl]",ex:"Grab a towel.",cat:"daily",type:"must"},
+{en:"soap",ru:"мыло",pron:"[soʊp]",ex:"Use soap.",cat:"daily",type:"must"},
+{en:"toothbrush",ru:"зубная щётка",pron:"[ˈtuːθbrʌʃ]",ex:"Buy a toothbrush.",cat:"daily",type:"must"},
+{en:"toothpaste",ru:"зубная паста",pron:"[ˈtuːθpeɪst]",ex:"Run out of toothpaste.",cat:"daily",type:"must"},
+{en:"mirror",ru:"зеркало",pron:"[ˈmɪrər]",ex:"Look in the mirror.",cat:"daily",type:"must"},
+{en:"blanket",ru:"одеяло",pron:"[ˈblæŋkɪt]",ex:"Warm blanket.",cat:"daily",type:"must"},
+{en:"pillow",ru:"подушка",pron:"[ˈpɪloʊ]",ex:"Soft pillow.",cat:"daily",type:"must"},
+{en:"alarm",ru:"будильник",pron:"[əˈlɑːrm]",ex:"Set an alarm.",cat:"daily",type:"must"},
+{en:"laundry",ru:"стирка",pron:"[ˈlɔːndri]",ex:"Do the laundry.",cat:"daily",type:"must"},
+{en:"detergent",ru:"стиральный порошок",pron:"[dɪˈtɜːrdʒənt]",ex:"Buy detergent.",cat:"daily",type:"must"},
+{en:"tissue",ru:"бумажный платок",pron:"[ˈtɪʃuː]",ex:"Pass me a tissue.",cat:"daily",type:"must"},
+{en:"parking",ru:"парковка",pron:"[ˈpɑːrkɪŋ]",ex:"Find parking.",cat:"daily",type:"must"},
+{en:"traffic",ru:"пробки",pron:"[ˈtræfɪk]",ex:"Bad traffic today.",cat:"daily",type:"must"},
+{en:"crosswalk",ru:"пешеходный переход",pron:"[ˈkrɒswɔːk]",ex:"Use the crosswalk.",cat:"daily",type:"must"},
+{en:"sidewalk",ru:"тротуар",pron:"[ˈsaɪdwɔːk]",ex:"Walk on the sidewalk.",cat:"daily",type:"must"},
+{en:"highway",ru:"шоссе",pron:"[ˈhaɪweɪ]",ex:"Take the highway.",cat:"daily",type:"must"},
+{en:"bridge",ru:"мост",pron:"[brɪdʒ]",ex:"Cross the bridge.",cat:"daily",type:"must"},
+{en:"bicycle",ru:"велосипед",pron:"[ˈbaɪsɪkəl]",ex:"Ride a bicycle.",cat:"daily",type:"must"},
+{en:"scooter",ru:"скутер",pron:"[ˈskuːtər]",ex:"Rent a scooter.",cat:"daily",type:"must"},
+{en:"gas station",ru:"заправка",pron:"[ɡæs ˈsteɪʃən]",ex:"Stop at a gas station.",cat:"daily",type:"must"},
+{en:"package",ru:"посылка",pron:"[ˈpækɪdʒ]",ex:"Track my package.",cat:"daily",type:"must"},
+{en:"post office",ru:"почта",pron:"[poʊst ˈɒfɪs]",ex:"Go to the post office.",cat:"daily",type:"must"},
+{en:"deposit",ru:"залог",pron:"[dɪˈpɒzɪt]",ex:"Pay a deposit.",cat:"daily",type:"must"},
+{en:"utilities",ru:"коммунальные услуги",pron:"[juːˈtɪlɪtɪz]",ex:"Utilities included.",cat:"daily",type:"must"},
+{en:"lease",ru:"договор аренды",pron:"[liːs]",ex:"Sign the lease.",cat:"daily",type:"must"},
+{en:"tenant",ru:"арендатор",pron:"[ˈtɛnənt]",ex:"Good tenant.",cat:"daily",type:"must"},
+{en:"tram",ru:"трамвай",pron:"[træm]",ex:"Catch the tram.",cat:"daily",type:"must"},
+{en:"plumber",ru:"сантехник",pron:"[ˈplʌmər]",ex:"Call the plumber.",cat:"daily",type:"must"},
+{en:"candle",ru:"свеча",pron:"[ˈkændəl]",ex:"Light a candle.",cat:"daily",type:"must"},
+{en:"sign",ru:"знак / вывеска",pron:"[saɪn]",ex:"Follow the sign.",cat:"daily",type:"must"},
+{en:"notice",ru:"объявление",pron:"[ˈnoʊtɪs]",ex:"Read the notice.",cat:"daily",type:"must"},
+{en:"envelope",ru:"конверт",pron:"[ˈɛnvələʊp]",ex:"Seal the envelope.",cat:"daily",type:"must"},
+// TECH
+{en:"database",ru:"база данных",pron:"[ˈdeɪtəbeɪs]",ex:"Query the database.",cat:"tech",type:"must"},
+{en:"backup",ru:"бэкап",pron:"[ˈbækʌp]",ex:"Make a backup.",cat:"tech",type:"must"},
+{en:"dashboard",ru:"дашборд",pron:"[ˈdæʃbɔːrd]",ex:"Check the dashboard.",cat:"tech",type:"must"},
+{en:"crash",ru:"зависание",pron:"[kræʃ]",ex:"App crashed.",cat:"tech",type:"must"},
+{en:"reboot",ru:"перезагрузка",pron:"[ˌriːˈbuːt]",ex:"Reboot the system.",cat:"tech",type:"must"},
+{en:"install",ru:"установить",pron:"[ɪnˈstɔːl]",ex:"Install the app.",cat:"tech",type:"must"},
+{en:"download",ru:"скачать",pron:"[ˈdaʊnloʊd]",ex:"Download the file.",cat:"tech",type:"must"},
+{en:"upload",ru:"загрузить",pron:"[ˈʌploʊd]",ex:"Upload the photo.",cat:"tech",type:"must"},
+{en:"sync",ru:"синхронизация",pron:"[sɪŋk]",ex:"Sync your contacts.",cat:"tech",type:"must"},
+{en:"cache",ru:"кэш",pron:"[kæʃ]",ex:"Clear the cache.",cat:"tech",type:"must"},
+{en:"screenshot",ru:"скриншот",pron:"[ˈskriːnʃɒt]",ex:"Take a screenshot.",cat:"tech",type:"must"},
+{en:"folder",ru:"папка",pron:"[ˈfoʊldər]",ex:"Create a folder.",cat:"tech",type:"must"},
+{en:"scroll",ru:"прокрутка",pron:"[skroʊl]",ex:"Scroll down.",cat:"tech",type:"must"},
+{en:"spam",ru:"спам",pron:"[spæm]",ex:"Mark as spam.",cat:"tech",type:"must"},
+{en:"subscription",ru:"подписка",pron:"[səbˈskrɪpʃən]",ex:"Cancel subscription.",cat:"tech",type:"must"},
+{en:"version",ru:"версия",pron:"[ˈvɜːrʒən]",ex:"Latest version.",cat:"tech",type:"must"},
+{en:"release",ru:"релиз",pron:"[rɪˈliːs]",ex:"New release.",cat:"tech",type:"must"},
+{en:"code",ru:"код",pron:"[koʊd]",ex:"Write clean code.",cat:"tech",type:"must"},
+{en:"debug",ru:"дебажить",pron:"[ˌdiːˈbʌɡ]",ex:"Debug the issue.",cat:"tech",type:"must"},
+{en:"log",ru:"лог",pron:"[lɒɡ]",ex:"Check the logs.",cat:"tech",type:"must"},
+{en:"bot",ru:"бот",pron:"[bɒt]",ex:"Telegram bot.",cat:"tech",type:"must"},
+{en:"pixel",ru:"пиксель",pron:"[ˈpɪksəl]",ex:"High pixel count.",cat:"tech",type:"cognate"},
+{en:"algorithm",ru:"алгоритм",pron:"[ˈælɡərɪðəm]",ex:"Smart algorithm.",cat:"tech",type:"cognate"},
+{en:"interface",ru:"интерфейс",pron:"[ˈɪntərfeɪs]",ex:"User interface.",cat:"tech",type:"cognate"},
+{en:"integration",ru:"интеграция",pron:"[ˌɪntɪˈɡreɪʃən]",ex:"Third-party integration.",cat:"tech",type:"cognate"},
+{en:"automation",ru:"автоматизация",pron:"[ˌɔːtəˈmeɪʃən]",ex:"Process automation.",cat:"tech",type:"cognate"},
+{en:"encryption",ru:"шифрование",pron:"[ɪnˈkrɪpʃən]",ex:"End-to-end encryption.",cat:"tech",type:"must"},
+{en:"bandwidth",ru:"пропускная способность",pron:"[ˈbændwɪdθ]",ex:"Low bandwidth.",cat:"tech",type:"must"},
+{en:"shortcut",ru:"шорткат",pron:"[ˈʃɔːrtkʌt]",ex:"Use a shortcut.",cat:"tech",type:"must"},
+{en:"toggle",ru:"переключатель",pron:"[ˈtɒɡəl]",ex:"Toggle dark mode.",cat:"tech",type:"must"},
+// WORK
+{en:"agenda",ru:"повестка дня",pron:"[əˈdʒɛndə]",ex:"Meeting agenda.",cat:"work",type:"cognate"},
+{en:"onboarding",ru:"онбординг",pron:"[ˈɒnbɔːrdɪŋ]",ex:"Onboarding process.",cat:"work",type:"must"},
+{en:"probation",ru:"испытательный срок",pron:"[prəˈbeɪʃən]",ex:"On probation.",cat:"work",type:"must"},
+{en:"overtime",ru:"сверхурочные",pron:"[ˈoʊvərtaɪm]",ex:"Work overtime.",cat:"work",type:"must"},
+{en:"payroll",ru:"зарплатная ведомость",pron:"[ˈpeɪroʊl]",ex:"Check payroll.",cat:"work",type:"must"},
+{en:"pitch",ru:"питч",pron:"[pɪtʃ]",ex:"Sales pitch.",cat:"work",type:"must"},
+{en:"brainstorm",ru:"мозговой штурм",pron:"[ˈbreɪnstɔːrm]",ex:"Let's brainstorm.",cat:"work",type:"must"},
+{en:"stakeholder",ru:"стейкхолдер",pron:"[ˈsteɪkhoʊldər]",ex:"Key stakeholder.",cat:"work",type:"must"},
+{en:"bottleneck",ru:"узкое место",pron:"[ˈbɒtlnɛk]",ex:"Find the bottleneck.",cat:"work",type:"must"},
+{en:"KPI",ru:"ключевые показатели",pron:"[keɪ piː aɪ]",ex:"Meet the KPIs.",cat:"work",type:"must"},
+{en:"quarterly",ru:"ежеквартальный",pron:"[ˈkwɔːrtərli]",ex:"Quarterly review.",cat:"work",type:"must"},
+{en:"revenue",ru:"выручка",pron:"[ˈrɛvɪnjuː]",ex:"Grow revenue.",cat:"work",type:"must"},
+{en:"turnover",ru:"оборот / текучка",pron:"[ˈtɜːrnoʊvər]",ex:"High turnover rate.",cat:"work",type:"must"},
+{en:"churn",ru:"отток",pron:"[tʃɜːrn]",ex:"Reduce churn.",cat:"work",type:"must"},
+{en:"retention",ru:"удержание",pron:"[rɪˈtɛnʃən]",ex:"User retention.",cat:"work",type:"must"},
+{en:"funnel",ru:"воронка",pron:"[ˈfʌnəl]",ex:"Sales funnel.",cat:"work",type:"must"},
+{en:"outsource",ru:"аутсорс",pron:"[ˌaʊtˈsɔːrs]",ex:"Outsource the work.",cat:"work",type:"must"},
+{en:"freelance",ru:"фриланс",pron:"[ˈfriːlæns]",ex:"Go freelance.",cat:"work",type:"must"},
+{en:"HR",ru:"кадровый отдел",pron:"[eɪtʃ ɑːr]",ex:"Talk to HR.",cat:"work",type:"must"},
+{en:"layoff",ru:"сокращение",pron:"[ˈleɪɒf]",ex:"Mass layoffs.",cat:"work",type:"must"},
+{en:"resignation",ru:"увольнение по своей воле",pron:"[ˌrɛzɪɡˈneɪʃən]",ex:"Submit resignation.",cat:"work",type:"must"},
+{en:"cover letter",ru:"сопроводительное письмо",pron:"[ˈkʌvər ˈlɛtər]",ex:"Write a cover letter.",cat:"work",type:"must"},
+{en:"recruiter",ru:"рекрутер",pron:"[rɪˈkruːtər]",ex:"Talk to recruiter.",cat:"work",type:"must"},
+{en:"reference",ru:"рекомендация",pron:"[ˈrɛfrəns]",ex:"Need a reference.",cat:"work",type:"must"},
+{en:"maternity leave",ru:"декрет",pron:"[məˈtɜːrnɪti liːv]",ex:"On maternity leave.",cat:"work",type:"must"},
+{en:"corporate",ru:"корпоративный",pron:"[ˈkɔːrpərɪt]",ex:"Corporate culture.",cat:"work",type:"cognate"},
+{en:"hierarchy",ru:"иерархия",pron:"[ˈhaɪərɑːrki]",ex:"Corporate hierarchy.",cat:"work",type:"cognate"},
+{en:"capacity",ru:"мощность",pron:"[kəˈpæsɪti]",ex:"At full capacity.",cat:"work",type:"must"},
+{en:"annual",ru:"ежегодный",pron:"[ˈænjuəl]",ex:"Annual report.",cat:"work",type:"must"},
+{en:"conversion",ru:"конверсия",pron:"[kənˈvɜːrʒən]",ex:"Improve conversion.",cat:"work",type:"cognate"},
+// FOOD
+{en:"appetizer",ru:"закуска",pron:"[ˈæpɪtaɪzər]",ex:"Start with appetizer.",cat:"food",type:"must"},
+{en:"main course",ru:"главное блюдо",pron:"[meɪn kɔːrs]",ex:"What is the main course?",cat:"food",type:"must"},
+{en:"dessert",ru:"десерт",pron:"[dɪˈzɜːrt]",ex:"Skip dessert.",cat:"food",type:"must"},
+{en:"sauce",ru:"соус",pron:"[sɔːs]",ex:"Extra sauce please.",cat:"food",type:"must"},
+{en:"vegan",ru:"веган",pron:"[ˈviːɡən]",ex:"Vegan option.",cat:"food",type:"must"},
+{en:"vegetarian",ru:"вегетарианец",pron:"[ˌvɛdʒɪˈtɛəriən]",ex:"I'm vegetarian.",cat:"food",type:"must"},
+{en:"gluten-free",ru:"без глютена",pron:"[ˈɡluːtən friː]",ex:"Gluten-free menu.",cat:"food",type:"must"},
+{en:"organic",ru:"органический",pron:"[ɔːrˈɡænɪk]",ex:"Organic produce.",cat:"food",type:"cognate"},
+{en:"dairy",ru:"молочные продукты",pron:"[ˈdɛəri]",ex:"No dairy.",cat:"food",type:"must"},
+{en:"seafood",ru:"морепродукты",pron:"[ˈsiːfuːd]",ex:"Fresh seafood.",cat:"food",type:"must"},
+{en:"steak",ru:"стейк",pron:"[steɪk]",ex:"Medium steak.",cat:"food",type:"must"},
+{en:"soup",ru:"суп",pron:"[suːp]",ex:"Hot soup.",cat:"food",type:"must"},
+{en:"salad",ru:"салат",pron:"[ˈsæləd]",ex:"Fresh salad.",cat:"food",type:"must"},
+{en:"pasta",ru:"паста",pron:"[ˈpæstə]",ex:"Pasta carbonara.",cat:"food",type:"cognate"},
+{en:"burger",ru:"бургер",pron:"[ˈbɜːrɡər]",ex:"Cheeseburger please.",cat:"food",type:"cognate"},
+{en:"sandwich",ru:"сэндвич",pron:"[ˈsænwɪdʒ]",ex:"Tuna sandwich.",cat:"food",type:"cognate"},
+{en:"wrap",ru:"ролл",pron:"[ræp]",ex:"Chicken wrap.",cat:"food",type:"must"},
+{en:"smoothie",ru:"смузи",pron:"[ˈsmuːði]",ex:"Protein smoothie.",cat:"food",type:"must"},
+{en:"latte",ru:"латте",pron:"[ˈlæteɪ]",ex:"Oat latte.",cat:"food",type:"cognate"},
+{en:"espresso",ru:"эспрессо",pron:"[ɛˈsprɛsoʊ]",ex:"Double espresso.",cat:"food",type:"cognate"},
+{en:"to go",ru:"с собой",pron:"[tə ɡoʊ]",ex:"Can I get this to go?",cat:"food",type:"must"},
+{en:"leftovers",ru:"остатки еды",pron:"[ˈlɛftoʊvərz]",ex:"Heat up leftovers.",cat:"food",type:"must"},
+{en:"calorie",ru:"калория",pron:"[ˈkæləri]",ex:"Count calories.",cat:"food",type:"cognate"},
+{en:"protein",ru:"белок",pron:"[ˈproʊtiːn]",ex:"High protein diet.",cat:"food",type:"cognate"},
+{en:"carbs",ru:"углеводы",pron:"[kɑːrbz]",ex:"Cut the carbs.",cat:"food",type:"must"},
+{en:"macros",ru:"БЖУ",pron:"[ˈmækroʊz]",ex:"Track your macros.",cat:"food",type:"must"},
+{en:"cheat meal",ru:"читмил",pron:"[tʃiːt miːl]",ex:"Sunday cheat meal.",cat:"food",type:"must"},
+{en:"sparkling water",ru:"газированная вода",pron:"[ˈspɑːrklɪŋ ˈwɔːtər]",ex:"Still or sparkling?",cat:"food",type:"must"},
+{en:"dressing",ru:"заправка",pron:"[ˈdrɛsɪŋ]",ex:"Caesar dressing.",cat:"food",type:"must"},
+// HEALTH
+{en:"prescription",ru:"рецепт врача",pron:"[prɪˈskrɪpʃən]",ex:"Get a prescription.",cat:"health",type:"must"},
+{en:"diagnosis",ru:"диагноз",pron:"[ˌdaɪəɡˈnoʊsɪs]",ex:"Awaiting diagnosis.",cat:"health",type:"cognate"},
+{en:"blood test",ru:"анализ крови",pron:"[blʌd tɛst]",ex:"Get a blood test.",cat:"health",type:"must"},
+{en:"vaccination",ru:"вакцинация",pron:"[ˌvæksɪˈneɪʃən]",ex:"Get vaccinated.",cat:"health",type:"cognate"},
+{en:"bandage",ru:"бинт / повязка",pron:"[ˈbændɪdʒ]",ex:"Change the bandage.",cat:"health",type:"must"},
+{en:"sprain",ru:"растяжение",pron:"[spreɪn]",ex:"Ankle sprain.",cat:"health",type:"must"},
+{en:"bruise",ru:"синяк",pron:"[bruːz]",ex:"Bad bruise.",cat:"health",type:"must"},
+{en:"sore throat",ru:"боль в горле",pron:"[sɔːr θroʊt]",ex:"I have a sore throat.",cat:"health",type:"must"},
+{en:"runny nose",ru:"насморк",pron:"[ˈrʌni noʊz]",ex:"Runny nose all day.",cat:"health",type:"must"},
+{en:"nausea",ru:"тошнота",pron:"[ˈnɔːziə]",ex:"Feeling nausea.",cat:"health",type:"must"},
+{en:"dizziness",ru:"головокружение",pron:"[ˈdɪzɪnəs]",ex:"Sudden dizziness.",cat:"health",type:"must"},
+{en:"rash",ru:"сыпь",pron:"[ræʃ]",ex:"Skin rash.",cat:"health",type:"must"},
+{en:"anxiety",ru:"тревога",pron:"[æŋˈzaɪɪti]",ex:"Social anxiety.",cat:"health",type:"must"},
+{en:"burnout",ru:"выгорание",pron:"[ˈbɜːrnaʊt]",ex:"Avoid burnout.",cat:"health",type:"must"},
+{en:"therapy",ru:"терапия",pron:"[ˈθɛrəpi]",ex:"Go to therapy.",cat:"health",type:"cognate"},
+{en:"meditation",ru:"медитация",pron:"[ˌmɛdɪˈteɪʃən]",ex:"Daily meditation.",cat:"health",type:"cognate"},
+{en:"stretching",ru:"растяжка",pron:"[ˈstrɛtʃɪŋ]",ex:"Morning stretching.",cat:"health",type:"must"},
+{en:"cardio",ru:"кардио",pron:"[ˈkɑːrdioʊ]",ex:"30 min cardio.",cat:"health",type:"must"},
+{en:"recovery",ru:"восстановление",pron:"[rɪˈkʌvəri]",ex:"Recovery day.",cat:"health",type:"must"},
+{en:"supplement",ru:"добавка",pron:"[ˈsʌplɪmənt]",ex:"Take supplements.",cat:"health",type:"must"},
+{en:"posture",ru:"осанка",pron:"[ˈpɒstʃər]",ex:"Fix your posture.",cat:"health",type:"must"},
+{en:"rep",ru:"повтор",pron:"[rɛp]",ex:"3 sets of 12 reps.",cat:"health",type:"must"},
+{en:"personal trainer",ru:"персональный тренер",pron:"[ˈpɜːrsənəl ˈtreɪnər]",ex:"Hire a personal trainer.",cat:"health",type:"must"},
+{en:"depression",ru:"депрессия",pron:"[dɪˈprɛʃən]",ex:"Fight depression.",cat:"health",type:"cognate"},
+{en:"hydration",ru:"гидратация",pron:"[haɪˈdreɪʃən]",ex:"Stay hydrated.",cat:"health",type:"must"},
+{en:"collagen",ru:"коллаген",pron:"[ˈkɒlədʒən]",ex:"Collagen peptides.",cat:"health",type:"cognate"},
+{en:"strength training",ru:"силовые тренировки",pron:"[strɛŋθ ˈtreɪnɪŋ]",ex:"Strength training 3x.",cat:"health",type:"must"},
+// EMOTIONS
+{en:"empathy",ru:"эмпатия",pron:"[ˈɛmpəθi]",ex:"Show empathy.",cat:"emotions",type:"must"},
+{en:"compassion",ru:"сострадание",pron:"[kəmˈpæʃən]",ex:"Show compassion.",cat:"emotions",type:"must"},
+{en:"resilience",ru:"стойкость",pron:"[rɪˈzɪliəns]",ex:"Build resilience.",cat:"emotions",type:"must"},
+{en:"optimistic",ru:"оптимистичный",pron:"[ˌɒptɪˈmɪstɪk]",ex:"Stay optimistic.",cat:"emotions",type:"must"},
+{en:"pessimistic",ru:"пессимистичный",pron:"[ˌpɛsɪˈmɪstɪk]",ex:"Don't be pessimistic.",cat:"emotions",type:"must"},
+{en:"impulsive",ru:"импульсивный",pron:"[ɪmˈpʌlsɪv]",ex:"Too impulsive.",cat:"emotions",type:"must"},
+{en:"introverted",ru:"интровертный",pron:"[ˈɪntrəvɜːrtɪd]",ex:"I'm introverted.",cat:"emotions",type:"must"},
+{en:"extroverted",ru:"экстравертный",pron:"[ˈɛkstrəvɜːrtɪd]",ex:"Very extroverted.",cat:"emotions",type:"must"},
+{en:"grounded",ru:"уравновешенный",pron:"[ˈɡraʊndɪd]",ex:"Stay grounded.",cat:"emotions",type:"must"},
+{en:"guilt",ru:"вина",pron:"[ɡɪlt]",ex:"Feeling guilt.",cat:"emotions",type:"must"},
+{en:"shame",ru:"стыд",pron:"[ʃeɪm]",ex:"No shame.",cat:"emotions",type:"must"},
+{en:"envy",ru:"зависть",pron:"[ˈɛnvi]",ex:"Feeling envy.",cat:"emotions",type:"must"},
+{en:"nostalgia",ru:"ностальгия",pron:"[nɒˈstældʒiə]",ex:"Waves of nostalgia.",cat:"emotions",type:"cognate"},
+{en:"contentment",ru:"удовлетворённость",pron:"[kənˈtɛntmənt]",ex:"Inner contentment.",cat:"emotions",type:"must"},
+{en:"craving",ru:"тяга",pron:"[ˈkreɪvɪŋ]",ex:"Craving chocolate.",cat:"emotions",type:"must"},
+{en:"self-conscious",ru:"стеснительный",pron:"[ˌsɛlf ˈkɒnʃəs]",ex:"Feeling self-conscious.",cat:"emotions",type:"must"},
+{en:"self-aware",ru:"осознанный",pron:"[ˌsɛlf əˈwɛər]",ex:"Be self-aware.",cat:"emotions",type:"must"},
+// MONEY
+{en:"mortgage",ru:"ипотека",pron:"[ˈmɔːrɡɪdʒ]",ex:"Pay the mortgage.",cat:"money",type:"must"},
+{en:"interest rate",ru:"процентная ставка",pron:"[ˈɪntrəst reɪt]",ex:"High interest rate.",cat:"money",type:"must"},
+{en:"installment",ru:"рассрочка",pron:"[ɪnˈstɔːlmənt]",ex:"Monthly installments.",cat:"money",type:"must"},
+{en:"cash flow",ru:"денежный поток",pron:"[kæʃ floʊ]",ex:"Positive cash flow.",cat:"money",type:"must"},
+{en:"net worth",ru:"чистый капитал",pron:"[nɛt wɜːrθ]",ex:"Calculate net worth.",cat:"money",type:"must"},
+{en:"portfolio",ru:"портфель",pron:"[pɔːrtˈfoʊlioʊ]",ex:"Investment portfolio.",cat:"money",type:"cognate"},
+{en:"stock",ru:"акция",pron:"[stɒk]",ex:"Buy the stock.",cat:"money",type:"must"},
+{en:"crypto",ru:"крипта",pron:"[ˈkrɪptoʊ]",ex:"Buy crypto.",cat:"money",type:"must"},
+{en:"exchange rate",ru:"курс валют",pron:"[ɪksˈtʃeɪndʒ reɪt]",ex:"Check exchange rate.",cat:"money",type:"must"},
+{en:"overdraft",ru:"овердрафт",pron:"[ˈoʊvərdrɑːft]",ex:"Avoid overdraft.",cat:"money",type:"must"},
+{en:"pension",ru:"пенсия",pron:"[ˈpɛnʃən]",ex:"Pension fund.",cat:"money",type:"must"},
+{en:"down payment",ru:"первоначальный взнос",pron:"[daʊn ˈpeɪmənt]",ex:"20% down payment.",cat:"money",type:"must"},
+{en:"net salary",ru:"зарплата на руки",pron:"[nɛt ˈsæləri]",ex:"Net salary after tax.",cat:"money",type:"must"},
+{en:"gross salary",ru:"зарплата до вычетов",pron:"[ɡroʊs ˈsæləri]",ex:"Gross salary 5000.",cat:"money",type:"must"},
+{en:"commission",ru:"комиссионные",pron:"[kəˈmɪʃən]",ex:"Earn commission.",cat:"money",type:"cognate"},
+{en:"cashback",ru:"кэшбэк",pron:"[ˈkæʃbæk]",ex:"5% cashback.",cat:"money",type:"must"},
+{en:"VAT",ru:"НДС",pron:"[viː eɪ tiː]",ex:"VAT included.",cat:"money",type:"must"},
+{en:"accountant",ru:"бухгалтер",pron:"[əˈkaʊntənt]",ex:"Hire an accountant.",cat:"money",type:"must"},
+{en:"audit",ru:"аудит",pron:"[ˈɔːdɪt]",ex:"Annual audit.",cat:"money",type:"cognate"},
+{en:"dividend",ru:"дивиденды",pron:"[ˈdɪvɪdɛnd]",ex:"Quarterly dividend.",cat:"money",type:"cognate"},
+// TRAVEL
+{en:"itinerary",ru:"план поездки",pron:"[aɪˈtɪnərɛri]",ex:"Share the itinerary.",cat:"travel",type:"must"},
+{en:"hostel",ru:"хостел",pron:"[ˈhɒstəl]",ex:"Stay in a hostel.",cat:"travel",type:"cognate"},
+{en:"carry-on",ru:"ручная кладь",pron:"[ˈkæri ɒn]",ex:"Only carry-on.",cat:"travel",type:"must"},
+{en:"departure",ru:"вылет",pron:"[dɪˈpɑːrtʃər]",ex:"Check departure gate.",cat:"travel",type:"must"},
+{en:"arrival",ru:"прибытие",pron:"[əˈraɪvəl]",ex:"Arrival time.",cat:"travel",type:"must"},
+{en:"terminal",ru:"терминал",pron:"[ˈtɜːrmɪnəl]",ex:"Which terminal?",cat:"travel",type:"must"},
+{en:"gate",ru:"гейт",pron:"[ɡeɪt]",ex:"Gate 14.",cat:"travel",type:"must"},
+{en:"time zone",ru:"часовой пояс",pron:"[taɪm zoʊn]",ex:"Different time zone.",cat:"travel",type:"must"},
+{en:"jet lag",ru:"джетлаг",pron:"[dʒɛt læɡ]",ex:"Suffering from jet lag.",cat:"travel",type:"must"},
+{en:"travel insurance",ru:"страховка для путешествий",pron:"[ˈtrævəl ɪnˈʃʊərəns]",ex:"Buy travel insurance.",cat:"travel",type:"must"},
+{en:"tourist trap",ru:"туристический развод",pron:"[ˈtʊərɪst træp]",ex:"Avoid tourist traps.",cat:"travel",type:"must"},
+{en:"landmark",ru:"достопримечательность",pron:"[ˈlændmɑːrk]",ex:"Famous landmark.",cat:"travel",type:"must"},
+{en:"local cuisine",ru:"местная кухня",pron:"[ˈloʊkəl kwɪˈziːn]",ex:"Try local cuisine.",cat:"travel",type:"must"},
+{en:"viewpoint",ru:"смотровая площадка",pron:"[ˈvjuːpɔɪnt]",ex:"Best viewpoint.",cat:"travel",type:"must"},
+{en:"connecting flight",ru:"стыковочный рейс",pron:"[kəˈnɛktɪŋ flaɪt]",ex:"Missed connecting flight.",cat:"travel",type:"must"},
+{en:"checked baggage",ru:"зарегистрированный багаж",pron:"[tʃɛkt ˈbæɡɪdʒ]",ex:"One checked baggage.",cat:"travel",type:"must"},
+// LIFESTYLE
+{en:"skincare",ru:"уход за кожей",pron:"[ˈskɪnkɛər]",ex:"Skincare routine.",cat:"life",type:"must"},
+{en:"grooming",ru:"уход за собой",pron:"[ˈɡruːmɪŋ]",ex:"Grooming products.",cat:"life",type:"must"},
+{en:"fragrance",ru:"парфюм",pron:"[ˈfreɪɡrəns]",ex:"New fragrance.",cat:"life",type:"must"},
+{en:"aftershave",ru:"лосьон после бритья",pron:"[ˈɑːftərʃeɪv]",ex:"Woody aftershave.",cat:"life",type:"must"},
+{en:"razor",ru:"бритва",pron:"[ˈreɪzər]",ex:"Safety razor.",cat:"life",type:"must"},
+{en:"haircut",ru:"стрижка",pron:"[ˈhɛəkʌt]",ex:"Get a haircut.",cat:"life",type:"must"},
+{en:"gym membership",ru:"абонемент в зал",pron:"[dʒɪm ˈmɛmbərʃɪp]",ex:"Cancel gym membership.",cat:"life",type:"must"},
+{en:"meal prep",ru:"готовка заранее",pron:"[miːl prɛp]",ex:"Sunday meal prep.",cat:"life",type:"must"},
+{en:"morning routine",ru:"утренний ритуал",pron:"[ˈmɔːrnɪŋ ruːˈtiːn]",ex:"Stick to morning routine.",cat:"life",type:"must"},
+{en:"journaling",ru:"ведение дневника",pron:"[ˈdʒɜːrnəlɪŋ]",ex:"Try journaling.",cat:"life",type:"must"},
+{en:"bucket list",ru:"список желаний",pron:"[ˈbʌkɪt lɪst]",ex:"Cross it off bucket list.",cat:"life",type:"must"},
+{en:"side hustle",ru:"подработка",pron:"[saɪd ˈhʌsəl]",ex:"Start a side hustle.",cat:"life",type:"must"},
+{en:"passive income",ru:"пассивный доход",pron:"[ˈpæsɪv ˈɪnkʌm]",ex:"Build passive income.",cat:"life",type:"must"},
+{en:"mindset",ru:"мышление",pron:"[ˈmaɪndˌsɛt]",ex:"Growth mindset.",cat:"life",type:"must"},
+{en:"consistency",ru:"последовательность",pron:"[kənˈsɪstənsi]",ex:"Key is consistency.",cat:"life",type:"must"},
+{en:"self-care",ru:"забота о себе",pron:"[sɛlf kɛər]",ex:"Sunday self-care.",cat:"life",type:"must"},
+{en:"podcast",ru:"подкаст",pron:"[ˈpɒdkɑːst]",ex:"Listen to podcast.",cat:"life",type:"cognate"},
+{en:"streaming",ru:"стриминг",pron:"[ˈstriːmɪŋ]",ex:"Streaming platform.",cat:"life",type:"must"},
+{en:"vision board",ru:"доска визуализации",pron:"[ˈvɪʒən bɔːrd]",ex:"Make a vision board.",cat:"life",type:"must"},
+{en:"networking",ru:"нетворкинг",pron:"[ˈnɛtwɜːrkɪŋ]",ex:"Good at networking.",cat:"life",type:"must"},
+{en:"discipline",ru:"дисциплина",pron:"[ˈdɪsɪplɪn]",ex:"Need more discipline.",cat:"life",type:"cognate"},
+// WORLD / NATURE
+{en:"earthquake",ru:"землетрясение",pron:"[ˈɜːrθkweɪk]",ex:"Strong earthquake.",cat:"world",type:"must"},
+{en:"flood",ru:"наводнение",pron:"[flʌd]",ex:"Flood warning.",cat:"world",type:"must"},
+{en:"drought",ru:"засуха",pron:"[draʊt]",ex:"Severe drought.",cat:"world",type:"must"},
+{en:"lightning",ru:"молния",pron:"[ˈlaɪtnɪŋ]",ex:"Thunder and lightning.",cat:"world",type:"must"},
+{en:"thunder",ru:"гром",pron:"[ˈθʌndər]",ex:"Loud thunder.",cat:"world",type:"must"},
+{en:"heatwave",ru:"волна тепла",pron:"[ˈhiːtweɪv]",ex:"Summer heatwave.",cat:"world",type:"must"},
+{en:"climate change",ru:"изменение климата",pron:"[ˈklaɪmɪt tʃeɪndʒ]",ex:"Fight climate change.",cat:"world",type:"must"},
+{en:"pollution",ru:"загрязнение",pron:"[pəˈluːʃən]",ex:"Air pollution.",cat:"world",type:"cognate"},
+{en:"recycling",ru:"переработка",pron:"[riːˈsaɪklɪŋ]",ex:"Separate recycling.",cat:"world",type:"must"},
+{en:"carbon footprint",ru:"углеродный след",pron:"[ˈkɑːrbən ˈfʊtprɪnt]",ex:"Reduce carbon footprint.",cat:"world",type:"must"},
+{en:"ocean",ru:"океан",pron:"[ˈoʊʃən]",ex:"Pacific ocean.",cat:"world",type:"must"},
+{en:"coast",ru:"побережье",pron:"[koʊst]",ex:"East coast.",cat:"world",type:"must"},
+{en:"desert",ru:"пустыня",pron:"[ˈdɛzərt]",ex:"Sahara desert.",cat:"world",type:"must"},
+{en:"forest",ru:"лес",pron:"[ˈfɒrɪst]",ex:"Amazon forest.",cat:"world",type:"must"},
+{en:"mountain",ru:"гора",pron:"[ˈmaʊntɪn]",ex:"High mountain.",cat:"world",type:"must"},
+{en:"valley",ru:"долина",pron:"[ˈvæli]",ex:"Green valley.",cat:"world",type:"must"},
+{en:"sustainability",ru:"устойчивость",pron:"[səˌsteɪnəˈbɪlɪti]",ex:"Focus on sustainability.",cat:"world",type:"must"},
+{en:"renewable energy",ru:"возобновляемая энергия",pron:"[rɪˈnjuːəbəl ˈɛnərʒi]",ex:"Switch to renewables.",cat:"world",type:"must"},
+// MIND
+{en:"cognitive",ru:"когнитивный",pron:"[ˈkɒɡnɪtɪv]",ex:"Cognitive bias.",cat:"mind",type:"must"},
+{en:"bias",ru:"предвзятость",pron:"[ˈbaɪəs]",ex:"Confirmation bias.",cat:"mind",type:"must"},
+{en:"perception",ru:"восприятие",pron:"[pərˈsɛpʃən]",ex:"Change your perception.",cat:"mind",type:"must"},
+{en:"intuition",ru:"интуиция",pron:"[ˌɪntjuˈɪʃən]",ex:"Trust your intuition.",cat:"mind",type:"cognate"},
+{en:"reasoning",ru:"рассуждение",pron:"[ˈriːzənɪŋ]",ex:"Critical reasoning.",cat:"mind",type:"must"},
+{en:"mindfulness",ru:"осознанность",pron:"[ˈmaɪndfʊlnɪs]",ex:"Practice mindfulness.",cat:"mind",type:"must"},
+{en:"procrastination",ru:"прокрастинация",pron:"[prəˌkræstɪˈneɪʃən]",ex:"Stop procrastination.",cat:"mind",type:"cognate"},
+{en:"willpower",ru:"сила воли",pron:"[ˈwɪlpaʊər]",ex:"Build willpower.",cat:"mind",type:"must"},
+{en:"concentration",ru:"концентрация",pron:"[ˌkɒnsənˈtreɪʃən]",ex:"Poor concentration.",cat:"mind",type:"cognate"},
+{en:"overthinking",ru:"чрезмерное обдумывание",pron:"[ˌoʊvərˈθɪŋkɪŋ]",ex:"Stop overthinking.",cat:"mind",type:"must"},
+{en:"reframe",ru:"переосмыслить",pron:"[ˌriːˈfreɪm]",ex:"Reframe the problem.",cat:"mind",type:"must"},
+{en:"growth mindset",ru:"установка на рост",pron:"[ɡroʊθ ˈmaɪndˌsɛt]",ex:"Develop growth mindset.",cat:"mind",type:"must"},
+// SOCIETY
+{en:"election",ru:"выборы",pron:"[ɪˈlɛkʃən]",ex:"Presidential election.",cat:"society",type:"cognate"},
+{en:"vote",ru:"голосовать",pron:"[voʊt]",ex:"Go vote.",cat:"society",type:"must"},
+{en:"democracy",ru:"демократия",pron:"[dɪˈmɒkrəsi]",ex:"Support democracy.",cat:"society",type:"cognate"},
+{en:"corruption",ru:"коррупция",pron:"[kəˈrʌpʃən]",ex:"Fight corruption.",cat:"society",type:"cognate"},
+{en:"poverty",ru:"бедность",pron:"[ˈpɒvərti]",ex:"End poverty.",cat:"society",type:"must"},
+{en:"inequality",ru:"неравенство",pron:"[ˌɪnɪˈkwɒlɪti]",ex:"Social inequality.",cat:"society",type:"must"},
+{en:"discrimination",ru:"дискриминация",pron:"[dɪˌskrɪmɪˈneɪʃən]",ex:"Fight discrimination.",cat:"society",type:"cognate"},
+{en:"welfare",ru:"благосостояние",pron:"[ˈwɛlfɛər]",ex:"Social welfare.",cat:"society",type:"must"},
+{en:"healthcare",ru:"здравоохранение",pron:"[ˈhɛlθkɛər]",ex:"Universal healthcare.",cat:"society",type:"must"},
+{en:"infrastructure",ru:"инфраструктура",pron:"[ˈɪnfrəstrʌktʃər]",ex:"Old infrastructure.",cat:"society",type:"cognate"},
+{en:"gentrification",ru:"джентрификация",pron:"[ˌdʒɛntrɪfɪˈkeɪʃən]",ex:"Neighborhood gentrification.",cat:"society",type:"must"},
+// ADJECTIVES
+{en:"genuine",ru:"настоящий",pron:"[ˈdʒɛnjuɪn]",ex:"Genuine smile.",cat:"adj",type:"must"},
+{en:"subtle",ru:"едва заметный",pron:"[ˈsʌtəl]",ex:"Subtle difference.",cat:"adj",type:"must"},
+{en:"vague",ru:"неясный",pron:"[veɪɡ]",ex:"Too vague.",cat:"adj",type:"must"},
+{en:"precise",ru:"точный",pron:"[prɪˈsaɪs]",ex:"Be precise.",cat:"adj",type:"must"},
+{en:"thorough",ru:"тщательный",pron:"[ˈθʌrə]",ex:"Thorough check.",cat:"adj",type:"must"},
+{en:"brief",ru:"краткий",pron:"[briːf]",ex:"Keep it brief.",cat:"adj",type:"must"},
+{en:"harsh",ru:"жёсткий",pron:"[hɑːrʃ]",ex:"Harsh feedback.",cat:"adj",type:"must"},
+{en:"gentle",ru:"мягкий",pron:"[ˈdʒɛntəl]",ex:"Gentle approach.",cat:"adj",type:"must"},
+{en:"bold",ru:"смелый",pron:"[boʊld]",ex:"Bold decision.",cat:"adj",type:"must"},
+{en:"vivid",ru:"яркий",pron:"[ˈvɪvɪd]",ex:"Vivid memory.",cat:"adj",type:"must"},
+{en:"dull",ru:"тусклый / скучный",pron:"[dʌl]",ex:"Dull color.",cat:"adj",type:"must"},
+{en:"cozy",ru:"уютный",pron:"[ˈkoʊzi]",ex:"Cozy cafe.",cat:"adj",type:"must"},
+{en:"spacious",ru:"просторный",pron:"[ˈspeɪʃəs]",ex:"Spacious apartment.",cat:"adj",type:"must"},
+{en:"minimal",ru:"минималистичный",pron:"[ˈmɪnɪməl]",ex:"Minimal design.",cat:"adj",type:"must"},
+{en:"exhausting",ru:"изматывающий",pron:"[ɪɡˈzɔːstɪŋ]",ex:"Exhausting week.",cat:"adj",type:"must"},
+{en:"refreshing",ru:"освежающий",pron:"[rɪˈfrɛʃɪŋ]",ex:"Refreshing change.",cat:"adj",type:"must"},
+{en:"rewarding",ru:"приносящий удовлетворение",pron:"[rɪˈwɔːrdɪŋ]",ex:"Rewarding job.",cat:"adj",type:"must"},
+{en:"demanding",ru:"требовательный",pron:"[dɪˈmɑːndɪŋ]",ex:"Demanding client.",cat:"adj",type:"must"},
+{en:"inspiring",ru:"вдохновляющий",pron:"[ɪnˈspaɪərɪŋ]",ex:"Inspiring story.",cat:"adj",type:"must"},
+{en:"outdated",ru:"устаревший",pron:"[ˌaʊtˈdeɪtɪd]",ex:"Outdated system.",cat:"adj",type:"must"},
+{en:"up-to-date",ru:"актуальный",pron:"[ˌʌp tə ˈdeɪt]",ex:"Stay up-to-date.",cat:"adj",type:"must"},
+{en:"underrated",ru:"недооценённый",pron:"[ˌʌndərˈreɪtɪd]",ex:"Underrated movie.",cat:"adj",type:"must"},
+{en:"overrated",ru:"переоценённый",pron:"[ˌoʊvərˈreɪtɪd]",ex:"Overrated brand.",cat:"adj",type:"must"},
+{en:"controversial",ru:"спорный",pron:"[ˌkɒntrəˈvɜːrʃəl]",ex:"Controversial topic.",cat:"adj",type:"must"},
+{en:"neutral",ru:"нейтральный",pron:"[ˈnjuːtrəl]",ex:"Stay neutral.",cat:"adj",type:"must"},
+{en:"objective",ru:"объективный",pron:"[əbˈdʒɛktɪv]",ex:"Be objective.",cat:"adj",type:"must"},
+{en:"temporary",ru:"временный",pron:"[ˈtɛmpərɛri]",ex:"Temporary solution.",cat:"adj",type:"must"},
+{en:"permanent",ru:"постоянный",pron:"[ˈpɜːrmənənt]",ex:"Permanent job.",cat:"adj",type:"must"},
+{en:"spontaneous",ru:"спонтанный",pron:"[spɒnˈteɪniəs]",ex:"Spontaneous decision.",cat:"adj",type:"must"},
+{en:"overwhelming",ru:"подавляющий",pron:"[ˌoʊvərˈwɛlmɪŋ]",ex:"Overwhelming feeling.",cat:"adj",type:"must"},
+{en:"misleading",ru:"вводящий в заблуждение",pron:"[ˌmɪsˈliːdɪŋ]",ex:"Misleading info.",cat:"adj",type:"must"},
+{en:"flexible",ru:"гибкий",pron:"[ˈflɛksɪbəl]",ex:"Flexible schedule.",cat:"adj",type:"must"},
+{en:"stable",ru:"стабильный",pron:"[ˈsteɪbəl]",ex:"Stable income.",cat:"adj",type:"must"},
+{en:"efficient",ru:"эффективный",pron:"[ɪˈfɪʃənt]",ex:"Efficient method.",cat:"adj",type:"must"},
+{en:"significant",ru:"значительный",pron:"[sɪɡˈnɪfɪkənt]",ex:"Significant change.",cat:"adj",type:"must"},
+{en:"ridiculous",ru:"нелепый",pron:"[rɪˈdɪkjʊləs]",ex:"That's ridiculous.",cat:"adj",type:"must"},
+{en:"complicated",ru:"сложный",pron:"[ˈkɒmplɪkeɪtɪd]",ex:"Very complicated.",cat:"adj",type:"must"},
+{en:"genuine",ru:"искренний",pron:"[ˈdʒɛnjuɪn]",ex:"Genuine person.",cat:"adj",type:"must"},
+{en:"urgent",ru:"срочный",pron:"[ˈɜːrdʒənt]",ex:"Urgent matter.",cat:"adj",type:"must"},
+{en:"reliable",ru:"надёжный",pron:"[rɪˈlaɪəbəl]",ex:"Reliable person.",cat:"adj",type:"must"},
+// VERBS EXTRA
+{en:"negotiate",ru:"договариваться",pron:"[nɪˈɡoʊʃieɪt]",ex:"Negotiate the price.",cat:"verbs",type:"must"},
+{en:"implement",ru:"внедрять",pron:"[ˈɪmplɪmɛnt]",ex:"Implement changes.",cat:"verbs",type:"must"},
+{en:"evaluate",ru:"оценивать",pron:"[ɪˈvæljueɪt]",ex:"Evaluate results.",cat:"verbs",type:"must"},
+{en:"prioritize",ru:"расставлять приоритеты",pron:"[praɪˈɒrɪtaɪz]",ex:"Prioritize tasks.",cat:"verbs",type:"must"},
+{en:"delegate",ru:"делегировать",pron:"[ˈdɛlɪɡeɪt]",ex:"Delegate work.",cat:"verbs",type:"must"},
+{en:"collaborate",ru:"сотрудничать",pron:"[kəˈlæbəreɪt]",ex:"Collaborate on project.",cat:"verbs",type:"must"},
+{en:"facilitate",ru:"содействовать",pron:"[fəˈsɪlɪteɪt]",ex:"Facilitate meeting.",cat:"verbs",type:"must"},
+{en:"advocate",ru:"отстаивать",pron:"[ˈædvəkeɪt]",ex:"Advocate for change.",cat:"verbs",type:"must"},
+{en:"adjust",ru:"корректировать",pron:"[əˈdʒʌst]",ex:"Adjust your approach.",cat:"verbs",type:"must"},
+{en:"anticipate",ru:"предвидеть",pron:"[ænˈtɪsɪpeɪt]",ex:"Anticipate problems.",cat:"verbs",type:"must"},
+{en:"clarify",ru:"прояснять",pron:"[ˈklærɪfaɪ]",ex:"Clarify the details.",cat:"verbs",type:"must"},
+{en:"communicate",ru:"общаться",pron:"[kəˈmjuːnɪkeɪt]",ex:"Communicate clearly.",cat:"verbs",type:"must"},
+{en:"compromise",ru:"идти на компромисс",pron:"[ˈkɒmprəmaɪz]",ex:"Need to compromise.",cat:"verbs",type:"must"},
+{en:"convince",ru:"убеждать",pron:"[kənˈvɪns]",ex:"Hard to convince.",cat:"verbs",type:"must"},
+{en:"cope",ru:"справляться",pron:"[koʊp]",ex:"Learn to cope.",cat:"verbs",type:"must"},
+{en:"demand",ru:"требовать",pron:"[dɪˈmɑːnd]",ex:"Demand a refund.",cat:"verbs",type:"must"},
+{en:"demonstrate",ru:"демонстрировать",pron:"[ˈdɛmənstreɪt]",ex:"Demonstrate skills.",cat:"verbs",type:"must"},
+{en:"eliminate",ru:"исключать",pron:"[ɪˈlɪmɪneɪt]",ex:"Eliminate risk.",cat:"verbs",type:"must"},
+{en:"emphasize",ru:"подчёркивать",pron:"[ˈɛmfəsaɪz]",ex:"Emphasize the point.",cat:"verbs",type:"must"},
+{en:"encourage",ru:"поощрять",pron:"[ɪnˈkɜːrɪdʒ]",ex:"Encourage growth.",cat:"verbs",type:"must"},
+{en:"enhance",ru:"улучшать",pron:"[ɪnˈhɑːns]",ex:"Enhance performance.",cat:"verbs",type:"must"},
+{en:"estimate",ru:"прикидывать",pron:"[ˈɛstɪmɪt]",ex:"Estimate the cost.",cat:"verbs",type:"must"},
+{en:"execute",ru:"выполнять",pron:"[ˈɛksɪkjuːt]",ex:"Execute the plan.",cat:"verbs",type:"must"},
+{en:"expand",ru:"расширять",pron:"[ɪkˈspænd]",ex:"Expand the team.",cat:"verbs",type:"must"},
+{en:"generate",ru:"генерировать",pron:"[ˈdʒɛnəreɪt]",ex:"Generate revenue.",cat:"verbs",type:"must"},
+{en:"highlight",ru:"выделять",pron:"[ˈhaɪlaɪt]",ex:"Highlight key points.",cat:"verbs",type:"must"},
+{en:"identify",ru:"определять",pron:"[aɪˈdɛntɪfaɪ]",ex:"Identify the issue.",cat:"verbs",type:"must"},
+{en:"ignore",ru:"игнорировать",pron:"[ɪɡˈnɔːr]",ex:"Don't ignore it.",cat:"verbs",type:"must"},
+{en:"imply",ru:"подразумевать",pron:"[ɪmˈplaɪ]",ex:"What are you implying?",cat:"verbs",type:"must"},
+{en:"influence",ru:"влиять",pron:"[ˈɪnfluəns]",ex:"Influence the outcome.",cat:"verbs",type:"must"},
+{en:"justify",ru:"оправдывать",pron:"[ˈdʒʌstɪfaɪ]",ex:"Justify your decision.",cat:"verbs",type:"must"},
+{en:"maintain",ru:"поддерживать",pron:"[meɪnˈteɪn]",ex:"Maintain quality.",cat:"verbs",type:"must"},
+{en:"measure",ru:"измерять",pron:"[ˈmɛʒər]",ex:"Measure success.",cat:"verbs",type:"must"},
+{en:"motivate",ru:"мотивировать",pron:"[ˈmoʊtɪveɪt]",ex:"Motivate the team.",cat:"verbs",type:"must"},
+{en:"navigate",ru:"навигировать",pron:"[ˈnævɪɡeɪt]",ex:"Navigate the system.",cat:"verbs",type:"must"},
+{en:"obtain",ru:"получать",pron:"[əbˈteɪn]",ex:"Obtain permission.",cat:"verbs",type:"must"},
+{en:"overcome",ru:"преодолевать",pron:"[ˌoʊvərˈkʌm]",ex:"Overcome obstacles.",cat:"verbs",type:"must"},
+{en:"perform",ru:"выполнять",pron:"[pərˈfɔːrm]",ex:"Perform well.",cat:"verbs",type:"must"},
+{en:"persist",ru:"не сдаваться",pron:"[pərˈsɪst]",ex:"Persist through failure.",cat:"verbs",type:"must"},
+{en:"predict",ru:"предсказывать",pron:"[prɪˈdɪkt]",ex:"Hard to predict.",cat:"verbs",type:"must"},
+{en:"proceed",ru:"продолжать",pron:"[prəˈsiːd]",ex:"Proceed with caution.",cat:"verbs",type:"must"},
+{en:"promote",ru:"продвигать",pron:"[prəˈmoʊt]",ex:"Promote the product.",cat:"verbs",type:"must"},
+{en:"propose",ru:"предлагать",pron:"[prəˈpoʊz]",ex:"Propose a solution.",cat:"verbs",type:"must"},
+{en:"pursue",ru:"добиваться",pron:"[pərˈsjuː]",ex:"Pursue your goals.",cat:"verbs",type:"must"},
+{en:"recognize",ru:"признавать",pron:"[ˈrɛkəɡnaɪz]",ex:"Recognize the problem.",cat:"verbs",type:"must"},
+{en:"reduce",ru:"сокращать",pron:"[rɪˈdjuːs]",ex:"Reduce costs.",cat:"verbs",type:"must"},
+{en:"reflect",ru:"размышлять",pron:"[rɪˈflɛkt]",ex:"Reflect on it.",cat:"verbs",type:"must"},
+{en:"resolve",ru:"разрешать",pron:"[rɪˈzɒlv]",ex:"Resolve the conflict.",cat:"verbs",type:"must"},
+{en:"reveal",ru:"раскрывать",pron:"[rɪˈviːl]",ex:"Reveal the truth.",cat:"verbs",type:"must"},
+{en:"seek",ru:"искать",pron:"[siːk]",ex:"Seek advice.",cat:"verbs",type:"must"},
+{en:"shift",ru:"менять",pron:"[ʃɪft]",ex:"Shift your focus.",cat:"verbs",type:"must"},
+{en:"simplify",ru:"упрощать",pron:"[ˈsɪmplɪfaɪ]",ex:"Simplify the process.",cat:"verbs",type:"must"},
+{en:"solve",ru:"решать",pron:"[sɒlv]",ex:"Solve the problem.",cat:"verbs",type:"must"},
+{en:"split",ru:"делить",pron:"[splɪt]",ex:"Split the bill.",cat:"verbs",type:"must"},
+{en:"summarize",ru:"суммировать",pron:"[ˈsʌməraɪz]",ex:"Summarize the meeting.",cat:"verbs",type:"must"},
+{en:"trigger",ru:"провоцировать",pron:"[ˈtrɪɡər]",ex:"Trigger a response.",cat:"verbs",type:"must"},
+{en:"undermine",ru:"подрывать",pron:"[ˌʌndərˈmaɪn]",ex:"Don't undermine me.",cat:"verbs",type:"must"},
+{en:"validate",ru:"подтверждать",pron:"[ˈvælɪdeɪt]",ex:"Validate the data.",cat:"verbs",type:"must"},
+{en:"verify",ru:"проверять",pron:"[ˈvɛrɪfaɪ]",ex:"Verify your identity.",cat:"verbs",type:"must"},
+{en:"visualize",ru:"визуализировать",pron:"[ˈvɪʒuəlaɪz]",ex:"Visualize success.",cat:"verbs",type:"must"},
+{en:"withdraw",ru:"снимать",pron:"[wɪðˈdrɔː]",ex:"Withdraw cash.",cat:"verbs",type:"must"},
+{en:"yield",ru:"давать результат",pron:"[jiːld]",ex:"Yield good results.",cat:"verbs",type:"must"},
+{en:"achieve",ru:"достигать",pron:"[əˈtʃiːv]",ex:"Achieve your goals.",cat:"verbs",type:"must"},
+{en:"accept",ru:"принимать",pron:"[əkˈsɛpt]",ex:"Accept the offer.",cat:"verbs",type:"must"},
+{en:"reject",ru:"отклонять",pron:"[rɪˈdʒɛkt]",ex:"Reject the idea.",cat:"verbs",type:"must"},
+{en:"admit",ru:"признавать",pron:"[ədˈmɪt]",ex:"Admit the mistake.",cat:"verbs",type:"must"},
+{en:"deny",ru:"отрицать",pron:"[dɪˈnaɪ]",ex:"He denied it.",cat:"verbs",type:"must"},
+{en:"respond",ru:"отвечать",pron:"[rɪˈspɒnd]",ex:"Respond to emails.",cat:"verbs",type:"must"},
+{en:"react",ru:"реагировать",pron:"[riˈækt]",ex:"How did you react?",cat:"verbs",type:"must"},
+{en:"rely",ru:"полагаться",pron:"[rɪˈlaɪ]",ex:"Rely on yourself.",cat:"verbs",type:"must"},
+{en:"depend",ru:"зависеть",pron:"[dɪˈpɛnd]",ex:"It depends.",cat:"verbs",type:"must"},
+{en:"affect",ru:"влиять",pron:"[əˈfɛkt]",ex:"It affects everyone.",cat:"verbs",type:"must"},
+{en:"involve",ru:"включать",pron:"[ɪnˈvɒlv]",ex:"Get involved.",cat:"verbs",type:"must"},
+{en:"introduce",ru:"представлять",pron:"[ˌɪntrəˈdjuːs]",ex:"Let me introduce.",cat:"verbs",type:"must"},
+{en:"recommend",ru:"рекомендовать",pron:"[ˌrɛkəˈmɛnd]",ex:"I recommend this.",cat:"verbs",type:"must"},
+{en:"prevent",ru:"предотвращать",pron:"[prɪˈvɛnt]",ex:"Prevent the problem.",cat:"verbs",type:"must"},
+{en:"assume",ru:"предполагать",pron:"[əˈsjuːm]",ex:"Don't assume.",cat:"verbs",type:"must"},
+{en:"wonder",ru:"задаваться вопросом",pron:"[ˈwʌndər]",ex:"I wonder why.",cat:"verbs",type:"must"},
+{en:"appreciate",ru:"ценить",pron:"[əˈpriːʃieɪt]",ex:"I appreciate it.",cat:"verbs",type:"must"},
+{en:"deserve",ru:"заслуживать",pron:"[dɪˈzɜːrv]",ex:"You deserve it.",cat:"verbs",type:"must"},
+{en:"pretend",ru:"притворяться",pron:"[prɪˈtɛnd]",ex:"Stop pretending.",cat:"verbs",type:"must"},
+{en:"regret",ru:"сожалеть",pron:"[rɪˈɡrɛt]",ex:"I regret it.",cat:"verbs",type:"must"},
+{en:"struggle",ru:"бороться",pron:"[ˈstrʌɡəl]",ex:"I'm struggling.",cat:"verbs",type:"must"},
+{en:"survive",ru:"выживать",pron:"[səˈvaɪv]",ex:"We will survive.",cat:"verbs",type:"must"},
+{en:"fail",ru:"провалиться",pron:"[feɪl]",ex:"Don't fail.",cat:"verbs",type:"must"},
+{en:"succeed",ru:"преуспеть",pron:"[səkˈsiːd]",ex:"You will succeed.",cat:"verbs",type:"must"},
+{en:"complain",ru:"жаловаться",pron:"[kəmˈpleɪn]",ex:"Stop complaining.",cat:"verbs",type:"must"},
+{en:"blame",ru:"обвинять",pron:"[bleɪm]",ex:"Don't blame me.",cat:"verbs",type:"must"},
+{en:"warn",ru:"предупреждать",pron:"[wɔːrn]",ex:"I warned you.",cat:"verbs",type:"must"},
+{en:"challenge",ru:"бросать вызов",pron:"[ˈtʃælɪndʒ]",ex:"Challenge yourself.",cat:"verbs",type:"must"},
+{en:"launch",ru:"запускать",pron:"[lɔːntʃ]",ex:"Launch the product.",cat:"verbs",type:"must"},
+{en:"boost",ru:"усиливать",pron:"[buːst]",ex:"Boost your skills.",cat:"verbs",type:"must"},
+// PHRASES EXTRA
+{en:"keep in mind",ru:"имей в виду",pron:"[kiːp ɪn maɪnd]",ex:"Keep in mind.",cat:"phrases",type:"must"},
+{en:"on top of that",ru:"вдобавок",pron:"[ɒn tɒp ɒv ðæt]",ex:"On top of that.",cat:"phrases",type:"must"},
+{en:"in other words",ru:"другими словами",pron:"[ɪn ˈʌðər wɜːrdz]",ex:"In other words.",cat:"phrases",type:"must"},
+{en:"that said",ru:"тем не менее",pron:"[ðæt sɛd]",ex:"That said it's fine.",cat:"phrases",type:"must"},
+{en:"as a result",ru:"в результате",pron:"[æz ə rɪˈzʌlt]",ex:"As a result.",cat:"phrases",type:"must"},
+{en:"to sum up",ru:"подводя итог",pron:"[tə sʌm ʌp]",ex:"To sum up.",cat:"phrases",type:"must"},
+{en:"for instance",ru:"например",pron:"[fər ˈɪnstəns]",ex:"For instance.",cat:"phrases",type:"must"},
+{en:"in particular",ru:"в частности",pron:"[ɪn pəˈtɪkjʊlər]",ex:"In particular.",cat:"phrases",type:"must"},
+{en:"as far as I know",ru:"насколько я знаю",pron:"[æz fɑːr æz aɪ noʊ]",ex:"As far as I know.",cat:"phrases",type:"must"},
+{en:"it depends",ru:"зависит",pron:"[ɪt dɪˈpɛndz]",ex:"It depends.",cat:"phrases",type:"must"},
+{en:"speaking of which",ru:"кстати об этом",pron:"[ˈspiːkɪŋ ɒv wɪtʃ]",ex:"Speaking of which.",cat:"phrases",type:"must"},
+{en:"at first glance",ru:"на первый взгляд",pron:"[æt fɜːrst ɡlɑːns]",ex:"At first glance.",cat:"phrases",type:"must"},
+{en:"in the long run",ru:"в долгосрочной перспективе",pron:"[ɪn ðə lɒŋ rʌn]",ex:"In the long run.",cat:"phrases",type:"must"},
+{en:"from scratch",ru:"с нуля",pron:"[frəm skrætʃ]",ex:"Build from scratch.",cat:"phrases",type:"must"},
+{en:"step by step",ru:"шаг за шагом",pron:"[stɛp baɪ stɛp]",ex:"Go step by step.",cat:"phrases",type:"must"},
+{en:"once in a while",ru:"иногда",pron:"[wʌns ɪn ə waɪl]",ex:"Once in a while.",cat:"phrases",type:"must"},
+{en:"out of the blue",ru:"неожиданно",pron:"[aʊt ɒv ðə bluː]",ex:"Out of the blue.",cat:"phrases",type:"must"},
+{en:"sooner or later",ru:"рано или поздно",pron:"[ˈsuːnər ɔːr ˈleɪtər]",ex:"Sooner or later.",cat:"phrases",type:"must"},
+{en:"all of a sudden",ru:"внезапно",pron:"[ɔːl əv ə ˈsʌdən]",ex:"All of a sudden.",cat:"phrases",type:"must"},
+{en:"in the meantime",ru:"тем временем",pron:"[ɪn ðə ˈmiːntaɪm]",ex:"In the meantime.",cat:"phrases",type:"must"},
+{en:"as it turns out",ru:"как выяснилось",pron:"[æz ɪt tɜːrnz aʊt]",ex:"As it turns out.",cat:"phrases",type:"must"},
+{en:"for the time being",ru:"на данный момент",pron:"[fər ðə taɪm ˈbiːɪŋ]",ex:"For the time being.",cat:"phrases",type:"must"},
+{en:"give it a shot",ru:"попробовать",pron:"[ɡɪv ɪt ə ʃɒt]",ex:"Give it a shot.",cat:"phrases",type:"must"},
+{en:"make the most of",ru:"использовать по максимуму",pron:"[meɪk ðə moʊst ɒv]",ex:"Make the most of it.",cat:"phrases",type:"must"},
+{en:"on second thought",ru:"подумав ещё раз",pron:"[ɒn ˈsɛkənd θɔːt]",ex:"On second thought.",cat:"phrases",type:"must"},
+{en:"bear in mind",ru:"учитывать",pron:"[bɛər ɪn maɪnd]",ex:"Bear in mind.",cat:"phrases",type:"must"},
+{en:"on the bright side",ru:"с хорошей стороны",pron:"[ɒn ðə braɪt saɪd]",ex:"On the bright side.",cat:"phrases",type:"must"},
+{en:"easier said than done",ru:"легче сказать чем сделать",pron:"[ˈiːziər sɛd ðæn dʌn]",ex:"Easier said than done.",cat:"phrases",type:"must"},
+{en:"under the radar",ru:"незамеченный",pron:"[ˈʌndər ðə ˈreɪdɑːr]",ex:"Stay under the radar.",cat:"phrases",type:"must"},
+{en:"out of nowhere",ru:"ниоткуда",pron:"[aʊt ɒv ˈnoʊwɛər]",ex:"Came out of nowhere.",cat:"phrases",type:"must"},
+{en:"once and for all",ru:"раз и навсегда",pron:"[wʌns ænd fər ɔːl]",ex:"Once and for all.",cat:"phrases",type:"must"},
+{en:"needless to say",ru:"само собой разумеется",pron:"[ˈniːdləs tə seɪ]",ex:"Needless to say.",cat:"phrases",type:"must"},
+{en:"to cut to the chase",ru:"без лишних слов",pron:"[tə kʌt tə ðə tʃeɪs]",ex:"Let me cut to the chase.",cat:"phrases",type:"must"},
+// SLANG EXTRA
+{en:"understood the assignment",ru:"понял задачу",pron:"[ˌʌndəˈstʊd ðə əˈsaɪnmənt]",ex:"She understood the assignment.",cat:"slang",type:"slang"},
+{en:"it's giving",ru:"это отдаёт...",pron:"[ɪts ˈɡɪvɪŋ]",ex:"It's giving luxury.",cat:"slang",type:"slang"},
+{en:"no shot",ru:"да ладно",pron:"[noʊ ʃɒt]",ex:"No shot that happened.",cat:"slang",type:"slang"},
+{en:"sending me",ru:"умираю со смеху",pron:"[ˈsɛndɪŋ miː]",ex:"This is sending me.",cat:"slang",type:"slang"},
+{en:"ate",ru:"отлично справился",pron:"[eɪt]",ex:"She really ate.",cat:"slang",type:"slang"},
+{en:"rent free",ru:"живёт в голове",pron:"[rɛnt friː]",ex:"Living rent free in my head.",cat:"slang",type:"slang"},
+{en:"touch grass",ru:"выйти из интернета",pron:"[tʌtʃ ɡrɑːs]",ex:"Go touch grass.",cat:"slang",type:"slang"},
+{en:"go off",ru:"давай / зажигай",pron:"[ɡoʊ ɒf]",ex:"Go off king.",cat:"slang",type:"slang"},
+{en:"gatekeeping",ru:"скрывать что-то хорошее",pron:"[ˈɡeɪtkiːpɪŋ]",ex:"Stop gatekeeping.",cat:"slang",type:"slang"},
+{en:"situationship",ru:"неопределённые отношения",pron:"[ˌsɪtʃuˈeɪʃənʃɪp]",ex:"We are in a situationship.",cat:"slang",type:"slang"},
+{en:"soft launch",ru:"осторожно показать партнёра",pron:"[sɒft lɔːntʃ]",ex:"She soft launched him.",cat:"slang",type:"slang"},
+{en:"main character",ru:"главный герой своей жизни",pron:"[meɪn ˈkærɪktər]",ex:"Main character energy.",cat:"slang",type:"slang"},
+{en:"shook",ru:"шокирован",pron:"[ʃʊk]",ex:"I am shook.",cat:"slang",type:"slang"},
+{en:"spill",ru:"выкладывай",pron:"[spɪl]",ex:"Spill the tea.",cat:"slang",type:"slang"},
+{en:"stan",ru:"быть большим фанатом",pron:"[stæn]",ex:"I stan this brand.",cat:"slang",type:"slang"},
+{en:"cap",ru:"ложь",pron:"[kæp]",ex:"That's cap.",cat:"slang",type:"slang"},
+{en:"pressed",ru:"зациклился",pron:"[prɛst]",ex:"Why are you so pressed?",cat:"slang",type:"slang"},
+{en:"bussin",ru:"очень вкусно / топ",pron:"[ˈbʌsɪn]",ex:"This food is bussin.",cat:"slang",type:"slang"},
+{en:"on point",ru:"идеально",pron:"[ɒn pɔɪnt]",ex:"Your fit is on point.",cat:"slang",type:"slang"},
+{en:"secure the bag",ru:"заработать денег",pron:"[sɪˈkjʊər ðə bæɡ]",ex:"Gotta secure the bag.",cat:"slang",type:"slang"},
+{en:"big yikes",ru:"большой кринж",pron:"[bɪɡ jaɪks]",ex:"Big yikes.",cat:"slang",type:"slang"},
+{en:"yikes",ru:"ой / кринж",pron:"[jaɪks]",ex:"Yikes.",cat:"slang",type:"slang"},
+{en:"it slaps",ru:"это огонь",pron:"[ɪt slæps]",ex:"This beat slaps.",cat:"slang",type:"slang"},
+{en:"catch feelings",ru:"влюбиться",pron:"[kætʃ ˈfiːlɪŋz]",ex:"I caught feelings.",cat:"slang",type:"slang"},
+{en:"snatched",ru:"в отличной форме",pron:"[snætʃt]",ex:"Looking snatched.",cat:"slang",type:"slang"},
+{en:"W",ru:"победа / хорошо",pron:"[dʌb]",ex:"That is a W.",cat:"slang",type:"slang"},
+{en:"L",ru:"поражение / плохо",pron:"[ɛl]",ex:"Taking an L.",cat:"slang",type:"slang"},
+{en:"highkey",ru:"открыто / очень",pron:"[ˈhaɪkiː]",ex:"Highkey obsessed.",cat:"slang",type:"slang"},
+{en:"clout",ru:"известность",pron:"[klaʊt]",ex:"Chasing clout.",cat:"slang",type:"slang"},
+{en:"tea",ru:"сплетни",pron:"[tiː]",ex:"Spill the tea.",cat:"slang",type:"slang"},
+{en:"fit",ru:"наряд",pron:"[fɪt]",ex:"Nice fit today.",cat:"slang",type:"slang"},
+{en:"drip",ru:"стиль / swag",pron:"[drɪp]",ex:"Nice drip.",cat:"slang",type:"slang"},
+{en:"glow up",ru:"преображение",pron:"[ɡloʊ ʌp]",ex:"Massive glow up.",cat:"slang",type:"slang"},
+{en:"grind",ru:"пахать",pron:"[ɡraɪnd]",ex:"On the grind.",cat:"slang",type:"slang"},
+{en:"bestie",ru:"лучший друг",pron:"[ˈbɛsti]",ex:"My bestie.",cat:"slang",type:"slang"},
+{en:"plug",ru:"связи",pron:"[plʌɡ]",ex:"He's the plug.",cat:"slang",type:"slang"},
+{en:"vibe check",ru:"проверка атмосферы",pron:"[vaɪb tʃɛk]",ex:"Vibe check passed.",cat:"slang",type:"slang"},
+];
+// merge extra into main vocab array
+vocab.push.apply(vocab, extraVocab);
+
 // ═══ DEDUP VOCAB ═══
 var seen=new Set();
 var uniq=vocab.filter(function(w){if(seen.has(w.en))return false;seen.add(w.en);return true;});
@@ -1280,37 +1821,54 @@ function updateLevels(){
   if(kc)kc.textContent=known.size;
 }
 
-// ═══ VOCAB RENDER — FIXED: используем data-атрибуты вместо inline JS с кавычками ═══
+// ═══ VOCAB — ФИЛЬТРЫ ═══
+var catLevelMap={
+  "daily":"a1","food":"a1","time":"a1","relations":"a1",
+  "tech":"a2","health":"a2","travel":"a2","emotions":"a2","life":"a2","world":"a2","adj":"a2","-tion":"a2",
+  "work":"b1","money":"b1","comm":"b1","mind":"b1","society":"b1","verbs":"b1","phrases":"b1",
+  "slang":"b2"
+};
+
+function makeCardHTML(w){
+  var key=encodeURIComponent(w.en);
+  var badge=w.type==="cognate"?"≈похожее":w.type==="must"?"must":"slang";
+  var bc="b"+(w.type==="cognate"?"c":w.type==="must"?"m":"s");
+  var kn=known.has(w.en)?" known":"";
+  var h='<div class="vcard'+kn+'" onclick="flipV(this)">';
+  h+='<span class="vbadge '+bc+'">'+badge+'</span>';
+  h+='<div class="vfront">';
+  h+='<div class="ven">'+w.en+' <button class="speak-btn" data-speak="'+w.en.replace(/"/g,'')+'">🔊</button></div>';
+  h+='<div class="vru">'+w.ru+'</div>';
+  h+='<div class="vtap">tap →</div>';
+  h+='</div>';
+  h+='<div class="vback">';
+  h+='<div class="ven">'+w.en+'</div>';
+  h+='<div class="vpron">'+w.pron+' <button class="speak-btn" data-speak="'+w.en.replace(/"/g,'')+'">🔊</button></div>';
+  h+='<div class="vex">'+w.ex+'</div>';
+  h+='<button class="vkb" data-en="'+key+'" onclick="event.stopPropagation();tkvBtn(this)">'+(known.has(w.en)?"✓ known":"mark known")+'</button>';
+  h+='</div></div>';
+  return h;
+}
+
 function renderV(){
+  var q=sQ.toLowerCase();
+  var cat=document.getElementById("vcat")?document.getElementById("vcat").value:"all";
+  var lvl=document.getElementById("vlevel")?document.getElementById("vlevel").value:"all";
+
   var f=uniq.filter(function(w){
-    var mc=aTab==="all"||w.cat===aTab;
-    var q=sQ.toLowerCase();
-    return mc&&(!q||w.en.toLowerCase().indexOf(q)>=0||w.ru.toLowerCase().indexOf(q)>=0);
+    var matchCat=cat==="all"||w.cat===cat;
+    var matchLvl=lvl==="all"||(catLevelMap[w.cat]||"b1")===lvl;
+    var matchQ=!q||w.en.toLowerCase().indexOf(q)>=0||w.ru.toLowerCase().indexOf(q)>=0;
+    return matchCat&&matchLvl&&matchQ;
   });
-  document.getElementById("vstats").innerHTML='showing <b>'+f.length+'</b> / '+uniq.length+' · <b style="color:var(--accent)">'+known.size+'</b> known';
-  if(!f.length){document.getElementById("vgrid").innerHTML='<div class="empty">not found 🤷</div>';return;}
+
+  document.getElementById("vstats").innerHTML='показано <b>'+f.length+'</b> из '+uniq.length+' · known: <b style="color:var(--accent)">'+known.size+'</b>';
+
+  var grid=document.getElementById("vgrid");
+  if(!f.length){grid.innerHTML='<div class="empty">not found 🤷</div>';return;}
   var html='';
-  f.forEach(function(w,i){
-    var key=encodeURIComponent(w.en);
-    var badge=w.type==="cognate"?"≈похожее":w.type==="must"?"must":"slang";
-    var bc="b"+(w.type==="cognate"?"c":w.type==="must"?"m":"s");
-    var kn=known.has(w.en)?" known":"";
-    html+='<div class="vcard'+kn+'" data-idx="'+i+'" onclick="flipV(this)">';
-    html+='<span class="vbadge '+bc+'">'+badge+'</span>';
-    html+='<div class="vfront">';
-    html+='<div class="ven">'+w.en+' <button class="speak-btn" data-speak="'+w.en.replace(/"/g,'')+'">🔊</button></div>';
-    html+='<div class="vru">'+w.ru+'</div>';
-    html+='<div class="vtap">tap →</div>';
-    html+='</div>';
-    html+='<div class="vback">';
-    html+='<div class="ven">'+w.en+'</div>';
-    html+='<div class="vpron">'+w.pron+' <button class="speak-btn" data-speak="'+w.en.replace(/"/g,'')+'">🔊</button></div>';
-    html+='<div class="vex">'+w.ex+'</div>';
-    html+='<button class="vkb" data-en="'+key+'" onclick="event.stopPropagation();tkvBtn(this)">'+(known.has(w.en)?"✓ known":"mark known")+'</button>';
-    html+='</div>';
-    html+='</div>';
-  });
-  document.getElementById("vgrid").innerHTML=html;
+  f.forEach(function(w){html+=makeCardHTML(w);});
+  grid.innerHTML=html;
 }
 
 function flipV(el){el.classList.toggle("flipped");}
@@ -1329,12 +1887,6 @@ function tkvBtn(btn){
   sk();updateLevels();
 }
 
-function renderTabs(){
-  document.getElementById("vtabs").innerHTML=cats.map(function(c){
-    return '<button class="tab '+(c===aTab?'active':'')+'" onclick="setTab(\''+c+'\')">'+c+'</button>';
-  }).join("");
-}
-function setTab(c){aTab=c;renderTabs();renderV();}
 document.getElementById("vsearch").addEventListener("input",function(e){sQ=e.target.value;renderV();});
 
 // ═══ IRREG VERBS ═══
@@ -1672,7 +2224,7 @@ document.addEventListener('click',function(e){
 });
 
 // ═══ INIT ═══
-renderTabs();renderV();updateLevels();
+renderV();updateLevels();
 </script>
 </body>
 </html>
