@@ -3,221 +3,311 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ENG HUB v3</title>
+<title>ENG HUB — American English</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a0a0a;--card:#141414;--border:#222;--accent:#c8ff00;--orange:#ff6b35;--blue:#4fc3f7;--purple:#ce93d8;--text:#f0f0f0;--muted:#555;--muted2:#888;}
+:root{
+  --bg:#080808;--card:#111;--card2:#181818;--border:#1e1e1e;
+  --accent:#c8ff00;--orange:#ff6b35;--blue:#4fc3f7;--purple:#ce93d8;
+  --pink:#f48fb1;--red:#ff5252;--green:#69ff47;
+  --text:#f0f0f0;--muted:#555;--muted2:#888;
+}
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--text);font-family:"IBM Plex Mono",monospace;min-height:100vh;padding:18px 14px 100px;}
-h1{font-family:"Syne",sans-serif;font-weight:800;font-size:clamp(26px,8vw,52px);line-height:.9;letter-spacing:-2px;margin-bottom:4px;}
+body{background:var(--bg);color:var(--text);font-family:"IBM Plex Mono",monospace;min-height:100vh;padding:16px 12px 120px;}
+.header{margin-bottom:16px;}
+h1{font-family:"Syne",sans-serif;font-weight:800;font-size:clamp(24px,7vw,48px);line-height:.9;letter-spacing:-2px;margin-bottom:3px;}
 .g{color:var(--accent);}.o{color:var(--orange);}
-.sub{color:var(--muted);font-size:11px;margin-bottom:16px;line-height:1.7;}
-.nav{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:18px;}
-.nb{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:10px;padding:6px 12px;border-radius:20px;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.4px;}
-.nb:hover{border-color:var(--accent);color:var(--text);}.nb.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700;}
+.sub{color:var(--muted);font-size:10px;line-height:1.7;margin-bottom:14px;}
+.level-bar{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px;}
+.level-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.level-name{font-size:11px;font-weight:700;width:28px;color:var(--muted2);}
+.level-track{flex:1;height:6px;background:#1a1a1a;border-radius:3px;overflow:hidden;}
+.level-fill{height:100%;border-radius:3px;transition:width 1s ease;}
+.level-pct{font-size:10px;color:var(--muted2);width:36px;text-align:right;}
+.lf-a1{background:var(--accent);}.lf-a2{background:var(--blue);}.lf-b1{background:var(--orange);}.lf-b2{background:var(--purple);}
+.total-words{font-size:11px;color:var(--muted);text-align:center;margin-top:4px;}
+.total-words b{color:var(--accent);}
+.nav{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px;}
+.nb{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:10px;padding:6px 12px;border-radius:20px;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap;}
+.nb:hover{border-color:var(--accent);color:var(--text);}
+.nb.active{background:var(--accent);color:#000;font-weight:700;}
 .section{display:none;}.section.active{display:block;}
-.sw{position:relative;margin-bottom:10px;}
-.sw input{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:13px;padding:10px 14px 10px 36px;border-radius:8px;outline:none;transition:border-color .2s;}
-.sw input:focus{border-color:var(--accent);}.sw::before{content:"⌕";position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:16px;}
-.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px;}
-.tab{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:9px;padding:4px 10px;border-radius:20px;cursor:pointer;transition:all .2s;text-transform:uppercase;}
-.tab.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700;}
-.stats{font-size:11px;color:var(--muted);margin-bottom:9px;}.stats b{color:var(--accent);}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:7px;}
-.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 10px 8px;cursor:pointer;transition:border-color .2s,transform .15s;position:relative;min-height:65px;}
-.card:hover{border-color:var(--accent);transform:translateY(-2px);}
-.card.flipped{border-color:var(--orange);}.card.flipped .front{display:none;}.card.flipped .back{display:flex;}.card.known{opacity:.25;}
-.front,.back{display:flex;flex-direction:column;gap:3px;}.back{display:none;}
-.en{font-family:"Syne",sans-serif;font-weight:700;font-size:14px;}
-.tc .en{color:var(--accent);}.tm .en{color:var(--blue);}.ts .en{color:var(--orange);}
-.ru{font-size:11px;color:var(--muted2);}.pron{font-size:11px;color:var(--orange);}.ex{font-size:11px;color:#666;font-style:italic;line-height:1.4;}
-.badge{position:absolute;top:5px;right:5px;font-size:8px;text-transform:uppercase;padding:2px 4px;border-radius:3px;}
+.sw{position:relative;margin-bottom:9px;}
+.sw input{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:13px;padding:9px 14px 9px 34px;border-radius:8px;outline:none;transition:border-color .2s;}
+.sw input:focus{border-color:var(--accent);}
+.sw::before{content:"⌕";position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:15px;}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:9px;}
+.tab{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:9px;padding:4px 9px;border-radius:20px;cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.tab.active{background:var(--accent);color:#000;font-weight:700;}
+.vstats{font-size:10px;color:var(--muted);margin-bottom:8px;}.vstats b{color:var(--accent);}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:7px;}
+.vcard{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;cursor:pointer;transition:all .2s;position:relative;min-height:72px;}
+.vcard:hover{border-color:var(--accent);transform:translateY(-1px);}
+.vcard.flipped{border-color:var(--orange);}
+.vcard.flipped .vfront{display:none;}
+.vcard.flipped .vback{display:flex;}
+.vcard.known{opacity:.22;}
+.vfront,.vback{display:flex;flex-direction:column;gap:3px;}
+.vback{display:none;}
+.ven{font-family:"Syne",sans-serif;font-weight:700;font-size:14px;}
+.tc .ven{color:var(--accent);}.tm .ven{color:var(--blue);}.ts .ven{color:var(--orange);}
+.vru{font-size:11px;color:var(--muted2);}
+.vpron{font-size:11px;color:var(--orange);}
+.vex{font-size:11px;color:#666;font-style:italic;line-height:1.4;}
+.vbadge{position:absolute;top:5px;right:5px;font-size:8px;text-transform:uppercase;padding:2px 4px;border-radius:3px;}
 .bc{background:#1a2200;color:var(--accent);}.bm{background:#001a2c;color:var(--blue);}.bs{background:#2c1000;color:var(--orange);}
-.tap{font-size:9px;color:#2a2a2a;text-align:right;margin-top:2px;}
-.kb{margin-top:3px;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:9px;padding:2px 7px;border-radius:4px;cursor:pointer;font-family:"IBM Plex Mono",monospace;}
-.kb:hover{border-color:var(--accent);color:var(--accent);}.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px;}
-.tbox{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:9px;}
-.tbox.must{border-color:var(--accent);}.tbox.should{border-color:var(--blue);}.tbox.later{border-color:var(--purple);}.tbox.skip{opacity:.4;}
-.tname{font-family:"Syne",sans-serif;font-weight:800;font-size:16px;margin-bottom:3px;}
-.ttag{display:inline-block;font-size:9px;padding:2px 7px;border-radius:4px;text-transform:uppercase;font-weight:700;margin-bottom:7px;}
+.vtap{font-size:9px;color:#222;text-align:right;margin-top:2px;}
+.vkb{margin-top:3px;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:9px;padding:2px 6px;border-radius:3px;cursor:pointer;font-family:"IBM Plex Mono",monospace;}
+.vkb:hover{border-color:var(--accent);color:var(--accent);}
+.speak-btn{background:transparent;border:none;cursor:pointer;font-size:14px;padding:0 2px;vertical-align:middle;opacity:.7;transition:opacity .2s;}
+.speak-btn:hover{opacity:1;}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px;font-size:13px;}
+.tbox{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:13px;margin-bottom:8px;}
+.tbox.must{border-color:var(--accent);}.tbox.should{border-color:var(--blue);}.tbox.later{border-color:var(--purple);}.tbox.skip{opacity:.38;}
+.tname{font-family:"Syne",sans-serif;font-weight:800;font-size:15px;margin-bottom:3px;}
+.ttag{display:inline-block;font-size:8px;padding:2px 6px;border-radius:3px;text-transform:uppercase;font-weight:700;margin-bottom:6px;}
 .tag-must{background:#1a2200;color:var(--accent);}.tag-should{background:#001a2c;color:var(--blue);}.tag-later{background:#1a0030;color:var(--purple);}.tag-skip{background:#222;color:var(--muted);}
-.twhen{font-size:12px;color:var(--muted2);margin-bottom:7px;}
-.formula{background:#0f1a00;border:1px solid #2a3a00;border-radius:7px;padding:9px 11px;font-size:12px;color:var(--accent);margin:7px 0;line-height:1.8;}
-.formula.bl{background:#001420;border-color:#003a5c;color:var(--blue);}.formula.pu{background:#0d0020;border-color:#3a0060;color:var(--purple);}
+.twhen{font-size:11px;color:var(--muted2);margin-bottom:6px;}
+.formula{background:#0d1600;border:1px solid #243600;border-radius:7px;padding:8px 10px;font-size:11px;color:var(--accent);margin:6px 0;line-height:1.8;}
+.formula.bl{background:#001220;border-color:#003050;color:var(--blue);}
+.formula.pu{background:#0c001e;border-color:#350055;color:var(--purple);}
 .erow{display:flex;flex-direction:column;gap:4px;margin-top:5px;}
-.eg{background:#0a1a00;border-left:3px solid var(--accent);padding:5px 9px;border-radius:0 6px 6px 0;font-size:12px;color:#ccc;}
-.eb{background:#1a0a00;border-left:3px solid var(--orange);padding:5px 9px;border-radius:0 6px 6px 0;font-size:12px;color:#ccc;}
-.elabel{font-size:10px;margin-bottom:1px;}.trick{background:#0a0a00;border:1px dashed #2a2a2a;border-radius:7px;padding:9px;margin-top:7px;font-size:12px;color:var(--muted2);line-height:1.7;}.trick b{color:var(--accent);}
-.hero{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;}
-.hero h2{font-family:"Syne",sans-serif;font-weight:800;font-size:18px;color:var(--accent);margin-bottom:5px;}
-.hero p{font-size:12px;color:var(--muted2);line-height:1.7;margin-bottom:10px;}
-.hack{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:14px;margin-bottom:9px;}
-.ht{font-family:"Syne",sans-serif;font-weight:800;font-size:14px;color:var(--orange);margin-bottom:4px;}
-.htag{display:inline-block;background:#2c1000;color:var(--orange);font-size:9px;padding:2px 6px;border-radius:4px;text-transform:uppercase;margin-bottom:7px;}
-.hb{font-size:12px;color:var(--muted2);line-height:1.8;}.hb b{color:var(--text);}
-.hex{background:#0d0d0d;border-radius:7px;padding:9px;margin-top:7px;font-size:12px;line-height:1.9;}
+.eg{background:#0a1600;border-left:3px solid var(--accent);padding:5px 8px;border-radius:0 5px 5px 0;font-size:11px;color:#ccc;}
+.eb{background:#160a00;border-left:3px solid var(--orange);padding:5px 8px;border-radius:0 5px 5px 0;font-size:11px;color:#ccc;}
+.elabel{font-size:9px;margin-bottom:1px;}
+.trick{background:#0a0a00;border:1px dashed #252500;border-radius:7px;padding:8px;margin-top:6px;font-size:11px;color:var(--muted2);line-height:1.7;}
+.trick b{color:var(--accent);}
+.hero{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:14px;margin-bottom:11px;}
+.hero h2{font-family:"Syne",sans-serif;font-weight:800;font-size:16px;color:var(--accent);margin-bottom:5px;}
+.hero p{font-size:11px;color:var(--muted2);line-height:1.7;margin-bottom:8px;}
+.hack{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;}
+.ht{font-family:"Syne",sans-serif;font-weight:800;font-size:13px;color:var(--orange);margin-bottom:3px;}
+.htag{display:inline-block;background:#2c1000;color:var(--orange);font-size:8px;padding:2px 6px;border-radius:3px;text-transform:uppercase;margin-bottom:6px;}
+.hb{font-size:11px;color:var(--muted2);line-height:1.8;}.hb b{color:var(--text);}
+.hex{background:#0c0c0c;border-radius:6px;padding:8px;margin-top:6px;font-size:11px;line-height:1.9;}
 .yes{color:var(--accent);}.no2{color:var(--orange);}
-.sblock{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:14px;margin-bottom:9px;}
-.stitle{font-family:"Syne",sans-serif;font-weight:800;font-size:16px;color:var(--accent);margin-bottom:7px;}
-.sbody{font-size:12px;color:var(--muted2);line-height:1.9;}.sbody b{color:var(--text);}.sbody .hl{color:var(--accent);}.sbody .no{color:var(--orange);}
-.step{display:flex;gap:9px;margin-bottom:9px;align-items:flex-start;}
-.snum{background:var(--accent);color:#000;font-family:"Syne",sans-serif;font-weight:800;font-size:11px;padding:2px 7px;border-radius:4px;flex-shrink:0;margin-top:1px;}
-.stxt{font-size:12px;color:var(--muted2);line-height:1.7;}.stxt b{color:var(--text);}
-.isearch{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:13px;padding:10px 14px;border-radius:8px;outline:none;margin-bottom:11px;}
-.itbl{width:100%;border-collapse:collapse;font-size:12px;}
-.itbl th{text-align:left;color:var(--muted);font-size:10px;text-transform:uppercase;padding:5px 7px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);}
-.itbl td{padding:5px 7px;border-bottom:1px solid #161616;}.itbl tr:hover td{background:var(--card);}
-.v1c{color:var(--blue);font-weight:600;}.v2c{color:var(--accent);}.v3c{color:var(--purple);}.ruc{color:var(--muted2);font-size:11px;}
-.qscore{color:var(--accent);font-size:13px;text-align:center;margin-bottom:6px;}
-.qprog{font-size:11px;color:var(--muted);text-align:center;margin-bottom:11px;}
-.qcard{background:var(--card);border:2px solid var(--border);border-radius:13px;padding:24px 18px;text-align:center;margin-bottom:12px;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;transition:border-color .3s;}
-.qword{font-family:"Syne",sans-serif;font-weight:800;font-size:30px;}
-.qhint{font-size:12px;color:var(--muted);}
-.qans{font-size:16px;color:var(--accent);display:none;}.qpron2{font-size:11px;color:var(--orange);display:none;}.qex2{font-size:11px;color:#666;font-style:italic;display:none;}
+.sblock{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;}
+.stitle{font-family:"Syne",sans-serif;font-weight:800;font-size:15px;color:var(--accent);margin-bottom:6px;}
+.sbody{font-size:11px;color:var(--muted2);line-height:1.9;}.sbody b{color:var(--text);}.sbody .hl{color:var(--accent);}.sbody .no{color:var(--orange);}
+.step{display:flex;gap:8px;margin-bottom:8px;align-items:flex-start;}
+.snum{background:var(--accent);color:#000;font-family:"Syne",sans-serif;font-weight:800;font-size:10px;padding:2px 6px;border-radius:4px;flex-shrink:0;}
+.stxt{font-size:11px;color:var(--muted2);line-height:1.7;}.stxt b{color:var(--text);}
+.isearch{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:12px;padding:9px 13px;border-radius:8px;outline:none;margin-bottom:10px;}
+.itbl{width:100%;border-collapse:collapse;font-size:11px;}
+.itbl th{text-align:left;color:var(--muted);font-size:9px;text-transform:uppercase;padding:5px 6px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:1;}
+.itbl td{padding:5px 6px;border-bottom:1px solid #141414;vertical-align:top;}
+.itbl tr:hover td{background:var(--card);}
+.v1c{color:var(--blue);font-weight:700;}.v2c{color:var(--accent);}.v3c{color:var(--purple);}.ruc{color:var(--muted2);font-size:10px;}
+.v-example{font-size:10px;color:#444;font-style:italic;line-height:1.5;margin-top:3px;}
+.qscore{color:var(--accent);font-size:12px;text-align:center;margin-bottom:5px;}
+.qprog{font-size:10px;color:var(--muted);text-align:center;margin-bottom:10px;}
+.qcard{background:var(--card);border:2px solid var(--border);border-radius:12px;padding:22px 16px;text-align:center;margin-bottom:11px;min-height:130px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;transition:border-color .3s;}
+.qword{font-family:"Syne",sans-serif;font-weight:800;font-size:28px;}
+.qhint{font-size:11px;color:var(--muted);}
+.qans{font-size:15px;color:var(--accent);display:none;}
+.qpron2{font-size:11px;color:var(--orange);display:none;}
+.qex2{font-size:10px;color:#666;font-style:italic;display:none;}
 .qbtns{display:flex;gap:7px;}
-.qbtn{flex:1;padding:11px;border-radius:9px;border:none;font-family:"IBM Plex Mono",monospace;font-size:11px;cursor:pointer;font-weight:600;transition:all .15s;}
-.qshow{background:var(--accent);color:#000;}.qknow{background:#1a3300;color:var(--accent);border:1px solid var(--accent);}.qskip{background:var(--card);color:var(--muted);border:1px solid var(--border);}
-.train-modes{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
-.tm-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:10px;padding:7px 14px;border-radius:20px;cursor:pointer;transition:all .2s;text-transform:uppercase;}
-.tm-btn:hover{border-color:var(--accent);color:var(--text);}.tm-btn.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700;}
-.train-card{background:var(--card);border:2px solid var(--border);border-radius:13px;padding:20px;margin-bottom:12px;transition:border-color .3s;}
-.train-question{font-family:"Syne",sans-serif;font-weight:700;font-size:17px;margin-bottom:6px;color:var(--text);}
-.train-hint{font-size:11px;color:var(--muted);margin-bottom:12px;}
-.train-input{width:100%;background:#0d0d0d;border:1px solid var(--border);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:14px;padding:11px 13px;border-radius:8px;outline:none;margin-bottom:10px;transition:border-color .2s;}
+.qbtn{flex:1;padding:10px;border-radius:8px;border:none;font-family:"IBM Plex Mono",monospace;font-size:11px;cursor:pointer;font-weight:600;transition:all .15s;}
+.qshow{background:var(--accent);color:#000;}
+.qknow{background:#1a3300;color:var(--accent);border:1px solid var(--accent);}
+.qskip{background:var(--card);color:var(--muted);border:1px solid var(--border);}
+.train-modes{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
+.tm-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:10px;padding:6px 12px;border-radius:20px;cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.tm-btn:hover{border-color:var(--accent);color:var(--text);}
+.tm-btn.active{background:var(--accent);color:#000;font-weight:700;}
+.train-card{background:var(--card);border:2px solid var(--border);border-radius:12px;padding:18px;margin-bottom:11px;transition:border-color .3s;}
+.train-question{font-family:"Syne",sans-serif;font-weight:700;font-size:16px;margin-bottom:5px;color:var(--text);line-height:1.4;}
+.train-hint{font-size:10px;color:var(--muted);margin-bottom:10px;}
+.train-input{width:100%;background:#0c0c0c;border:1px solid var(--border);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:13px;padding:10px 12px;border-radius:7px;outline:none;margin-bottom:9px;transition:border-color .2s;}
 .train-input:focus{border-color:var(--accent);}
-.train-check-btn{width:100%;background:var(--accent);color:#000;border:none;font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:700;padding:11px;border-radius:8px;cursor:pointer;margin-bottom:10px;}
-.train-result{font-size:13px;padding:10px 12px;border-radius:8px;display:none;line-height:1.6;}
-.tr-correct{background:#0a1a00;border:1px solid var(--accent);color:var(--accent);}.tr-wrong{background:#1a0a00;border:1px solid var(--orange);color:var(--orange);}
-.train-next{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:12px;padding:9px;border-radius:8px;cursor:pointer;display:none;}
-.train-score{font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px;}.train-score b{color:var(--accent);}
-.mc-options{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;}
-.mc-opt{background:#0d0d0d;border:1px solid var(--border);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:13px;padding:10px 13px;border-radius:8px;cursor:pointer;text-align:left;transition:all .15s;}
-.mc-opt:hover{border-color:var(--accent);}.mc-opt.correct{background:#0a1a00;border-color:var(--accent);color:var(--accent);}.mc-opt.wrong{background:#1a0a00;border-color:var(--orange);color:var(--orange);}
-.sent-words{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px;min-height:44px;background:#0d0d0d;border-radius:8px;padding:10px;}
-.sent-word{background:var(--card);border:1px solid var(--border);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:12px;padding:5px 10px;border-radius:6px;cursor:pointer;transition:all .15s;user-select:none;}
+.train-check-btn{width:100%;background:var(--accent);color:#000;border:none;font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:700;padding:10px;border-radius:7px;cursor:pointer;margin-bottom:9px;}
+.train-result{font-size:12px;padding:9px 11px;border-radius:7px;display:none;line-height:1.6;}
+.tr-correct{background:#0a1600;border:1px solid var(--accent);color:var(--accent);}
+.tr-wrong{background:#160900;border:1px solid var(--orange);color:var(--orange);}
+.train-next{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:11px;padding:8px;border-radius:7px;cursor:pointer;display:none;}
+.train-score{font-size:11px;color:var(--muted);text-align:center;margin-bottom:9px;}.train-score b{color:var(--accent);}
+.mc-options{display:flex;flex-direction:column;gap:6px;margin-bottom:9px;}
+.mc-opt{background:#0c0c0c;border:1px solid var(--border);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:12px;padding:9px 12px;border-radius:7px;cursor:pointer;text-align:left;transition:all .15s;}
+.mc-opt:hover{border-color:var(--accent);}
+.mc-opt.correct{background:#0a1600;border-color:var(--accent);color:var(--accent);}
+.mc-opt.wrong{background:#160900;border-color:var(--orange);color:var(--orange);}
+.sent-words{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;min-height:40px;background:#0c0c0c;border-radius:7px;padding:8px;}
+.sent-word{background:var(--card);border:1px solid var(--border);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:11px;padding:4px 9px;border-radius:5px;cursor:pointer;transition:all .15s;user-select:none;}
 .sent-word:hover{border-color:var(--orange);color:var(--orange);}
-.sent-answer{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px;min-height:44px;background:#0a0a0a;border:1px dashed var(--border);border-radius:8px;padding:10px;}
+.sent-answer{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;min-height:40px;background:#080808;border:1px dashed var(--border);border-radius:7px;padding:8px;}
 .sent-answer .sent-word{border-color:var(--accent);color:var(--accent);}
+.pairs-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.pair-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px;text-align:center;}
+.pair-word{font-family:"Syne",sans-serif;font-weight:800;font-size:16px;color:var(--accent);margin-bottom:3px;}
+.pair-ru{font-size:11px;color:var(--muted2);margin-bottom:5px;}
+.pair-arrow{font-size:12px;color:var(--border);text-align:center;margin:2px 0;}
+.pair-opp{font-family:"Syne",sans-serif;font-weight:800;font-size:16px;color:var(--orange);}
+.pair-opp-ru{font-size:11px;color:var(--muted2);}
+.story-card{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:14px;margin-bottom:9px;}
+.story-title{font-family:"Syne",sans-serif;font-weight:800;font-size:14px;color:var(--accent);margin-bottom:8px;}
+.story-line{display:flex;gap:8px;align-items:flex-start;margin-bottom:7px;padding-bottom:7px;border-bottom:1px solid var(--border);}
+.story-line:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.story-word{background:#0d1600;border:1px solid var(--accent);color:var(--accent);font-family:"Syne",sans-serif;font-weight:700;font-size:12px;padding:3px 8px;border-radius:4px;flex-shrink:0;}
+.story-en{font-size:12px;color:var(--text);line-height:1.5;flex:1;}
+.story-ru{font-size:11px;color:var(--muted2);margin-top:1px;}
+.native-card{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:13px;margin-bottom:8px;display:flex;gap:12px;}
+.nt-side{flex:1;}
+.nt-label{font-size:9px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;font-weight:700;}
+.nt-ru-label{color:var(--red);}.nt-en-label{color:var(--accent);}
+.nt-text{font-size:13px;line-height:1.6;}
+.nt-ru .nt-text{color:#888;font-style:italic;}
+.nt-en .nt-text{color:var(--accent);font-family:"Syne",sans-serif;font-weight:700;}
+.nt-divider{width:1px;background:var(--border);margin:0 2px;}
+.nt-note{font-size:10px;color:var(--muted2);margin-top:5px;line-height:1.5;}
+.family-card{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:13px;margin-bottom:8px;}
+.family-root{font-family:"Syne",sans-serif;font-weight:800;font-size:18px;color:var(--accent);margin-bottom:8px;}
+.family-words{display:flex;flex-wrap:wrap;gap:6px;}
+.fw{background:#0d1600;border:1px solid #243600;border-radius:5px;padding:4px 9px;font-size:11px;}
+.fw-en{color:var(--accent);font-weight:700;}
+.fw-pos{font-size:9px;color:var(--muted);margin-left:3px;}
+.fw-ru{color:var(--muted2);font-size:10px;margin-top:1px;}
+.cs-block{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:13px;margin-bottom:9px;}
+.cs-title{font-family:"Syne",sans-serif;font-weight:800;font-size:14px;color:var(--blue);margin-bottom:8px;}
+.cs-table{width:100%;border-collapse:collapse;font-size:11px;}
+.cs-table th{text-align:left;color:var(--muted);font-size:9px;text-transform:uppercase;padding:4px 7px;border-bottom:1px solid var(--border);}
+.cs-table td{padding:5px 7px;border-bottom:1px solid #141414;color:var(--text);}
+.cs-table tr:last-child td{border-bottom:none;}
+.cs-table .key{color:var(--accent);font-weight:700;font-family:"Syne",sans-serif;}
+.cs-table .en{color:var(--blue);}
+.cs-table .note{color:var(--muted2);font-size:10px;}
 </style>
 </head>
 <body>
-<h1><span class="g">ENG</span><br><span class="o">HUB</span> <span style="font-size:.32em;color:var(--muted)">v3</span></h1>
-<p class="sub">1500+ слов · времена с примерами · 4 типа тренинга · лайфхаки · quiz</p>
+
+<div class="header">
+  <h1><span class="g">ENG</span><br><span class="o">HUB</span></h1>
+  <p class="sub">🇺🇸 American English · 3000+ words · stories · native thinking · families · cheatsheets</p>
+</div>
+
+<div class="level-bar" id="level-bar">
+  <div class="level-row"><span class="level-name">A1</span><div class="level-track"><div class="level-fill lf-a1" id="lf-a1" style="width:0%"></div></div><span class="level-pct" id="lp-a1">0%</span></div>
+  <div class="level-row"><span class="level-name">A2</span><div class="level-track"><div class="level-fill lf-a2" id="lf-a2" style="width:0%"></div></div><span class="level-pct" id="lp-a2">0%</span></div>
+  <div class="level-row"><span class="level-name">B1</span><div class="level-track"><div class="level-fill lf-b1" id="lf-b1" style="width:0%"></div></div><span class="level-pct" id="lp-b1">0%</span></div>
+  <div class="level-row"><span class="level-name">B2</span><div class="level-track"><div class="level-fill lf-b2" id="lf-b2" style="width:0%"></div></div><span class="level-pct" id="lp-b2">0%</span></div>
+  <div class="total-words">Total words: <b id="total-count">0</b> · Known: <b id="known-count">0</b></div>
+</div>
+
 <div class="nav">
   <button class="nb active" onclick="showSec('vocab',this)">📚 Vocab</button>
   <button class="nb" onclick="showSec('tenses',this)">⏱ Tenses</button>
   <button class="nb" onclick="showSec('train',this)">🎯 Training</button>
+  <button class="nb" onclick="showSec('native',this)">🧠 Native Think</button>
+  <button class="nb" onclick="showSec('stories',this)">📖 Stories</button>
+  <button class="nb" onclick="showSec('pairs',this)">⇄ Pairs</button>
+  <button class="nb" onclick="showSec('families',this)">🌱 Families</button>
   <button class="nb" onclick="showSec('hacks',this)">⚡ Hacks</button>
-  <button class="nb" onclick="showSec('strategy',this)">🚀 Strategy</button>
+  <button class="nb" onclick="showSec('cheat',this)">📋 Cheatsheets</button>
   <button class="nb" onclick="showSec('irreg',this)">🔀 Irreg</button>
   <button class="nb" onclick="showSec('quiz',this)">🧠 Quiz</button>
 </div>
 
 <div class="section active" id="sec-vocab">
-  <div class="sw"><input type="text" id="vsearch" placeholder="search word..."></div>
+  <div class="sw"><input type="text" id="vsearch" placeholder="search English or Russian..."></div>
   <div class="tabs" id="vtabs"></div>
-  <div class="stats" id="vstats"></div>
+  <div class="vstats" id="vstats"></div>
   <div class="grid" id="vgrid"></div>
 </div>
 
 <div class="section" id="sec-tenses">
   <div class="hero">
-    <h2>Времена английского</h2>
-    <p>Один глагол — пять времён. Запоминай через образы, не через правила.<br>
-    Возьми глагол <b style="color:var(--accent)">EAT</b> и представь:</p>
-    <div style="font-size:12px;line-height:2.2;color:var(--muted2);">
-      <b style="color:var(--blue)">I eat at 8am</b> → мой режим, всегда так<br>
-      <b style="color:var(--blue)">I am eating</b> → вижу это прямо сейчас<br>
-      <b style="color:var(--blue)">I ate</b> → уже всё, прошло<br>
-      <b style="color:var(--blue)">I have eaten</b> → уже сыт → поэтому не хочу сейчас<br>
-      <b style="color:var(--blue)">I will eat</b> → решил только что
+    <h2>⏱ Времена через образы</h2>
+    <p>Запоминай не правило — запоминай <b>картинку</b>. Один глагол EAT — пять времён:</p>
+    <div style="font-size:12px;line-height:2.3;color:var(--muted2);background:#0c0c0c;padding:10px;border-radius:7px;margin-top:6px;">
+      <b style="color:var(--blue)">I eat at 8</b> → мой режим, всегда так ← Simple<br>
+      <b style="color:var(--blue)">I am eating</b> → вижу это прямо сейчас ← Continuous<br>
+      <b style="color:var(--blue)">I ate</b> → уже всё, прошло ← Past Simple<br>
+      <b style="color:var(--blue)">I have eaten</b> → уже сыт → поэтому не хочу сейчас ← Perfect<br>
+      <b style="color:var(--blue)">I will eat</b> → решил только что ← Future
     </div>
   </div>
   <div class="tbox must">
     <div class="tname">Present Simple</div><span class="ttag tag-must">🔥 учи сейчас</span>
     <div class="twhen">Факты, привычки, расписание</div>
-    <div class="formula">I/You/We/They + V1 &nbsp;|&nbsp; He/She/It + V1+<b>s</b><br>Отриц: <b>don't / doesn't</b> + V1<br>Вопрос: <b>Do / Does</b> + подл + V1?</div>
+    <div class="formula">I/You/We/They + <b>V1</b> · He/She/It + <b>V1+s</b><br>Отриц: <b>don't / doesn't</b> + V1<br>Вопрос: <b>Do / Does</b> + подл + V1?</div>
     <div class="erow">
       <div class="eg"><span class="elabel yes">✓ факт</span> I <b>live</b> in Warsaw. She <b>works</b> at Bolt.</div>
-      <div class="eg"><span class="elabel yes">✓ привычка</span> I <b>go</b> to the gym every day.</div>
+      <div class="eg"><span class="elabel yes">✓ привычка</span> I <b>go</b> to the gym every morning.</div>
       <div class="eg"><span class="elabel yes">✓ вопрос</span> <b>Do</b> you speak English? — Yes, I <b>do</b>.</div>
-      <div class="eg"><span class="elabel yes">✓ отриц</span> He <b>doesn't</b> drink coffee.</div>
+      <div class="eg"><span class="elabel yes">✓ отриц</span> He <b>doesn't</b> like coffee.</div>
       <div class="eb"><span class="elabel no2">✗</span> I am live. / He work. / Do he speaks?</div>
     </div>
-    <div class="trick">🔑 <b>Маркеры:</b> always, usually, often, sometimes, never, every day/week<br>⚠️ После he/she/it → +s: work→<b>works</b>, go→<b>goes</b>, have→<b>has</b></div>
+    <div class="trick">🔑 <b>Маркеры:</b> always, usually, often, sometimes, never, every day<br>⚠️ He/She/It → всегда +s: go→<b>goes</b>, have→<b>has</b>, do→<b>does</b></div>
   </div>
   <div class="tbox must">
     <div class="tname">Present Continuous</div><span class="ttag tag-must">🔥 учи сейчас</span>
-    <div class="twhen">Прямо сейчас / временно в этот период</div>
-    <div class="formula"><b>am/is/are</b> + V-ing<br>Отриц: am/is/are + <b>not</b> + V-ing<br>Вопрос: Am/Is/Are + подл + V-ing?</div>
+    <div class="twhen">Прямо сейчас / временно / договорённый план</div>
+    <div class="formula"><b>am/is/are</b> + V<b>-ing</b><br>Отриц: am/is/are + <b>not</b> + V-ing<br>Вопрос: Am/Is/Are + подл + V-ing?</div>
     <div class="erow">
       <div class="eg"><span class="elabel yes">✓ сейчас</span> I <b>am working</b> from home right now.</div>
       <div class="eg"><span class="elabel yes">✓ временно</span> We <b>are staying</b> at a hotel this week.</div>
       <div class="eg"><span class="elabel yes">✓ план</span> I <b>am meeting</b> him tomorrow. (договорено)</div>
       <div class="eb"><span class="elabel no2">✗</span> I am work. / I working. / She is go.</div>
     </div>
-    <div class="trick">🔑 <b>Маркеры:</b> now, right now, at the moment, currently, this week<br>⚠️ НЕ используют -ing: <b>know, like, want, need, understand, mean, seem, own, love, hate, believe</b></div>
+    <div class="trick">🔑 <b>Маркеры:</b> now, right now, at the moment, currently, this week<br>⚠️ <b>НЕ -ing:</b> know, like, want, need, understand, mean, seem, own, love, hate, believe, remember, forget</div>
   </div>
   <div class="tbox must">
     <div class="tname">Past Simple</div><span class="ttag tag-must">🔥 учи сейчас</span>
-    <div class="twhen">Завершённое действие в прошлом — самое нужное время</div>
-    <div class="formula">V2 (правильные: V+<b>ed</b> | неправильные: своя форма)<br>Отриц: <b>didn't</b> + V1 ← НЕ V2!<br>Вопрос: <b>Did</b> + подл + V1?</div>
+    <div class="twhen">Завершённое действие в прошлом</div>
+    <div class="formula"><b>V2</b> (правильные: V+<b>ed</b> | неправильные: своя форма)<br>Отриц: <b>didn't</b> + V1 ← НЕ V2!<br>Вопрос: <b>Did</b> + подл + V1?</div>
     <div class="erow">
       <div class="eg"><span class="elabel yes">✓</span> I <b>went</b> shopping. We <b>found</b> a JBL speaker.</div>
-      <div class="eg"><span class="elabel yes">✓</span> We <b>moved</b> to Warsaw 5 years ago.</div>
       <div class="eg"><span class="elabel yes">✓ отриц</span> I <b>didn't go</b> to the gym yesterday.</div>
-      <div class="eg"><span class="elabel yes">✓ вопрос</span> <b>Did</b> you go there? — Yes, I <b>did</b>.</div>
+      <div class="eg"><span class="elabel yes">✓ вопрос</span> <b>Did</b> you go? — Yes, I <b>did</b>.</div>
       <div class="eb"><span class="elabel no2">✗</span> I did went. / I didn't went. / Did he went?</div>
     </div>
-    <div class="trick">🔑 <b>Маркеры:</b> yesterday, last week/year, ago, in 2020, when I was...<br>💡 <b>Лайфхак:</b> Забыл V2? → <b>"I did go"</b> — усилительная форма, технически верно!</div>
+    <div class="trick">🔑 <b>Маркеры:</b> yesterday, last week/year, ago, in 2020, when I was...<br>💡 <b>Лайфхак:</b> Забыл V2? → <b>"I did go"</b> — технически верно!</div>
   </div>
   <div class="tbox must">
     <div class="tname">Future: will / going to</div><span class="ttag tag-must">🔥 учи сейчас</span>
-    <div class="twhen">Будущее: спонтанное vs запланированное</div>
-    <div class="formula"><b>will</b> + V1 → спонтанно, обещание, предсказание<br><b>going to</b> + V1 → план, намерение<br>Continuous → конкретный договорённый план</div>
+    <div class="twhen">Будущее: спонтанно vs запланировано</div>
+    <div class="formula"><b>will</b> + V1 → спонтанно, обещание, предсказание<br><b>going to</b> + V1 → план, намерение</div>
     <div class="erow">
-      <div class="eg"><span class="elabel yes">✓ will</span> "I'll call you." (решил только что)</div>
-      <div class="eg"><span class="elabel yes">✓ will</span> "It will rain tomorrow." (предсказание)</div>
-      <div class="eg"><span class="elabel yes">✓ going to</span> "We're going to Warsaw next month." (план)</div>
-      <div class="eg"><span class="elabel yes">✓ continuous</span> "I'm meeting him on Friday." (договорено)</div>
+      <div class="eg"><span class="elabel yes">✓ will — спонтанно</span> "I'll call you back." (решил сейчас)</div>
+      <div class="eg"><span class="elabel yes">✓ going to — план</span> "We're going to Warsaw next month."</div>
+      <div class="eg"><span class="elabel yes">✓ continuous — договорено</span> "I'm meeting him on Friday."</div>
     </div>
-    <div class="trick">💡 <b>Лайфхак:</b> Не помнишь разницу? Используй Continuous: <b>"I'm leaving tomorrow."</b></div>
+    <div class="trick">💡 Не помнишь разницу? Continuous всегда работает: <b>"I'm leaving tomorrow."</b></div>
   </div>
   <div class="tbox should">
     <div class="tname">Present Perfect</div><span class="ttag tag-should">📌 важно</span>
-    <div class="twhen">Прошлое → влияет на настоящее. Опыт. Результат.</div>
-    <div class="formula bl"><b>have/has</b> + V3<br>Отриц: <b>haven't/hasn't</b> + V3<br>Вопрос: <b>Have/Has</b> + подл + V3?</div>
+    <div class="twhen">Прошлое → влияет на настоящее · Опыт · Результат</div>
+    <div class="formula bl"><b>have / has</b> + V3<br>Отриц: <b>haven't / hasn't</b> + V3<br>Вопрос: <b>Have/Has</b> + подл + V3?</div>
     <div class="erow">
       <div class="eg"><span class="elabel yes">✓ опыт</span> Have you <b>ever been</b> to London? — No, never.</div>
-      <div class="eg"><span class="elabel yes">✓ до сих пор</span> I <b>have lived</b> here for 5 years. (и сейчас живу)</div>
+      <div class="eg"><span class="elabel yes">✓ до сих пор</span> I <b>have lived</b> here for 5 years.</div>
       <div class="eg"><span class="elabel yes">✓ just</span> I <b>have just got</b> home.</div>
-      <div class="eg"><span class="elabel yes">✓ yet/already</span> I <b>haven't finished</b> yet. / I've <b>already</b> done it.</div>
+      <div class="eg"><span class="elabel yes">✓ yet/already</span> I <b>haven't finished</b> yet. / I've <b>already</b> eaten.</div>
       <div class="eb"><span class="elabel no2">✗</span> I have went. / I lived here since 5 years.</div>
     </div>
-    <div class="trick">🔑 <b>Маркеры:</b> ever, never, already, yet, just, for, since, recently, lately<br>⚠️ "I <b>went</b> to London last year" (когда?) vs "I <b>have been</b> to London" (опыт вообще)</div>
+    <div class="trick">🔑 <b>Маркеры:</b> ever, never, already, yet, just, for, since, recently, lately</div>
   </div>
   <div class="tbox should">
     <div class="tname">Past Continuous</div><span class="ttag tag-should">📌 важно</span>
-    <div class="twhen">Фон в прошлом / что происходило в момент события</div>
-    <div class="formula bl"><b>was/were</b> + V-ing</div>
+    <div class="twhen">Фон события в прошлом / что происходило в момент</div>
+    <div class="formula bl"><b>was / were</b> + V-ing</div>
     <div class="erow">
       <div class="eg"><span class="elabel yes">✓</span> I <b>was working</b> when he called me.</div>
-      <div class="eg"><span class="elabel yes">✓</span> We <b>were having</b> dinner when power went out.</div>
       <div class="eg"><span class="elabel yes">✓ история</span> "I <b>was walking</b> home when suddenly I saw him."</div>
     </div>
-    <div class="trick">💡 <b>was/were + -ing</b> = фон  |  <b>Past Simple</b> = событие</div>
+    <div class="trick">💡 <b>was/were + -ing</b> = фон истории · <b>Past Simple</b> = само событие</div>
   </div>
   <div class="tbox should">
     <div class="tname">Modal Verbs</div><span class="ttag tag-should">📌 важно</span>
-    <div class="twhen">can / could / should / must / might / have to / would</div>
-    <div class="formula bl">Modal + V1 (без to, кроме have to)</div>
+    <div class="formula bl">Modal + V1 (без to, кроме have to / ought to)</div>
     <div class="erow">
       <div class="eg"><span class="elabel yes">can</span> I <b>can</b> drive. / <b>Can</b> you help?</div>
-      <div class="eg"><span class="elabel yes">could</span> <b>Could</b> you repeat that? (вежливо)</div>
-      <div class="eg"><span class="elabel yes">should</span> You <b>should</b> try this place.</div>
+      <div class="eg"><span class="elabel yes">could</span> <b>Could</b> you repeat? (вежливо)</div>
+      <div class="eg"><span class="elabel yes">should</span> You <b>should</b> try this.</div>
       <div class="eg"><span class="elabel yes">might</span> It <b>might</b> rain. (может быть)</div>
-      <div class="eg"><span class="elabel yes">have to</span> I <b>have to</b> work tomorrow. (вынужден)</div>
-      <div class="eg"><span class="elabel yes">would</span> I <b>would</b> love to. / <b>Would</b> you like some?</div>
+      <div class="eg"><span class="elabel yes">must</span> I <b>must</b> go. / You <b>must</b> be tired.</div>
+      <div class="eg"><span class="elabel yes">have to</span> I <b>have to</b> work. (вынужден)</div>
+      <div class="eg"><span class="elabel yes">would</span> I <b>would</b> love to! / <b>Would</b> you like some?</div>
     </div>
   </div>
   <div class="tbox later">
@@ -225,21 +315,21 @@ h1{font-family:"Syne",sans-serif;font-weight:800;font-size:clamp(26px,8vw,52px);
     <div class="formula pu">0: If + Present → Present (факт)<br>1: If + Present → <b>will</b> + V1 (реально)<br>2: If + Past → <b>would</b> + V1 (нереально)</div>
     <div class="erow">
       <div class="eg"><span class="elabel yes">1</span> If I have time, I <b>will call</b> you.</div>
-      <div class="eg"><span class="elabel yes">2</span> If I had money, I <b>would travel</b> the world.</div>
+      <div class="eg"><span class="elabel yes">2</span> If I had money, I <b>would travel</b>.</div>
     </div>
   </div>
   <div class="tbox skip">
-    <div class="tname">Future Perfect / Past Perfect Continuous / Future Continuous...</div>
+    <div class="tname">Future Perfect · Past Perfect Continuous · Future Continuous...</div>
     <span class="ttag tag-skip">💤 C1–C2 — не нужны для B1–B2</span>
   </div>
   <div class="hero" style="margin-top:12px;">
-    <h2 style="font-size:14px;margin-bottom:9px;">Шпаргалка — когда что</h2>
-    <div style="font-size:12px;line-height:2.1;color:var(--muted2);">
-      <b style="color:var(--text)">Факт о себе / привычка</b> → Present Simple<br>
-      <b style="color:var(--text)">Что делаю прямо сейчас</b> → Present Continuous<br>
-      <b style="color:var(--text)">Что было в прошлом</b> → Past Simple<br>
-      <b style="color:var(--text)">Опыт жизни / результат</b> → Present Perfect<br>
-      <b style="color:var(--text)">Фон истории в прошлом</b> → Past Continuous<br>
+    <h2 style="font-size:13px;margin-bottom:8px;">⚡ Шпаргалка</h2>
+    <div style="font-size:11px;line-height:2.1;color:var(--muted2);">
+      <b style="color:var(--text)">Факт / привычка</b> → Present Simple<br>
+      <b style="color:var(--text)">Прямо сейчас</b> → Present Continuous<br>
+      <b style="color:var(--text)">Было в прошлом</b> → Past Simple<br>
+      <b style="color:var(--text)">Опыт / результат</b> → Present Perfect<br>
+      <b style="color:var(--text)">Фон истории</b> → Past Continuous<br>
       <b style="color:var(--text)">Конкретный план</b> → going to / Continuous<br>
       <b style="color:var(--text)">Спонтанное решение</b> → will
     </div>
@@ -248,77 +338,184 @@ h1{font-family:"Syne",sans-serif;font-weight:800;font-size:clamp(26px,8vw,52px);
 
 <div class="section" id="sec-train">
   <div class="train-modes">
-    <button class="tm-btn active" onclick="setTrainMode('mc',this)">🎯 Multiple choice</button>
-    <button class="tm-btn" onclick="setTrainMode('type',this)">✍️ Type it</button>
-    <button class="tm-btn" onclick="setTrainMode('sent',this)">🔤 Build sentence</button>
-    <button class="tm-btn" onclick="setTrainMode('tense',this)">⏱ Tense drill</button>
+    <button class="tm-btn active" onclick="setTrainMode('mc',this)">🎯 Choice</button>
+    <button class="tm-btn" onclick="setTrainMode('type',this)">✍️ Type</button>
+    <button class="tm-btn" onclick="setTrainMode('sent',this)">🔤 Build</button>
+    <button class="tm-btn" onclick="setTrainMode('tense',this)">⏱ Tense</button>
+    <button class="tm-btn" onclick="setTrainMode('sprint',this)">⚡ Sprint</button>
   </div>
   <div class="train-score" id="train-score">correct: <b>0</b> / 0</div>
   <div id="train-area"></div>
 </div>
 
+<div class="section" id="sec-native">
+  <div class="hero">
+    <h2>🧠 Как думают носители</h2>
+    <p>Русский переводит дословно — носитель говорит иначе. Запомни эти паттерны.</p>
+  </div>
+  <div id="native-list"></div>
+</div>
+
+<div class="section" id="sec-stories">
+  <div class="hero">
+    <h2>📖 Мини-истории</h2>
+    <p>3–5 слов в контексте запоминаются в 3x быстрее. Читай историю — слова входят сами.</p>
+  </div>
+  <div id="stories-list"></div>
+</div>
+
+<div class="section" id="sec-pairs">
+  <div class="hero">
+    <h2>⇄ Слова-пары</h2>
+    <p>Мозг запоминает пары быстрее. Учи противоположности вместе.</p>
+  </div>
+  <div class="pairs-grid" id="pairs-list"></div>
+</div>
+
+<div class="section" id="sec-families">
+  <div class="hero">
+    <h2>🌱 Семейства слов</h2>
+    <p>Выучи один корень — получи 4–6 слов бесплатно.</p>
+  </div>
+  <div id="families-list"></div>
+</div>
+
 <div class="section" id="sec-hacks">
   <div class="hack"><div class="ht">Забыл V2 неправильного глагола</div><div class="htag">глаголы</div>
   <div class="hb">Используй <b>did + V1</b> — усилительная форма, технически верно.</div>
-  <div class="hex"><span class="yes">✓</span> "I <b>did go</b> there." (вместо went)<br><span class="yes">✓</span> "We <b>did find</b> it." (вместо found)<br><span class="no2">✗</span> "I did went." — нельзя</div></div>
-  <div class="hack"><div class="ht">Прошлое без V2 — используй "was"</div><div class="htag">прошедшее</div>
-  <div class="hex"><span class="yes">✓</span> "It <b>was</b> really good." (вместо enjoyed)<br><span class="yes">✓</span> "We <b>were</b> late." (вместо arrived late)<br><span class="yes">✓</span> "I <b>was</b> so tired." (вместо felt tired)</div></div>
+  <div class="hex"><span class="yes">✓</span> "I <b>did go</b> there." (вместо went)<br><span class="yes">✓</span> "We <b>did find</b> it." (вместо found)<br><span class="no2">✗</span> "I did went." — нельзя, два прошлых</div></div>
+  <div class="hack"><div class="ht">Прошлое без V2 → используй "was"</div><div class="htag">прошедшее</div>
+  <div class="hex"><span class="yes">✓</span> "It <b>was</b> good."<br><span class="yes">✓</span> "We <b>were</b> late."<br><span class="yes">✓</span> "I <b>was</b> tired."</div></div>
   <div class="hack"><div class="ht">Планы без Future → Continuous</div><div class="htag">будущее</div>
   <div class="hex"><span class="yes">✓</span> "I'm meeting him next week."<br><span class="yes">✓</span> "We're going to Warsaw tomorrow."<br><span class="yes">✓</span> "I'm working from home on Friday."</div></div>
   <div class="hack"><div class="ht">Забыл слово — опиши его</div><div class="htag">словарь</div>
+  <div class="hb">Никогда не молчи. Описание = B2 навык.</div>
   <div class="hex">Забыл "speaker" → <span class="yes">"A thing that plays music, like a big box"</span><br>Забыл "traffic jam" → <span class="yes">"When too many cars and nothing moves"</span></div></div>
   <div class="hack"><div class="ht">Fillers — выиграй время</div><div class="htag">разговор</div>
   <div class="hex"><b style="color:var(--accent)">Well...</b> — ну...<br><b style="color:var(--accent)">You know...</b> — ты понимаешь<br><b style="color:var(--accent)">I mean...</b> — я имею в виду<br><b style="color:var(--accent)">Let me think...</b> — дай подумаю<br><b style="color:var(--accent)">How do I put it...</b> — как бы сказать<br><b style="color:var(--accent)">So basically...</b> — ну в общем-то</div></div>
   <div class="hack"><div class="ht">Contractions — звучи как носитель</div><div class="htag">произношение</div>
-  <div class="hex">I am → <b style="color:var(--accent)">I'm</b>  |  I will → <b style="color:var(--accent)">I'll</b><br>I have → <b style="color:var(--accent)">I've</b>  |  I would → <b style="color:var(--accent)">I'd</b><br>do not → <b style="color:var(--accent)">don't</b>  |  did not → <b style="color:var(--accent)">didn't</b><br>going to → <b style="color:var(--accent)">gonna</b>  |  want to → <b style="color:var(--accent)">wanna</b><br>have to → <b style="color:var(--accent)">gotta</b>  |  kind of → <b style="color:var(--accent)">kinda</b></div></div>
+  <div class="hex">I am → <b style="color:var(--accent)">I'm</b>  |  I will → <b style="color:var(--accent)">I'll</b><br>I have → <b style="color:var(--accent)">I've</b>  |  I would → <b style="color:var(--accent)">I'd</b><br>going to → <b style="color:var(--accent)">gonna</b>  |  want to → <b style="color:var(--accent)">wanna</b><br>have to → <b style="color:var(--accent)">gotta</b>  |  kind of → <b style="color:var(--accent)">kinda</b></div></div>
   <div class="hack"><div class="ht">10 универсальных реакций</div><div class="htag">разговор</div>
   <div class="hex"><b style="color:var(--accent)">That makes sense.</b> — логично<br><b style="color:var(--accent)">Exactly.</b> — именно<br><b style="color:var(--accent)">Fair enough.</b> — ну и ладно<br><b style="color:var(--accent)">Totally.</b> — согласен<br><b style="color:var(--accent)">No way!</b> — да ладно!<br><b style="color:var(--accent)">That's wild.</b> — это безумие<br><b style="color:var(--accent)">I get it.</b> — понял<br><b style="color:var(--accent)">Same here.</b> — у меня так же<br><b style="color:var(--accent)">Not really.</b> — не особо<br><b style="color:var(--accent)">Kind of.</b> — как бы да</div></div>
   <div class="hack"><div class="ht">Мягкое несогласие</div><div class="htag">мнения</div>
   <div class="hex"><b style="color:var(--accent)">I'm not sure about that.</b><br><b style="color:var(--accent)">I see it differently.</b><br><b style="color:var(--accent)">I get what you mean, but...</b><br><b style="color:var(--accent)">I'd say it's more like...</b></div></div>
-  <div class="hack"><div class="ht">Как говорить "нравится" по-разному</div><div class="htag">эмоции</div>
-  <div class="hex"><b style="color:var(--accent)">I love it.</b> — очень нравится<br><b style="color:var(--accent)">I'm into it.</b> — мне заходит<br><b style="color:var(--accent)">I'm a big fan of...</b> — я фанат<br><b style="color:var(--accent)">I'm obsessed with it.</b> — помешан<br><b style="color:var(--accent)">It hits different.</b> — особое ощущение</div></div>
   <div class="hack"><div class="ht">Связки для длинных предложений</div><div class="htag">структура</div>
   <div class="hex"><b style="color:var(--accent)">because</b> — потому что  |  <b style="color:var(--accent)">so</b> — поэтому<br><b style="color:var(--accent)">but</b> — но  |  <b style="color:var(--accent)">although</b> — хотя<br><b style="color:var(--accent)">which means</b> — что означает<br><b style="color:var(--accent)">that's why</b> — вот почему<br><b style="color:var(--accent)">on top of that</b> — вдобавок</div></div>
-  <div class="hack"><div class="ht">Артикль — не знаешь, ставь "the"</div><div class="htag">артикли</div>
-  <div class="hex"><span class="yes">✓</span> "I went to the market" — почти всегда ок<br><span class="no2">✗</span> "the Warsaw", "the Ukraine" — никогда</div></div>
 </div>
 
-<div class="section" id="sec-strategy">
-  <div class="sblock">
-    <div class="stitle">Почему большинство не говорит годами</div>
-    <div class="sbody">Они <b>учат язык</b> вместо того чтобы <b>использовать его</b>. Грамматика без практики = ноль.</div>
+<div class="section" id="sec-cheat">
+  <div class="cs-block">
+    <div class="cs-title">📍 Предлоги места</div>
+    <table class="cs-table">
+      <tr><th>Предлог</th><th>Значение</th><th>Пример</th></tr>
+      <tr><td class="key">in</td><td>внутри</td><td class="en">in the bag · in Warsaw · in 2020</td></tr>
+      <tr><td class="key">on</td><td>на поверхности</td><td class="en">on the table · on the wall · on the bus</td></tr>
+      <tr><td class="key">at</td><td>точка / место</td><td class="en">at home · at work · at the airport</td></tr>
+      <tr><td class="key">under</td><td>под</td><td class="en">under the bed</td></tr>
+      <tr><td class="key">above</td><td>над</td><td class="en">above the door</td></tr>
+      <tr><td class="key">next to</td><td>рядом</td><td class="en">next to the bank</td></tr>
+      <tr><td class="key">between</td><td>между</td><td class="en">between us</td></tr>
+      <tr><td class="key">behind</td><td>за / сзади</td><td class="en">behind the car</td></tr>
+      <tr><td class="key">in front of</td><td>перед</td><td class="en">in front of the office</td></tr>
+      <tr><td class="key">across from</td><td>напротив</td><td class="en">across from the hotel</td></tr>
+      <tr><td class="key">through</td><td>через / сквозь</td><td class="en">go through customs</td></tr>
+    </table>
   </div>
-  <div class="sblock">
-    <div class="stitle">Фаза 1 — База (1–2 месяца)</div>
-    <div class="step"><span class="snum">1</span><div class="stxt"><b>Переключи телефон на английский.</b></div></div>
-    <div class="step"><span class="snum">2</span><div class="stxt"><b>10 неправильных глаголов в день</b> из раздела Irreg.</div></div>
-    <div class="step"><span class="snum">3</span><div class="stxt"><b>Training здесь — 10 минут в день.</b></div></div>
-    <div class="step"><span class="snum">4</span><div class="stxt"><b>YouTube / Netflix с субтитрами.</b> Не учи — просто смотри.</div></div>
+  <div class="cs-block">
+    <div class="cs-title">🕐 Предлоги времени</div>
+    <table class="cs-table">
+      <tr><th>Предлог</th><th>Когда</th><th>Пример</th></tr>
+      <tr><td class="key">in</td><td>месяц / год / сезон</td><td class="en">in March · in 2020 · in summer</td></tr>
+      <tr><td class="key">on</td><td>день / дата</td><td class="en">on Monday · on June 5th</td></tr>
+      <tr><td class="key">at</td><td>точное время</td><td class="en">at 8am · at noon · at midnight</td></tr>
+      <tr><td class="key">for</td><td>продолжительность</td><td class="en">for 5 years · for 2 hours</td></tr>
+      <tr><td class="key">since</td><td>с какого момента</td><td class="en">since 2020 · since Monday</td></tr>
+      <tr><td class="key">ago</td><td>тому назад</td><td class="en">5 years ago · an hour ago</td></tr>
+      <tr><td class="key">by</td><td>не позже чем</td><td class="en">by Friday · by 5pm</td></tr>
+      <tr><td class="key">until</td><td>до (момента)</td><td class="en">until midnight · until Friday</td></tr>
+      <tr><td class="key">during</td><td>в течение</td><td class="en">during the meeting</td></tr>
+      <tr><td class="key">before</td><td>до</td><td class="en">before dinner · before 8am</td></tr>
+      <tr><td class="key">after</td><td>после</td><td class="en">after work · after that</td></tr>
+    </table>
   </div>
-  <div class="sblock">
-    <div class="stitle">Фаза 2 — Разговор (2–4 месяца)</div>
-    <div class="step"><span class="snum">1</span><div class="stxt"><b>Говори вслух каждый день.</b> Описывай что делаешь по-английски.</div></div>
-    <div class="step"><span class="snum">2</span><div class="stxt"><b>Практикуй со мной.</b> Разговор с правками — самый быстрый метод.</div></div>
-    <div class="step"><span class="snum">3</span><div class="stxt"><b>Комментарии в инсте на английском.</b> Живой язык.</div></div>
-    <div class="step"><span class="snum">4</span><div class="stxt"><b>Не переводи в голове.</b> Думай картинками.</div></div>
+  <div class="cs-block">
+    <div class="cs-title">🔄 Глаголы + Герундий (V-ing)</div>
+    <table class="cs-table">
+      <tr><th>Глагол</th><th>Пример</th></tr>
+      <tr><td class="key">enjoy</td><td class="en">I enjoy <b>working</b> out.</td></tr>
+      <tr><td class="key">finish</td><td class="en">I finished <b>eating</b>.</td></tr>
+      <tr><td class="key">avoid</td><td class="en">Avoid <b>making</b> mistakes.</td></tr>
+      <tr><td class="key">consider</td><td class="en">Consider <b>moving</b> here.</td></tr>
+      <tr><td class="key">keep</td><td class="en">Keep <b>going</b>.</td></tr>
+      <tr><td class="key">mind</td><td class="en">Do you mind <b>waiting</b>?</td></tr>
+      <tr><td class="key">miss</td><td class="en">I miss <b>seeing</b> you.</td></tr>
+      <tr><td class="key">suggest</td><td class="en">I suggest <b>trying</b> this.</td></tr>
+      <tr><td class="key">quit</td><td class="en">He quit <b>smoking</b>.</td></tr>
+      <tr><td class="key">practice</td><td class="en">Practice <b>speaking</b> daily.</td></tr>
+    </table>
   </div>
-  <div class="sblock">
-    <div class="stitle">Правила</div>
-    <div class="sbody">
-      <span class="hl">✓</span> <b>Ошибки — норма.</b><br>
-      <span class="hl">✓</span> <b>Понятность важнее правильности.</b><br>
-      <span class="hl">✓</span> <b>Не молчи.</b> Любое слово лучше паузы.<br>
-      <span class="no">✗</span> <b>Не учи грамматику без речи.</b><br>
-      <span class="no">✗</span> <b>Не жди "когда выучу".</b> Говори сейчас.
-    </div>
+  <div class="cs-block">
+    <div class="cs-title">➡️ Глаголы + Инфинитив (to V)</div>
+    <table class="cs-table">
+      <tr><th>Глагол</th><th>Пример</th></tr>
+      <tr><td class="key">want</td><td class="en">I want <b>to go</b>.</td></tr>
+      <tr><td class="key">need</td><td class="en">I need <b>to work</b>.</td></tr>
+      <tr><td class="key">decide</td><td class="en">I decided <b>to stay</b>.</td></tr>
+      <tr><td class="key">plan</td><td class="en">I plan <b>to move</b>.</td></tr>
+      <tr><td class="key">hope</td><td class="en">I hope <b>to see</b> you.</td></tr>
+      <tr><td class="key">try</td><td class="en">Try <b>to be</b> on time.</td></tr>
+      <tr><td class="key">manage</td><td class="en">I managed <b>to do</b> it.</td></tr>
+      <tr><td class="key">learn</td><td class="en">I'm learning <b>to drive</b>.</td></tr>
+      <tr><td class="key">promise</td><td class="en">I promise <b>to call</b>.</td></tr>
+    </table>
+  </div>
+  <div class="cs-block">
+    <div class="cs-title">❓ Вопросительные слова</div>
+    <table class="cs-table">
+      <tr><th>Слово</th><th>Значение</th><th>Пример</th></tr>
+      <tr><td class="key">What</td><td>что / какой</td><td class="en">What do you want?</td></tr>
+      <tr><td class="key">Where</td><td>где / куда</td><td class="en">Where are you from?</td></tr>
+      <tr><td class="key">When</td><td>когда</td><td class="en">When did you arrive?</td></tr>
+      <tr><td class="key">Who</td><td>кто</td><td class="en">Who told you?</td></tr>
+      <tr><td class="key">Why</td><td>почему</td><td class="en">Why did you leave?</td></tr>
+      <tr><td class="key">How</td><td>как</td><td class="en">How are you?</td></tr>
+      <tr><td class="key">How long</td><td>как долго</td><td class="en">How long have you lived here?</td></tr>
+      <tr><td class="key">How much</td><td>сколько (неисч.)</td><td class="en">How much does it cost?</td></tr>
+      <tr><td class="key">How many</td><td>сколько (исч.)</td><td class="en">How many days?</td></tr>
+      <tr><td class="key">Which</td><td>который из</td><td class="en">Which one do you prefer?</td></tr>
+      <tr><td class="key">Whose</td><td>чей</td><td class="en">Whose bag is this?</td></tr>
+    </table>
+  </div>
+  <div class="cs-block">
+    <div class="cs-title">📊 Степени сравнения</div>
+    <table class="cs-table">
+      <tr><th>Позитив</th><th>Сравнит.</th><th>Превосход.</th><th>Перевод</th></tr>
+      <tr><td class="key">good</td><td class="en">better</td><td class="en">the best</td><td>хороший</td></tr>
+      <tr><td class="key">bad</td><td class="en">worse</td><td class="en">the worst</td><td>плохой</td></tr>
+      <tr><td class="key">big</td><td class="en">bigger</td><td class="en">the biggest</td><td>большой</td></tr>
+      <tr><td class="key">fast</td><td class="en">faster</td><td class="en">the fastest</td><td>быстрый</td></tr>
+      <tr><td class="key">expensive</td><td class="en">more expensive</td><td class="en">the most expensive</td><td>дорогой</td></tr>
+      <tr><td class="key">important</td><td class="en">more important</td><td class="en">the most important</td><td>важный</td></tr>
+    </table>
+    <div style="font-size:10px;color:var(--muted2);margin-top:8px;">Короткие: + er / est · Длинные: more / the most</div>
   </div>
 </div>
 
 <div class="section" id="sec-irreg">
+  <div class="hero" style="margin-bottom:10px;">
+    <h2 style="font-size:13px;margin-bottom:5px;">Формы глагола</h2>
+    <div style="font-size:11px;color:var(--muted2);line-height:1.7;">
+      <b style="color:var(--blue)">V1</b> → Present (I <b>go</b> every day)<br>
+      <b style="color:var(--accent)">V2</b> → Past Simple (I <b>went</b> yesterday)<br>
+      <b style="color:var(--purple)">V3</b> → Perfect / Passive (I have <b>gone</b>)
+    </div>
+  </div>
   <input class="isearch" type="text" id="isearch" placeholder="search verb...">
-  <div class="stats" id="istats"></div>
-  <table class="itbl"><thead><tr><th>V1 (base)</th><th>V2 (past)</th><th>V3 (pp)</th><th>Значение</th></tr></thead>
-  <tbody id="itbody"></tbody></table>
+  <div class="vstats" id="istats"></div>
+  <table class="itbl">
+    <thead><tr><th>V1 (present)</th><th>V2 (past)</th><th>V3 (perfect)</th><th>Значение</th></tr></thead>
+    <tbody id="itbody"></tbody>
+  </table>
 </div>
 
 <div class="section" id="sec-quiz">
@@ -339,8 +536,26 @@ h1{font-family:"Syne",sans-serif;font-weight:800;font-size:clamp(26px,8vw,52px);
 </div>
 
 <script>
+// ═══ SAFE STORAGE ═══
+var _store = {};
+function safeGet(k){try{return localStorage.getItem(k);}catch(e){return _store[k]||null;}}
+function safeSet(k,v){try{localStorage.setItem(k,v);}catch(e){_store[k]=v;}}
+
+// ═══ SAFE SPEAK ═══
+function speak(text){
+  try{
+    if(!window.speechSynthesis)return;
+    var u=new SpeechSynthesisUtterance(String(text));
+    u.lang='en-US';u.rate=0.9;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+// ═══ SAFE KEY ═══
+function safeKey(s){return String(s).replace(/[^a-zA-Z0-9 \-_]/g,'_');}
+
 const vocab=[
-// DAILY LIFE
 {en:"taxi",ru:"такси",pron:"[ˈtæksi]",ex:"Let's grab a taxi.",cat:"daily",type:"cognate"},
 {en:"hotel",ru:"отель",pron:"[hoʊˈtɛl]",ex:"Nice hotel.",cat:"daily",type:"cognate"},
 {en:"restaurant",ru:"ресторан",pron:"[ˈrɛstrɒnt]",ex:"Good restaurant.",cat:"daily",type:"cognate"},
@@ -354,7 +569,6 @@ const vocab=[
 {en:"passport",ru:"паспорт",pron:"[ˈpæspɔːrt]",ex:"Show your passport.",cat:"daily",type:"cognate"},
 {en:"visa",ru:"виза",pron:"[ˈviːzə]",ex:"Apply for a visa.",cat:"daily",type:"cognate"},
 {en:"apartment",ru:"апартамент",pron:"[əˈpɑːrtmənt]",ex:"Nice apartment.",cat:"daily",type:"cognate"},
-{en:"garage",ru:"гараж",pron:"[ɡəˈrɑːʒ]",ex:"Car in the garage.",cat:"daily",type:"cognate"},
 {en:"bus",ru:"автобус",pron:"[bʌs]",ex:"Take the bus.",cat:"daily",type:"must"},
 {en:"street",ru:"улица",pron:"[striːt]",ex:"Cross the street.",cat:"daily",type:"must"},
 {en:"road",ru:"дорога",pron:"[roʊd]",ex:"Long road.",cat:"daily",type:"must"},
@@ -377,25 +591,19 @@ const vocab=[
 {en:"cup",ru:"кружка",pron:"[kʌp]",ex:"Cup of coffee.",cat:"daily",type:"must"},
 {en:"door",ru:"дверь",pron:"[dɔːr]",ex:"Lock the door.",cat:"daily",type:"must"},
 {en:"window",ru:"окно",pron:"[ˈwɪndoʊ]",ex:"Open the window.",cat:"daily",type:"must"},
-{en:"corner",ru:"угол / перекрёсток",pron:"[ˈkɔːrnər]",ex:"Turn at the corner.",cat:"daily",type:"must"},
+{en:"corner",ru:"угол",pron:"[ˈkɔːrnər]",ex:"Turn at the corner.",cat:"daily",type:"must"},
 {en:"neighborhood",ru:"район",pron:"[ˈneɪbərˌhʊd]",ex:"Nice neighborhood.",cat:"daily",type:"must"},
 {en:"address",ru:"адрес",pron:"[əˈdrɛs]",ex:"What is your address?",cat:"daily",type:"must"},
-{en:"stuff",ru:"вещи / штуки",pron:"[stʌf]",ex:"Where is my stuff?",cat:"daily",type:"must"},
-{en:"thing",ru:"вещь / штука",pron:"[θɪŋ]",ex:"What is this thing?",cat:"daily",type:"must"},
+{en:"stuff",ru:"вещи",pron:"[stʌf]",ex:"Where is my stuff?",cat:"daily",type:"must"},
+{en:"thing",ru:"вещь",pron:"[θɪŋ]",ex:"What is this thing?",cat:"daily",type:"must"},
 {en:"place",ru:"место",pron:"[pleɪs]",ex:"Nice place.",cat:"daily",type:"must"},
-{en:"area",ru:"зона / район",pron:"[ˈɛəriə]",ex:"Nice area.",cat:"daily",type:"must"},
-{en:"environment",ru:"окружение / среда",pron:"[ɪnˈvaɪrənmənt]",ex:"Work environment.",cat:"daily",type:"must"},
-// TECH
+{en:"area",ru:"район",pron:"[ˈɛəriə]",ex:"Nice area.",cat:"daily",type:"must"},
 {en:"internet",ru:"интернет",pron:"[ˈɪntərˌnɛt]",ex:"No internet.",cat:"tech",type:"cognate"},
 {en:"monitor",ru:"монитор",pron:"[ˈmɒnɪtər]",ex:"Big monitor.",cat:"tech",type:"cognate"},
 {en:"server",ru:"сервер",pron:"[ˈsɜːrvər]",ex:"Server is down.",cat:"tech",type:"cognate"},
 {en:"browser",ru:"браузер",pron:"[ˈbraʊzər]",ex:"Open your browser.",cat:"tech",type:"cognate"},
 {en:"router",ru:"роутер",pron:"[ˈruːtər]",ex:"Restart the router.",cat:"tech",type:"cognate"},
-{en:"system",ru:"система",pron:"[ˈsɪstəm]",ex:"System update.",cat:"tech",type:"cognate"},
 {en:"app",ru:"приложение",pron:"[æp]",ex:"Download the app.",cat:"tech",type:"cognate"},
-{en:"status",ru:"статус",pron:"[ˈsteɪtəs]",ex:"Check the status.",cat:"tech",type:"cognate"},
-{en:"profile",ru:"профиль",pron:"[ˈproʊfaɪl]",ex:"Edit your profile.",cat:"tech",type:"cognate"},
-{en:"format",ru:"формат",pron:"[ˈfɔːrmæt]",ex:"Wrong format.",cat:"tech",type:"cognate"},
 {en:"laptop",ru:"ноутбук",pron:"[ˈlæptɒp]",ex:"My laptop is old.",cat:"tech",type:"must"},
 {en:"charger",ru:"зарядка",pron:"[ˈtʃɑːrdʒər]",ex:"Forgot my charger.",cat:"tech",type:"must"},
 {en:"battery",ru:"батарея",pron:"[ˈbætəri]",ex:"Low battery.",cat:"tech",type:"must"},
@@ -414,19 +622,13 @@ const vocab=[
 {en:"keyboard",ru:"клавиатура",pron:"[ˈkiːbɔːrd]",ex:"Wireless keyboard.",cat:"tech",type:"must"},
 {en:"cable",ru:"кабель",pron:"[ˈkeɪbəl]",ex:"USB cable.",cat:"tech",type:"must"},
 {en:"storage",ru:"хранилище",pron:"[ˈstɔːrɪdʒ]",ex:"No storage left.",cat:"tech",type:"must"},
-{en:"notification",ru:"уведомление",pron:"[ˌnoʊtɪfɪˈkeɪʃən]",ex:"Turn off notifications.",cat:"tech",type:"cognate"},
 {en:"settings",ru:"настройки",pron:"[ˈsɛtɪŋz]",ex:"Go to settings.",cat:"tech",type:"must"},
 {en:"mode",ru:"режим",pron:"[moʊd]",ex:"Dark mode.",cat:"tech",type:"must"},
 {en:"device",ru:"устройство",pron:"[dɪˈvaɪs]",ex:"New device.",cat:"tech",type:"must"},
-{en:"permission",ru:"разрешение",pron:"[pərˈmɪʃən]",ex:"App needs permission.",cat:"tech",type:"cognate"},
-// WORK
 {en:"manager",ru:"менеджер",pron:"[ˈmænɪdʒər]",ex:"Ask your manager.",cat:"work",type:"cognate"},
-{en:"director",ru:"директор",pron:"[dɪˈrɛktər]",ex:"The director called.",cat:"work",type:"cognate"},
 {en:"analyst",ru:"аналитик",pron:"[ˈænəlɪst]",ex:"I am an analyst.",cat:"work",type:"cognate"},
-{en:"specialist",ru:"специалист",pron:"[ˈspɛʃəlɪst]",ex:"IT specialist.",cat:"work",type:"cognate"},
 {en:"contract",ru:"контракт",pron:"[ˈkɒntrækt]",ex:"Sign the contract.",cat:"work",type:"cognate"},
 {en:"project",ru:"проект",pron:"[ˈprɒdʒɛkt]",ex:"Big project.",cat:"work",type:"cognate"},
-{en:"document",ru:"документ",pron:"[ˈdɒkjʊmənt]",ex:"Send the document.",cat:"work",type:"cognate"},
 {en:"report",ru:"отчёт",pron:"[rɪˈpɔːrt]",ex:"Write a report.",cat:"work",type:"cognate"},
 {en:"client",ru:"клиент",pron:"[ˈklaɪənt]",ex:"Happy client.",cat:"work",type:"cognate"},
 {en:"office",ru:"офис",pron:"[ˈɒfɪs]",ex:"At the office.",cat:"work",type:"cognate"},
@@ -443,50 +645,31 @@ const vocab=[
 {en:"feedback",ru:"обратная связь",pron:"[ˈfiːdbæk]",ex:"Give me feedback.",cat:"work",type:"must"},
 {en:"goal",ru:"цель",pron:"[ɡoʊl]",ex:"Set a goal.",cat:"work",type:"must"},
 {en:"task",ru:"задача",pron:"[tɑːsk]",ex:"Complete the task.",cat:"work",type:"must"},
-{en:"shift",ru:"смена",pron:"[ʃɪft]",ex:"Night shift.",cat:"work",type:"must"},
 {en:"remote",ru:"удалённый",pron:"[rɪˈmoʊt]",ex:"Work remote.",cat:"work",type:"must"},
 {en:"experience",ru:"опыт",pron:"[ɪkˈspɪəriəns]",ex:"5 years experience.",cat:"work",type:"must"},
 {en:"skill",ru:"навык",pron:"[skɪl]",ex:"New skill.",cat:"work",type:"must"},
 {en:"resume",ru:"резюме",pron:"[ˈrɛzjuːmeɪ]",ex:"Update your resume.",cat:"work",type:"must"},
-{en:"industry",ru:"индустрия",pron:"[ˈɪndəstri]",ex:"Tech industry.",cat:"work",type:"must"},
-{en:"startup",ru:"стартап",pron:"[ˈstɑːrtʌp]",ex:"Join a startup.",cat:"work",type:"must"},
-{en:"role",ru:"роль / должность",pron:"[roʊl]",ex:"What is your role?",cat:"work",type:"must"},
-{en:"responsibility",ru:"ответственность",pron:"[rɪˌspɒnsɪˈbɪlɪti]",ex:"My responsibility.",cat:"work",type:"must"},
+{en:"role",ru:"должность",pron:"[roʊl]",ex:"What is your role?",cat:"work",type:"must"},
 {en:"performance",ru:"производительность",pron:"[pəˈfɔːrməns]",ex:"Good performance.",cat:"work",type:"must"},
-{en:"workload",ru:"рабочая нагрузка",pron:"[ˈwɜːrkloʊd]",ex:"Heavy workload.",cat:"work",type:"must"},
-{en:"colleague",ru:"коллега",pron:"[ˈkɒliːɡ]",ex:"Good colleague.",cat:"work",type:"must"},
-// -TION
+{en:"workload",ru:"нагрузка",pron:"[ˈwɜːrkloʊd]",ex:"Heavy workload.",cat:"work",type:"must"},
 {en:"information",ru:"информация",pron:"[ˌɪnfərˈmeɪʃən]",ex:"Need more info.",cat:"-tion",type:"cognate"},
 {en:"situation",ru:"ситуация",pron:"[ˌsɪtʃuˈeɪʃən]",ex:"Difficult situation.",cat:"-tion",type:"cognate"},
 {en:"communication",ru:"коммуникация",pron:"[kəˌmjuːnɪˈkeɪʃən]",ex:"Clear communication.",cat:"-tion",type:"cognate"},
-{en:"organization",ru:"организация",pron:"[ˌɔːrɡənɪˈzeɪʃən]",ex:"Big organization.",cat:"-tion",type:"cognate"},
 {en:"motivation",ru:"мотивация",pron:"[ˌmoʊtɪˈveɪʃən]",ex:"I need motivation.",cat:"-tion",type:"cognate"},
-{en:"operation",ru:"операция",pron:"[ˌɒpəˈreɪʃən]",ex:"Smooth operation.",cat:"-tion",type:"cognate"},
-{en:"reaction",ru:"реакция",pron:"[riˈækʃən]",ex:"Fast reaction.",cat:"-tion",type:"cognate"},
 {en:"transaction",ru:"транзакция",pron:"[trænˈzækʃən]",ex:"Transaction failed.",cat:"-tion",type:"cognate"},
 {en:"confirmation",ru:"подтверждение",pron:"[ˌkɒnfərˈmeɪʃən]",ex:"Need confirmation.",cat:"-tion",type:"cognate"},
-{en:"registration",ru:"регистрация",pron:"[ˌrɛdʒɪˈstreɪʃən]",ex:"Registration required.",cat:"-tion",type:"cognate"},
 {en:"location",ru:"локация",pron:"[loʊˈkeɪʃən]",ex:"Send your location.",cat:"-tion",type:"cognate"},
 {en:"presentation",ru:"презентация",pron:"[ˌprɛzənˈteɪʃən]",ex:"Big presentation.",cat:"-tion",type:"cognate"},
 {en:"verification",ru:"верификация",pron:"[ˌvɛrɪfɪˈkeɪʃən]",ex:"ID verification.",cat:"-tion",type:"cognate"},
 {en:"conversation",ru:"разговор",pron:"[ˌkɒnvəˈseɪʃən]",ex:"Good conversation.",cat:"-tion",type:"cognate"},
-{en:"destination",ru:"назначение",pron:"[ˌdɛstɪˈneɪʃən]",ex:"Final destination.",cat:"-tion",type:"cognate"},
 {en:"education",ru:"образование",pron:"[ˌɛdjʊˈkeɪʃən]",ex:"Good education.",cat:"-tion",type:"cognate"},
 {en:"solution",ru:"решение",pron:"[səˈluːʃən]",ex:"Find a solution.",cat:"-tion",type:"cognate"},
-{en:"celebration",ru:"праздник",pron:"[ˌsɛlɪˈbreɪʃən]",ex:"Big celebration.",cat:"-tion",type:"cognate"},
 {en:"recommendation",ru:"рекомендация",pron:"[ˌrɛkəmɛnˈdeɪʃən]",ex:"Any recommendations?",cat:"-tion",type:"cognate"},
 {en:"connection",ru:"связь",pron:"[kəˈnɛkʃən]",ex:"Bad connection.",cat:"-tion",type:"cognate"},
-{en:"direction",ru:"направление",pron:"[dɪˈrɛkʃən]",ex:"Wrong direction.",cat:"-tion",type:"cognate"},
 {en:"attention",ru:"внимание",pron:"[əˈtɛnʃən]",ex:"Pay attention.",cat:"-tion",type:"cognate"},
-{en:"collection",ru:"коллекция",pron:"[kəˈlɛkʃən]",ex:"Nice collection.",cat:"-tion",type:"cognate"},
 {en:"condition",ru:"условие",pron:"[kənˈdɪʃən]",ex:"Good condition.",cat:"-tion",type:"cognate"},
 {en:"protection",ru:"защита",pron:"[prəˈtɛkʃən]",ex:"Data protection.",cat:"-tion",type:"cognate"},
 {en:"description",ru:"описание",pron:"[dɪˈskrɪpʃən]",ex:"Read the description.",cat:"-tion",type:"cognate"},
-{en:"population",ru:"население",pron:"[ˌpɒpjʊˈleɪʃən]",ex:"Large population.",cat:"-tion",type:"cognate"},
-{en:"revolution",ru:"революция",pron:"[ˌrɛvəˈluːʃən]",ex:"Digital revolution.",cat:"-tion",type:"cognate"},
-{en:"production",ru:"производство",pron:"[prəˈdʌkʃən]",ex:"In production.",cat:"-tion",type:"cognate"},
-{en:"promotion",ru:"продвижение",pron:"[prəˈmoʊʃən]",ex:"Job promotion.",cat:"-tion",type:"cognate"},
-// FOOD
 {en:"breakfast",ru:"завтрак",pron:"[ˈbrɛkfəst]",ex:"Skip breakfast.",cat:"food",type:"must"},
 {en:"lunch",ru:"обед",pron:"[lʌntʃ]",ex:"Lunch break.",cat:"food",type:"must"},
 {en:"dinner",ru:"ужин",pron:"[ˈdɪnər]",ex:"Cook dinner.",cat:"food",type:"must"},
@@ -498,20 +681,11 @@ const vocab=[
 {en:"bill",ru:"счёт",pron:"[bɪl]",ex:"Ask for the bill.",cat:"food",type:"must"},
 {en:"taste",ru:"вкус",pron:"[teɪst]",ex:"Great taste.",cat:"food",type:"must"},
 {en:"spicy",ru:"острый",pron:"[ˈspaɪsi]",ex:"Too spicy.",cat:"food",type:"must"},
-{en:"sweet",ru:"сладкий",pron:"[swiːt]",ex:"Too sweet.",cat:"food",type:"must"},
-{en:"salty",ru:"солёный",pron:"[ˈsɔːlti]",ex:"Very salty.",cat:"food",type:"must"},
-{en:"fresh",ru:"свежий",pron:"[frɛʃ]",ex:"Fresh bread.",cat:"food",type:"must"},
 {en:"grilled",ru:"на гриле",pron:"[ɡrɪld]",ex:"Grilled chicken.",cat:"food",type:"must"},
-{en:"fried",ru:"жареный",pron:"[fraɪd]",ex:"Fried eggs.",cat:"food",type:"must"},
-{en:"portion",ru:"порция",pron:"[ˈpɔːrʃən]",ex:"Large portion.",cat:"food",type:"must"},
-{en:"allergy",ru:"аллергия",pron:"[ˈælədʒi]",ex:"Nut allergy.",cat:"food",type:"must"},
 {en:"delivery",ru:"доставка",pron:"[dɪˈlɪvəri]",ex:"Free delivery.",cat:"food",type:"must"},
-{en:"takeaway",ru:"еда с собой",pron:"[ˈteɪkəweɪ]",ex:"Order takeaway.",cat:"food",type:"must"},
 {en:"recipe",ru:"рецепт",pron:"[ˈrɛsɪpi]",ex:"Easy recipe.",cat:"food",type:"must"},
-{en:"ingredient",ru:"ингредиент",pron:"[ɪnˈɡriːdiənt]",ex:"Fresh ingredients.",cat:"food",type:"must"},
 {en:"waiter",ru:"официант",pron:"[ˈweɪtər]",ex:"Ask the waiter.",cat:"food",type:"must"},
 {en:"reservation",ru:"бронь столика",pron:"[ˌrɛzəˈveɪʃən]",ex:"Make a reservation.",cat:"food",type:"must"},
-// HEALTH
 {en:"doctor",ru:"врач",pron:"[ˈdɒktər]",ex:"See a doctor.",cat:"health",type:"must"},
 {en:"hospital",ru:"больница",pron:"[ˈhɒspɪtəl]",ex:"Go to hospital.",cat:"health",type:"must"},
 {en:"pharmacy",ru:"аптека",pron:"[ˈfɑːrməsi]",ex:"Find a pharmacy.",cat:"health",type:"must"},
@@ -519,21 +693,13 @@ const vocab=[
 {en:"pain",ru:"боль",pron:"[peɪn]",ex:"Back pain.",cat:"health",type:"must"},
 {en:"headache",ru:"головная боль",pron:"[ˈhɛdeɪk]",ex:"Bad headache.",cat:"health",type:"must"},
 {en:"fever",ru:"температура",pron:"[ˈfiːvər]",ex:"High fever.",cat:"health",type:"must"},
-{en:"cough",ru:"кашель",pron:"[kɒf]",ex:"Dry cough.",cat:"health",type:"must"},
 {en:"injury",ru:"травма",pron:"[ˈɪndʒəri]",ex:"Minor injury.",cat:"health",type:"must"},
 {en:"appointment",ru:"запись к врачу",pron:"[əˈpɔɪntmənt]",ex:"Book an appointment.",cat:"health",type:"must"},
 {en:"insurance",ru:"страховка",pron:"[ɪnˈʃʊərəns]",ex:"Health insurance.",cat:"health",type:"must"},
 {en:"symptom",ru:"симптом",pron:"[ˈsɪmptəm]",ex:"What are your symptoms?",cat:"health",type:"must"},
-{en:"recover",ru:"восстанавливаться",pron:"[rɪˈkʌvər]",ex:"Recover quickly.",cat:"health",type:"must"},
-{en:"rest",ru:"отдых",pron:"[rɛst]",ex:"You need rest.",cat:"health",type:"must"},
 {en:"gym",ru:"спортзал",pron:"[dʒɪm]",ex:"Hit the gym.",cat:"health",type:"must"},
-{en:"diet",ru:"диета",pron:"[ˈdaɪɪt]",ex:"Healthy diet.",cat:"health",type:"cognate"},
-{en:"stress",ru:"стресс",pron:"[strɛs]",ex:"Too much stress.",cat:"health",type:"cognate"},
 {en:"sleep",ru:"сон",pron:"[sliːp]",ex:"Need more sleep.",cat:"health",type:"must"},
-{en:"pill",ru:"таблетка",pron:"[pɪl]",ex:"Take a pill.",cat:"health",type:"must"},
 {en:"workout",ru:"тренировка",pron:"[ˈwɜːrkaʊt]",ex:"Morning workout.",cat:"health",type:"must"},
-{en:"surgery",ru:"операция",pron:"[ˈsɜːrdʒəri]",ex:"Knee surgery.",cat:"health",type:"must"},
-// TRAVEL
 {en:"airport",ru:"аэропорт",pron:"[ˈɛərpɔːrt]",ex:"At the airport.",cat:"travel",type:"must"},
 {en:"flight",ru:"рейс",pron:"[flaɪt]",ex:"Long flight.",cat:"travel",type:"must"},
 {en:"ticket",ru:"билет",pron:"[ˈtɪkɪt]",ex:"Buy a ticket.",cat:"travel",type:"must"},
@@ -541,28 +707,19 @@ const vocab=[
 {en:"customs",ru:"таможня",pron:"[ˈkʌstəmz]",ex:"Go through customs.",cat:"travel",type:"must"},
 {en:"delay",ru:"задержка",pron:"[dɪˈleɪ]",ex:"Flight delay.",cat:"travel",type:"must"},
 {en:"booking",ru:"бронирование",pron:"[ˈbʊkɪŋ]",ex:"Cancel the booking.",cat:"travel",type:"must"},
-{en:"accommodation",ru:"жильё",pron:"[əˌkɒməˈdeɪʃən]",ex:"Book accommodation.",cat:"travel",type:"must"},
 {en:"currency",ru:"валюта",pron:"[ˈkʌrənsi]",ex:"Exchange currency.",cat:"travel",type:"must"},
-{en:"map",ru:"карта",pron:"[mæp]",ex:"Check the map.",cat:"travel",type:"must"},
 {en:"trip",ru:"поездка",pron:"[trɪp]",ex:"Road trip.",cat:"travel",type:"must"},
 {en:"abroad",ru:"за рубежом",pron:"[əˈbrɔːd]",ex:"Travel abroad.",cat:"travel",type:"must"},
-{en:"sightseeing",ru:"достопримечательности",pron:"[ˈsaɪtˌsiːɪŋ]",ex:"Go sightseeing.",cat:"travel",type:"must"},
-{en:"souvenir",ru:"сувенир",pron:"[ˌsuːvəˈnɪər]",ex:"Buy souvenirs.",cat:"travel",type:"must"},
-{en:"guide",ru:"гид",pron:"[ɡaɪd]",ex:"Hire a guide.",cat:"travel",type:"must"},
 {en:"boarding pass",ru:"посадочный талон",pron:"[ˈbɔːrdɪŋ pɑːs]",ex:"Show boarding pass.",cat:"travel",type:"must"},
-{en:"check-in",ru:"регистрация",pron:"[ˈtʃɛk ɪn]",ex:"Online check-in.",cat:"travel",type:"must"},
 {en:"layover",ru:"пересадка",pron:"[ˈleɪoʊvər]",ex:"Long layover.",cat:"travel",type:"must"},
-// EMOTIONS & CHARACTER
 {en:"happy",ru:"счастливый",pron:"[ˈhæpi]",ex:"I am happy.",cat:"emotions",type:"must"},
 {en:"sad",ru:"грустный",pron:"[sæd]",ex:"Feeling sad.",cat:"emotions",type:"must"},
 {en:"angry",ru:"злой",pron:"[ˈæŋɡri]",ex:"Do not be angry.",cat:"emotions",type:"must"},
 {en:"scared",ru:"испуганный",pron:"[skɛərd]",ex:"I am scared.",cat:"emotions",type:"must"},
-{en:"surprised",ru:"удивлённый",pron:"[səˈpraɪzd]",ex:"I am surprised.",cat:"emotions",type:"must"},
 {en:"excited",ru:"взволнованный",pron:"[ɪkˈsaɪtɪd]",ex:"I am excited.",cat:"emotions",type:"must"},
 {en:"nervous",ru:"нервный",pron:"[ˈnɜːrvəs]",ex:"A bit nervous.",cat:"emotions",type:"must"},
 {en:"confident",ru:"уверенный",pron:"[ˈkɒnfɪdənt]",ex:"Be confident.",cat:"emotions",type:"must"},
 {en:"proud",ru:"гордый",pron:"[praʊd]",ex:"I am proud of you.",cat:"emotions",type:"must"},
-{en:"jealous",ru:"ревнивый",pron:"[ˈdʒɛləs]",ex:"Do not be jealous.",cat:"emotions",type:"must"},
 {en:"embarrassed",ru:"смущённый",pron:"[ɪmˈbærəst]",ex:"I am embarrassed.",cat:"emotions",type:"must"},
 {en:"bored",ru:"скучающий",pron:"[bɔːrd]",ex:"I am so bored.",cat:"emotions",type:"must"},
 {en:"lonely",ru:"одинокий",pron:"[ˈloʊnli]",ex:"Feeling lonely.",cat:"emotions",type:"must"},
@@ -573,24 +730,17 @@ const vocab=[
 {en:"honest",ru:"честный",pron:"[ˈɒnɪst]",ex:"Be honest.",cat:"emotions",type:"must"},
 {en:"lazy",ru:"ленивый",pron:"[ˈleɪzi]",ex:"Do not be lazy.",cat:"emotions",type:"must"},
 {en:"patient",ru:"терпеливый",pron:"[ˈpeɪʃənt]",ex:"Be patient.",cat:"emotions",type:"must"},
-{en:"stubborn",ru:"упрямый",pron:"[ˈstʌbərn]",ex:"So stubborn.",cat:"emotions",type:"must"},
 {en:"ambitious",ru:"амбициозный",pron:"[æmˈbɪʃəs]",ex:"Very ambitious.",cat:"emotions",type:"must"},
 {en:"mood",ru:"настроение",pron:"[muːd]",ex:"Bad mood.",cat:"emotions",type:"must"},
-{en:"attitude",ru:"отношение",pron:"[ˈætɪtjuːd]",ex:"Bad attitude.",cat:"emotions",type:"must"},
-{en:"insecure",ru:"неуверенный в себе",pron:"[ˌɪnsɪˈkjʊər]",ex:"Feeling insecure.",cat:"emotions",type:"must"},
 {en:"overwhelmed",ru:"подавленный",pron:"[ˌoʊvərˈwɛlmd]",ex:"I am overwhelmed.",cat:"emotions",type:"must"},
 {en:"relieved",ru:"облегчённый",pron:"[rɪˈliːvd]",ex:"I am so relieved.",cat:"emotions",type:"must"},
-{en:"motivated",ru:"мотивированный",pron:"[ˈmoʊtɪveɪtɪd]",ex:"I am motivated.",cat:"emotions",type:"must"},
-// RELATIONSHIPS
 {en:"friend",ru:"друг",pron:"[frɛnd]",ex:"Old friend.",cat:"relations",type:"must"},
 {en:"partner",ru:"партнёр",pron:"[ˈpɑːrtnər]",ex:"My partner.",cat:"relations",type:"must"},
 {en:"husband",ru:"муж",pron:"[ˈhʌzbənd]",ex:"Her husband.",cat:"relations",type:"must"},
 {en:"wife",ru:"жена",pron:"[waɪf]",ex:"My wife.",cat:"relations",type:"must"},
 {en:"parent",ru:"родитель",pron:"[ˈpɛərənt]",ex:"Call your parents.",cat:"relations",type:"must"},
 {en:"sibling",ru:"брат или сестра",pron:"[ˈsɪblɪŋ]",ex:"Any siblings?",cat:"relations",type:"must"},
-{en:"cousin",ru:"двоюродный",pron:"[ˈkʌzən]",ex:"My cousin is here.",cat:"relations",type:"must"},
 {en:"stranger",ru:"незнакомец",pron:"[ˈstreɪndʒər]",ex:"A stranger.",cat:"relations",type:"must"},
-{en:"ex",ru:"бывший",pron:"[ɛks]",ex:"My ex called.",cat:"relations",type:"must"},
 {en:"crush",ru:"симпатия",pron:"[krʌʃ]",ex:"I have a crush.",cat:"relations",type:"must"},
 {en:"date",ru:"свидание",pron:"[deɪt]",ex:"Going on a date.",cat:"relations",type:"must"},
 {en:"relationship",ru:"отношения",pron:"[rɪˈleɪʃənʃɪp]",ex:"Healthy relationship.",cat:"relations",type:"must"},
@@ -599,7 +749,6 @@ const vocab=[
 {en:"apology",ru:"извинение",pron:"[əˈpɒlədʒi]",ex:"Accept my apology.",cat:"relations",type:"must"},
 {en:"support",ru:"поддержка",pron:"[səˈpɔːrt]",ex:"Emotional support.",cat:"relations",type:"must"},
 {en:"breakup",ru:"расставание",pron:"[ˈbreɪkʌp]",ex:"Bad breakup.",cat:"relations",type:"must"},
-// MONEY
 {en:"money",ru:"деньги",pron:"[ˈmʌni]",ex:"Need more money.",cat:"money",type:"must"},
 {en:"price",ru:"цена",pron:"[praɪs]",ex:"Good price.",cat:"money",type:"must"},
 {en:"cost",ru:"стоимость",pron:"[kɒst]",ex:"What is the cost?",cat:"money",type:"must"},
@@ -614,27 +763,16 @@ const vocab=[
 {en:"afford",ru:"позволить себе",pron:"[əˈfɔːrd]",ex:"Cannot afford it.",cat:"money",type:"must"},
 {en:"worth",ru:"стоит",pron:"[wɜːrθ]",ex:"Is it worth it?",cat:"money",type:"must"},
 {en:"investment",ru:"инвестиция",pron:"[ɪnˈvɛstmənt]",ex:"Good investment.",cat:"money",type:"must"},
-{en:"invoice",ru:"инвойс",pron:"[ˈɪnvɔɪs]",ex:"Send the invoice.",cat:"money",type:"must"},
-{en:"transfer",ru:"перевод",pron:"[ˈtrænsf3ːr]",ex:"Bank transfer.",cat:"money",type:"must"},
-{en:"expense",ru:"расход",pron:"[ɪkˈspɛns]",ex:"Monthly expenses.",cat:"money",type:"must"},
 {en:"income",ru:"доход",pron:"[ˈɪnkʌm]",ex:"Monthly income.",cat:"money",type:"must"},
-// LIFESTYLE
+{en:"expense",ru:"расход",pron:"[ɪkˈspɛns]",ex:"Monthly expenses.",cat:"money",type:"must"},
 {en:"sport",ru:"спорт",pron:"[spɔːrt]",ex:"I love sport.",cat:"life",type:"cognate"},
 {en:"music",ru:"музыка",pron:"[ˈmjuːzɪk]",ex:"Good music.",cat:"life",type:"cognate"},
-{en:"cinema",ru:"кино",pron:"[ˈsɪnəmə]",ex:"Go to the cinema.",cat:"life",type:"cognate"},
-{en:"club",ru:"клуб",pron:"[klʌb]",ex:"Night club.",cat:"life",type:"cognate"},
-{en:"festival",ru:"фестиваль",pron:"[ˈfɛstɪvəl]",ex:"Summer festival.",cat:"life",type:"cognate"},
-{en:"concert",ru:"концерт",pron:"[ˈkɒnsərt]",ex:"Great concert!",cat:"life",type:"cognate"},
-{en:"style",ru:"стиль",pron:"[staɪl]",ex:"Nice style.",cat:"life",type:"cognate"},
-{en:"energy",ru:"энергия",pron:"[ˈɛnərdʒi]",ex:"Full of energy.",cat:"life",type:"cognate"},
 {en:"hobby",ru:"хобби",pron:"[ˈhɒbi]",ex:"What is your hobby?",cat:"life",type:"must"},
 {en:"game",ru:"игра",pron:"[ɡeɪm]",ex:"Board game.",cat:"life",type:"must"},
 {en:"movie",ru:"фильм",pron:"[ˈmuːvi]",ex:"Watch a movie.",cat:"life",type:"must"},
 {en:"series",ru:"сериал",pron:"[ˈsɪəriːz]",ex:"New series.",cat:"life",type:"must"},
-{en:"channel",ru:"канал",pron:"[ˈtʃænəl]",ex:"YouTube channel.",cat:"life",type:"must"},
 {en:"post",ru:"пост",pron:"[poʊst]",ex:"Post a photo.",cat:"life",type:"must"},
 {en:"story",ru:"сторис",pron:"[ˈstɔːri]",ex:"Watch my story.",cat:"life",type:"must"},
-{en:"feed",ru:"лента",pron:"[fiːd]",ex:"Scroll the feed.",cat:"life",type:"must"},
 {en:"comment",ru:"комментарий",pron:"[ˈkɒmɛnt]",ex:"Leave a comment.",cat:"life",type:"must"},
 {en:"follow",ru:"подписаться",pron:"[ˈfɒloʊ]",ex:"Follow me.",cat:"life",type:"must"},
 {en:"walk",ru:"прогулка",pron:"[wɔːk]",ex:"Long walk.",cat:"life",type:"must"},
@@ -642,12 +780,8 @@ const vocab=[
 {en:"vibe",ru:"атмосфера",pron:"[vaɪb]",ex:"Good vibe.",cat:"life",type:"slang"},
 {en:"trend",ru:"тренд",pron:"[trɛnd]",ex:"New trend.",cat:"life",type:"must"},
 {en:"content",ru:"контент",pron:"[ˈkɒntɛnt]",ex:"Create content.",cat:"life",type:"must"},
-{en:"influencer",ru:"инфлюенсер",pron:"[ˈɪnfluənsər]",ex:"Big influencer.",cat:"life",type:"must"},
 {en:"reel",ru:"рилс",pron:"[riːl]",ex:"Post a reel.",cat:"life",type:"must"},
 {en:"brand",ru:"бренд",pron:"[brænd]",ex:"Cool brand.",cat:"life",type:"must"},
-{en:"collab",ru:"коллаб",pron:"[ˈkɒlæb]",ex:"Brand collab.",cat:"life",type:"slang"},
-{en:"drop",ru:"дроп / выпуск",pron:"[drɒp]",ex:"New drop.",cat:"life",type:"slang"},
-// PHRASES
 {en:"actually",ru:"на самом деле",pron:"[ˈæktʃuəli]",ex:"Actually I disagree.",cat:"phrases",type:"must"},
 {en:"basically",ru:"в основном",pron:"[ˈbeɪsɪkli]",ex:"Basically done.",cat:"phrases",type:"must"},
 {en:"literally",ru:"буквально",pron:"[ˈlɪtərəli]",ex:"Literally dying.",cat:"phrases",type:"must"},
@@ -659,7 +793,7 @@ const vocab=[
 {en:"besides",ru:"кроме того",pron:"[bɪˈsaɪdz]",ex:"Besides it is free.",cat:"phrases",type:"must"},
 {en:"instead",ru:"вместо",pron:"[ɪnˈstɛd]",ex:"Do this instead.",cat:"phrases",type:"must"},
 {en:"though",ru:"хотя",pron:"[ðoʊ]",ex:"Good though.",cat:"phrases",type:"must"},
-{en:"yet",ru:"ещё / уже",pron:"[jɛt]",ex:"Not yet.",cat:"phrases",type:"must"},
+{en:"yet",ru:"ещё",pron:"[jɛt]",ex:"Not yet.",cat:"phrases",type:"must"},
 {en:"still",ru:"всё ещё",pron:"[stɪl]",ex:"Still here.",cat:"phrases",type:"must"},
 {en:"already",ru:"уже",pron:"[ɔːlˈrɛdi]",ex:"Already done.",cat:"phrases",type:"must"},
 {en:"just",ru:"просто",pron:"[dʒʌst]",ex:"Just chilling.",cat:"phrases",type:"must"},
@@ -667,99 +801,50 @@ const vocab=[
 {en:"only",ru:"только",pron:"[ˈoʊnli]",ex:"Only 5 minutes.",cat:"phrases",type:"must"},
 {en:"almost",ru:"почти",pron:"[ˈɔːlmoʊst]",ex:"Almost there.",cat:"phrases",type:"must"},
 {en:"quite",ru:"довольно",pron:"[kwaɪt]",ex:"Quite good.",cat:"phrases",type:"must"},
-{en:"rather",ru:"скорее",pron:"[ˈrɑːðər]",ex:"I would rather not.",cat:"phrases",type:"must"},
-{en:"pretty",ru:"довольно (разг.)",pron:"[ˈprɪti]",ex:"Pretty good.",cat:"phrases",type:"must"},
-{en:"otherwise",ru:"иначе",pron:"[ˈʌðərwaɪz]",ex:"Hurry otherwise late.",cat:"phrases",type:"must"},
-{en:"therefore",ru:"поэтому",pron:"[ˈðɛərfɔːr]",ex:"Therefore I left.",cat:"phrases",type:"must"},
-{en:"meanwhile",ru:"тем временем",pron:"[ˈmiːnwaɪl]",ex:"Meanwhile he called.",cat:"phrases",type:"must"},
-{en:"suddenly",ru:"вдруг",pron:"[ˈsʌdənli]",ex:"Suddenly it stopped.",cat:"phrases",type:"must"},
+{en:"pretty",ru:"довольно",pron:"[ˈprɪti]",ex:"Pretty good.",cat:"phrases",type:"must"},
 {en:"finally",ru:"наконец",pron:"[ˈfaɪnəli]",ex:"Finally done!",cat:"phrases",type:"must"},
 {en:"recently",ru:"недавно",pron:"[ˈriːsəntli]",ex:"I recently moved.",cat:"phrases",type:"must"},
 {en:"at least",ru:"по крайней мере",pron:"[æt liːst]",ex:"At least try.",cat:"phrases",type:"must"},
 {en:"so far",ru:"до сих пор",pron:"[soʊ fɑːr]",ex:"So far so good.",cat:"phrases",type:"must"},
 {en:"right now",ru:"прямо сейчас",pron:"[raɪt naʊ]",ex:"Come right now.",cat:"phrases",type:"must"},
-{en:"used to",ru:"раньше делал",pron:"[ˈjuːst tə]",ex:"I used to live there.",cat:"phrases",type:"must"},
-{en:"in case",ru:"на случай если",pron:"[ɪn keɪs]",ex:"Take cash in case.",cat:"phrases",type:"must"},
-{en:"even though",ru:"даже несмотря",pron:"[ˈiːvən ðoʊ]",ex:"Even though it is late.",cat:"phrases",type:"must"},
-{en:"as soon as",ru:"как только",pron:"[æz suːn æz]",ex:"Call as soon as you can.",cat:"phrases",type:"must"},
 {en:"by the way",ru:"кстати",pron:"[baɪ ðə weɪ]",ex:"By the way...",cat:"phrases",type:"must"},
-{en:"after all",ru:"в конце концов",pron:"[ˈɑːftər ɔːl]",ex:"After all it is fine.",cat:"phrases",type:"must"},
 {en:"in my opinion",ru:"по-моему",pron:"[ɪn maɪ əˈpɪnjən]",ex:"In my opinion wrong.",cat:"phrases",type:"must"},
 {en:"to be honest",ru:"честно говоря",pron:"[tə biː ˈɒnɪst]",ex:"To be honest no.",cat:"phrases",type:"must"},
-{en:"to be fair",ru:"справедливости ради",pron:"[tə biː fɛər]",ex:"To be fair he tried.",cat:"phrases",type:"must"},
-{en:"no wonder",ru:"неудивительно",pron:"[noʊ ˈwʌndər]",ex:"No wonder tired.",cat:"phrases",type:"must"},
-{en:"on the other hand",ru:"с другой стороны",pron:"[ɒn ðə ˈʌðər hænd]",ex:"On the other hand...",cat:"phrases",type:"must"},
-{en:"at the moment",ru:"в данный момент",pron:"[æt ðə ˈmoʊmənt]",ex:"Busy at the moment.",cat:"phrases",type:"must"},
 {en:"I mean",ru:"я имею в виду",pron:"[aɪ miːn]",ex:"I mean it.",cat:"phrases",type:"must"},
-{en:"kind of",ru:"типа / как бы",pron:"[kaɪnd ɒv]",ex:"Kind of tired.",cat:"phrases",type:"must"},
-{en:"sort of",ru:"что-то типа",pron:"[sɔːrt ɒv]",ex:"Sort of works.",cat:"phrases",type:"must"},
+{en:"kind of",ru:"типа",pron:"[kaɪnd ɒv]",ex:"Kind of tired.",cat:"phrases",type:"must"},
 {en:"more or less",ru:"более или менее",pron:"[mɔːr ɔːr lɛs]",ex:"More or less done.",cat:"phrases",type:"must"},
 {en:"on the way",ru:"по пути",pron:"[ɒn ðə weɪ]",ex:"I am on the way.",cat:"phrases",type:"must"},
-{en:"at some point",ru:"в какой-то момент",pron:"[æt sʌm pɔɪnt]",ex:"At some point I knew.",cat:"phrases",type:"must"},
-{en:"that said",ru:"тем не менее",pron:"[ðæt sɛd]",ex:"That said it is fine.",cat:"phrases",type:"must"},
-// SLANG
 {en:"chill",ru:"расслабиться",pron:"[tʃɪl]",ex:"Just chill.",cat:"slang",type:"slang"},
-{en:"lit",ru:"огонь / крутой",pron:"[lɪt]",ex:"Party was lit.",cat:"slang",type:"slang"},
-{en:"fire",ru:"топ / огонь",pron:"[faɪər]",ex:"This is fire.",cat:"slang",type:"slang"},
+{en:"lit",ru:"огонь",pron:"[lɪt]",ex:"Party was lit.",cat:"slang",type:"slang"},
+{en:"fire",ru:"топ",pron:"[faɪər]",ex:"This is fire.",cat:"slang",type:"slang"},
 {en:"sick",ru:"крутой",pron:"[sɪk]",ex:"That is sick!",cat:"slang",type:"slang"},
-{en:"insane",ru:"нереальный",pron:"[ɪnˈseɪn]",ex:"Insane speaker.",cat:"slang",type:"slang"},
-{en:"gotta",ru:"надо (разг.)",pron:"[ˈɡɒtə]",ex:"You gotta see this.",cat:"slang",type:"slang"},
-{en:"wanna",ru:"хочу (разг.)",pron:"[ˈwɒnə]",ex:"I wanna go.",cat:"slang",type:"slang"},
+{en:"gotta",ru:"надо",pron:"[ˈɡɒtə]",ex:"You gotta see this.",cat:"slang",type:"slang"},
+{en:"wanna",ru:"хочу",pron:"[ˈwɒnə]",ex:"I wanna go.",cat:"slang",type:"slang"},
 {en:"gonna",ru:"собираюсь",pron:"[ˈɡɒnə]",ex:"I am gonna do it.",cat:"slang",type:"slang"},
 {en:"kinda",ru:"типа",pron:"[ˈkaɪndə]",ex:"Kinda tired.",cat:"slang",type:"slang"},
 {en:"nah",ru:"неа",pron:"[nɑː]",ex:"Nah I am good.",cat:"slang",type:"slang"},
 {en:"yeah",ru:"ага",pron:"[jɛə]",ex:"Yeah for sure.",cat:"slang",type:"slang"},
-{en:"yep",ru:"ага / угу",pron:"[jɛp]",ex:"Yep.",cat:"slang",type:"slang"},
-{en:"nope",ru:"нет (разг.)",pron:"[noʊp]",ex:"Nope.",cat:"slang",type:"slang"},
 {en:"dude",ru:"чувак",pron:"[djuːd]",ex:"Dude seriously?",cat:"slang",type:"slang"},
 {en:"bro",ru:"бро",pron:"[broʊ]",ex:"Bro what?",cat:"slang",type:"slang"},
 {en:"hang out",ru:"тусоваться",pron:"[hæŋ aʊt]",ex:"Let us hang out.",cat:"slang",type:"slang"},
-{en:"link up",ru:"пересечься",pron:"[lɪŋk ʌp]",ex:"Let us link up.",cat:"slang",type:"slang"},
-{en:"hit up",ru:"написать",pron:"[hɪt ʌp]",ex:"I will hit you up.",cat:"slang",type:"slang"},
-{en:"catch up",ru:"поговорить / наверстать",pron:"[kætʃ ʌp]",ex:"Let us catch up.",cat:"slang",type:"slang"},
 {en:"no cap",ru:"без шуток",pron:"[noʊ kæp]",ex:"No cap it was insane.",cat:"slang",type:"slang"},
-{en:"lowkey",ru:"честно говоря / тихо",pron:"[ˈloʊkiː]",ex:"Lowkey love it.",cat:"slang",type:"slang"},
-{en:"highkey",ru:"открыто / очень",pron:"[ˈhaɪkiː]",ex:"Highkey obsessed.",cat:"slang",type:"slang"},
+{en:"lowkey",ru:"честно говоря",pron:"[ˈloʊkiː]",ex:"Lowkey love it.",cat:"slang",type:"slang"},
 {en:"legit",ru:"реально",pron:"[lɪˈdʒɪt]",ex:"That is legit.",cat:"slang",type:"slang"},
 {en:"for real",ru:"серьёзно",pron:"[fər riːl]",ex:"For real?",cat:"slang",type:"slang"},
 {en:"my bad",ru:"моя вина",pron:"[maɪ bæd]",ex:"Oh my bad.",cat:"slang",type:"slang"},
-{en:"dead",ru:"умираю от смеха",pron:"[dɛd]",ex:"I am dead.",cat:"slang",type:"slang"},
 {en:"slay",ru:"выглядеть супер",pron:"[sleɪ]",ex:"You slay!",cat:"slang",type:"slang"},
 {en:"ghosted",ru:"игнорируют",pron:"[ˈɡoʊstɪd]",ex:"He ghosted me.",cat:"slang",type:"slang"},
 {en:"flex",ru:"хвастаться",pron:"[flɛks]",ex:"Stop flexing.",cat:"slang",type:"slang"},
-{en:"hyped",ru:"взволнован / в хайпе",pron:"[haɪpt]",ex:"So hyped.",cat:"slang",type:"slang"},
-{en:"it hits",ru:"цепляет",pron:"[ɪt hɪts]",ex:"This song hits.",cat:"slang",type:"slang"},
+{en:"hyped",ru:"в хайпе",pron:"[haɪpt]",ex:"So hyped.",cat:"slang",type:"slang"},
 {en:"sus",ru:"подозрительный",pron:"[sʌs]",ex:"That is sus.",cat:"slang",type:"slang"},
 {en:"GOAT",ru:"величайший",pron:"[ɡoʊt]",ex:"He is the GOAT.",cat:"slang",type:"slang"},
-{en:"vibe check",ru:"проверка атмосферы",pron:"[vaɪb tʃɛk]",ex:"Vibe check passed.",cat:"slang",type:"slang"},
-{en:"era",ru:"эра / период жизни",pron:"[ˈɪərə]",ex:"In my gym era.",cat:"slang",type:"slang"},
-{en:"main character",ru:"главный герой",pron:"[meɪn ˈkærɪktər]",ex:"Main character vibes.",cat:"slang",type:"slang"},
-{en:"rent free",ru:"живёт в голове",pron:"[rɛnt friː]",ex:"Living in my head rent free.",cat:"slang",type:"slang"},
-{en:"touch grass",ru:"выйти из интернета",pron:"[tʌtʃ ɡrɑːs]",ex:"Go touch grass.",cat:"slang",type:"slang"},
-{en:"understood",ru:"понял / принято",pron:"[ˌʌndəˈstʊd]",ex:"Understood.",cat:"slang",type:"slang"},
-{en:"it is giving",ru:"это отдаёт...",pron:"[ɪt ɪz ˈɡɪvɪŋ]",ex:"It is giving luxury.",cat:"slang",type:"slang"},
-{en:"based",ru:"здраво / заслуживает уважения",pron:"[beɪst]",ex:"That opinion is based.",cat:"slang",type:"slang"},
-{en:"cringe",ru:"кринж / стыдно",pron:"[krɪndʒ]",ex:"So cringe.",cat:"slang",type:"slang"},
-{en:"rizz",ru:"харизма / умение флиртовать",pron:"[rɪz]",ex:"He has rizz.",cat:"slang",type:"slang"},
+{en:"era",ru:"период жизни",pron:"[ˈɪərə]",ex:"In my gym era.",cat:"slang",type:"slang"},
+{en:"cringe",ru:"кринж",pron:"[krɪndʒ]",ex:"So cringe.",cat:"slang",type:"slang"},
+{en:"rizz",ru:"харизма",pron:"[rɪz]",ex:"He has rizz.",cat:"slang",type:"slang"},
 {en:"mid",ru:"средненький",pron:"[mɪd]",ex:"That movie was mid.",cat:"slang",type:"slang"},
-{en:"W",ru:"победа / хорошо",pron:"[dʌb]",ex:"That is a W.",cat:"slang",type:"slang"},
-{en:"L",ru:"поражение / плохо",pron:"[ɛl]",ex:"Taking an L.",cat:"slang",type:"slang"},
-{en:"slaps",ru:"бомба (о музыке)",pron:"[slæps]",ex:"This track slaps.",cat:"slang",type:"slang"},
-{en:"no shot",ru:"да ладно / серьёзно?",pron:"[noʊ ʃɒt]",ex:"No shot that happened.",cat:"slang",type:"slang"},
-{en:"sending me",ru:"умираю со смеху",pron:"[ˈsɛndɪŋ miː]",ex:"This is sending me.",cat:"slang",type:"slang"},
-{en:"I am not gonna lie",ru:"честно говоря",pron:"[aɪ æm nɒt ˈɡɒnə laɪ]",ex:"INGL that was good.",cat:"slang",type:"slang"},
-{en:"ate",ru:"отлично справился",pron:"[eɪt]",ex:"She really ate.",cat:"slang",type:"slang"},
-{en:"bestie",ru:"лучший друг",pron:"[ˈbɛsti]",ex:"My bestie.",cat:"slang",type:"slang"},
-{en:"cheat day",ru:"читмил",pron:"[tʃiːt deɪ]",ex:"Today is cheat day.",cat:"slang",type:"slang"},
-{en:"grind",ru:"пахать / усердно работать",pron:"[ɡraɪnd]",ex:"On the grind.",cat:"slang",type:"slang"},
-{en:"glow up",ru:"расцвет / преображение",pron:"[ɡloʊ ʌp]",ex:"Massive glow up.",cat:"slang",type:"slang"},
-{en:"snatched",ru:"в отличной форме",pron:"[snætʃt]",ex:"Looking snatched.",cat:"slang",type:"slang"},
-{en:"clout",ru:"известность / влияние",pron:"[klaʊt]",ex:"Chasing clout.",cat:"slang",type:"slang"},
-{en:"tea",ru:"сплетни / инфа",pron:"[tiː]",ex:"Spill the tea.",cat:"slang",type:"slang"},
-{en:"fit",ru:"наряд / outfit",pron:"[fɪt]",ex:"Nice fit today.",cat:"slang",type:"slang"},
-{en:"drip",ru:"стиль / swag",pron:"[drɪp]",ex:"Nice drip.",cat:"slang",type:"slang"},
-{en:"triggered",ru:"задело / разозлило",pron:"[ˈtrɪɡərd]",ex:"I am triggered.",cat:"slang",type:"slang"},
-// VERBS
+{en:"bet",ru:"договорились",pron:"[bɛt]",ex:"Bet. See you then.",cat:"slang",type:"slang"},
+{en:"bussin",ru:"очень вкусно",pron:"[ˈbʌsɪn]",ex:"This food is bussin.",cat:"slang",type:"slang"},
+{en:"delulu",ru:"в иллюзиях",pron:"[dɪˈluːluː]",ex:"She is delulu.",cat:"slang",type:"slang"},
 {en:"get",ru:"получать",pron:"[ɡɛt]",ex:"Can you get me water?",cat:"verbs",type:"must"},
 {en:"make",ru:"делать",pron:"[meɪk]",ex:"Make a decision.",cat:"verbs",type:"must"},
 {en:"take",ru:"брать",pron:"[teɪk]",ex:"Take your time.",cat:"verbs",type:"must"},
@@ -795,14 +880,9 @@ const vocab=[
 {en:"agree",ru:"соглашаться",pron:"[əˈɡriː]",ex:"I agree.",cat:"verbs",type:"must"},
 {en:"explain",ru:"объяснять",pron:"[ɪkˈspleɪn]",ex:"Can you explain?",cat:"verbs",type:"must"},
 {en:"suggest",ru:"предлагать",pron:"[səˈdʒɛst]",ex:"I suggest this.",cat:"verbs",type:"must"},
-{en:"allow",ru:"разрешать",pron:"[əˈlaʊ]",ex:"Not allowed.",cat:"verbs",type:"must"},
-{en:"avoid",ru:"избегать",pron:"[əˈvɔɪd]",ex:"Avoid this.",cat:"verbs",type:"must"},
 {en:"improve",ru:"улучшать",pron:"[ɪmˈpruːv]",ex:"Improve your English.",cat:"verbs",type:"must"},
 {en:"include",ru:"включать",pron:"[ɪnˈkluːd]",ex:"It includes tax.",cat:"verbs",type:"must"},
-{en:"offer",ru:"предлагать",pron:"[ˈɒfər]",ex:"They offered a job.",cat:"verbs",type:"must"},
-{en:"require",ru:"требовать",pron:"[rɪˈkwaɪər]",ex:"This requires time.",cat:"verbs",type:"must"},
 {en:"consider",ru:"рассматривать",pron:"[kənˈsɪdər]",ex:"Consider this.",cat:"verbs",type:"must"},
-{en:"imagine",ru:"представлять",pron:"[ɪˈmædʒɪn]",ex:"Imagine living there.",cat:"verbs",type:"must"},
 {en:"manage",ru:"справляться",pron:"[ˈmænɪdʒ]",ex:"I can manage it.",cat:"verbs",type:"must"},
 {en:"realize",ru:"осознавать",pron:"[ˈrɪəlaɪz]",ex:"I just realized.",cat:"verbs",type:"must"},
 {en:"apply",ru:"подавать заявку",pron:"[əˈplaɪ]",ex:"Apply for the job.",cat:"verbs",type:"must"},
@@ -811,44 +891,24 @@ const vocab=[
 {en:"share",ru:"делиться",pron:"[ʃɛər]",ex:"Share your screen.",cat:"verbs",type:"must"},
 {en:"save",ru:"сохранять",pron:"[seɪv]",ex:"Save the file.",cat:"verbs",type:"must"},
 {en:"choose",ru:"выбирать",pron:"[tʃuːz]",ex:"Choose one.",cat:"verbs",type:"must"},
-{en:"grow",ru:"расти",pron:"[ɡroʊ]",ex:"Business is growing.",cat:"verbs",type:"must"},
 {en:"build",ru:"строить",pron:"[bɪld]",ex:"Build a team.",cat:"verbs",type:"must"},
-{en:"bring",ru:"приносить",pron:"[brɪŋ]",ex:"Bring your ID.",cat:"verbs",type:"must"},
 {en:"meet",ru:"встречать",pron:"[miːt]",ex:"Nice to meet you.",cat:"verbs",type:"must"},
 {en:"show",ru:"показывать",pron:"[ʃoʊ]",ex:"Show me.",cat:"verbs",type:"must"},
-{en:"connect",ru:"подключать",pron:"[kəˈnɛkt]",ex:"Connect to wifi.",cat:"verbs",type:"must"},
-{en:"confirm",ru:"подтверждать",pron:"[kənˈfɜːrm]",ex:"Confirm the order.",cat:"verbs",type:"must"},
-{en:"cancel",ru:"отменять",pron:"[ˈkænsəl]",ex:"Cancel the booking.",cat:"verbs",type:"must"},
-{en:"complete",ru:"завершать",pron:"[kəmˈpliːt]",ex:"Complete the task.",cat:"verbs",type:"must"},
-{en:"create",ru:"создавать",pron:"[kriˈeɪt]",ex:"Create a profile.",cat:"verbs",type:"must"},
-{en:"expect",ru:"ожидать",pron:"[ɪkˈspɛkt]",ex:"Did not expect that.",cat:"verbs",type:"must"},
-{en:"handle",ru:"справляться с",pron:"[ˈhændəl]",ex:"I can handle it.",cat:"verbs",type:"must"},
-{en:"deal with",ru:"разбираться с",pron:"[diːl wɪð]",ex:"Deal with it.",cat:"verbs",type:"must"},
 {en:"figure out",ru:"разобраться",pron:"[ˈfɪɡər aʊt]",ex:"Figure it out.",cat:"verbs",type:"must"},
 {en:"give up",ru:"сдаться",pron:"[ɡɪv ʌp]",ex:"Do not give up.",cat:"verbs",type:"must"},
-{en:"look up",ru:"искать",pron:"[lʊk ʌp]",ex:"Look it up.",cat:"verbs",type:"must"},
 {en:"turn out",ru:"оказаться",pron:"[tɜːrn aʊt]",ex:"It turned out fine.",cat:"verbs",type:"must"},
 {en:"end up",ru:"в итоге оказаться",pron:"[ɛnd ʌp]",ex:"I ended up staying.",cat:"verbs",type:"must"},
-{en:"come up with",ru:"придумать",pron:"[kʌm ʌp wɪð]",ex:"Come up with an idea.",cat:"verbs",type:"must"},
 {en:"run out of",ru:"закончиться",pron:"[rʌn aʊt ɒv]",ex:"I ran out of time.",cat:"verbs",type:"must"},
-{en:"point out",ru:"указывать на",pron:"[pɔɪnt aʊt]",ex:"Let me point that out.",cat:"verbs",type:"must"},
-{en:"bring up",ru:"поднять тему",pron:"[brɪŋ ʌp]",ex:"He brought it up.",cat:"verbs",type:"must"},
-{en:"go through",ru:"проходить через",pron:"[ɡoʊ θruː]",ex:"Go through customs.",cat:"verbs",type:"must"},
-{en:"put off",ru:"откладывать",pron:"[pʊt ɒf]",ex:"Stop putting it off.",cat:"verbs",type:"must"},
 {en:"set up",ru:"настраивать",pron:"[sɛt ʌp]",ex:"Set up a meeting.",cat:"verbs",type:"must"},
-{en:"work out",ru:"тренироваться / получаться",pron:"[wɜːrk aʊt]",ex:"Did it work out?",cat:"verbs",type:"must"},
+{en:"work out",ru:"тренироваться",pron:"[wɜːrk aʊt]",ex:"Did it work out?",cat:"verbs",type:"must"},
 {en:"show up",ru:"появиться",pron:"[ʃoʊ ʌp]",ex:"He did not show up.",cat:"verbs",type:"must"},
-{en:"pick up",ru:"забирать / подхватить",pron:"[pɪk ʌp]",ex:"Pick me up.",cat:"verbs",type:"must"},
-{en:"drop off",ru:"довезти / высадить",pron:"[drɒp ɒf]",ex:"Drop me off here.",cat:"verbs",type:"must"},
-// ADJECTIVES
+{en:"pick up",ru:"забирать",pron:"[pɪk ʌp]",ex:"Pick me up.",cat:"verbs",type:"must"},
 {en:"good",ru:"хороший",pron:"[ɡʊd]",ex:"That is good.",cat:"adj",type:"must"},
 {en:"bad",ru:"плохой",pron:"[bæd]",ex:"That is bad.",cat:"adj",type:"must"},
 {en:"big",ru:"большой",pron:"[bɪɡ]",ex:"Big deal.",cat:"adj",type:"must"},
 {en:"small",ru:"маленький",pron:"[smɔːl]",ex:"Small problem.",cat:"adj",type:"must"},
 {en:"new",ru:"новый",pron:"[njuː]",ex:"Brand new.",cat:"adj",type:"must"},
 {en:"old",ru:"старый",pron:"[oʊld]",ex:"Old school.",cat:"adj",type:"must"},
-{en:"same",ru:"одинаковый",pron:"[seɪm]",ex:"Same thing.",cat:"adj",type:"must"},
-{en:"different",ru:"другой",pron:"[ˈdɪfrənt]",ex:"Totally different.",cat:"adj",type:"must"},
 {en:"easy",ru:"лёгкий",pron:"[ˈiːzi]",ex:"Easy job.",cat:"adj",type:"must"},
 {en:"hard",ru:"сложный",pron:"[hɑːrd]",ex:"Hard work.",cat:"adj",type:"must"},
 {en:"fast",ru:"быстрый",pron:"[fɑːst]",ex:"Fast car.",cat:"adj",type:"must"},
@@ -861,206 +921,455 @@ const vocab=[
 {en:"right",ru:"правильный",pron:"[raɪt]",ex:"You are right.",cat:"adj",type:"must"},
 {en:"important",ru:"важный",pron:"[ɪmˈpɔːrtənt]",ex:"That is important.",cat:"adj",type:"must"},
 {en:"interesting",ru:"интересный",pron:"[ˈɪntrəstɪŋ]",ex:"Interesting idea.",cat:"adj",type:"must"},
-{en:"boring",ru:"скучный",pron:"[ˈbɔːrɪŋ]",ex:"So boring.",cat:"adj",type:"must"},
 {en:"tired",ru:"уставший",pron:"[ˈtaɪərd]",ex:"I am tired.",cat:"adj",type:"must"},
 {en:"expensive",ru:"дорогой",pron:"[ɪkˈspɛnsɪv]",ex:"Too expensive.",cat:"adj",type:"must"},
 {en:"cheap",ru:"дешёвый",pron:"[tʃiːp]",ex:"Really cheap.",cat:"adj",type:"must"},
 {en:"clean",ru:"чистый",pron:"[kliːn]",ex:"Keep it clean.",cat:"adj",type:"must"},
-{en:"dirty",ru:"грязный",pron:"[ˈdɜːrti]",ex:"Dirty hands.",cat:"adj",type:"must"},
 {en:"early",ru:"ранний",pron:"[ˈɜːrli]",ex:"Too early.",cat:"adj",type:"must"},
 {en:"late",ru:"поздний",pron:"[leɪt]",ex:"I am late.",cat:"adj",type:"must"},
 {en:"full",ru:"полный",pron:"[fʊl]",ex:"I am full.",cat:"adj",type:"must"},
 {en:"empty",ru:"пустой",pron:"[ˈɛmpti]",ex:"Empty glass.",cat:"adj",type:"must"},
-{en:"enough",ru:"достаточно",pron:"[ɪˈnʌf]",ex:"That is enough.",cat:"adj",type:"must"},
 {en:"safe",ru:"безопасный",pron:"[seɪf]",ex:"Is it safe?",cat:"adj",type:"must"},
 {en:"serious",ru:"серьёзный",pron:"[ˈsɪəriəs]",ex:"Are you serious?",cat:"adj",type:"must"},
 {en:"weird",ru:"странный",pron:"[wɪərd]",ex:"That is weird.",cat:"adj",type:"must"},
 {en:"amazing",ru:"удивительный",pron:"[əˈmeɪzɪŋ]",ex:"That is amazing!",cat:"adj",type:"must"},
-{en:"awful",ru:"ужасный",pron:"[ˈɔːfəl]",ex:"That was awful.",cat:"adj",type:"must"},
 {en:"perfect",ru:"идеальный",pron:"[ˈpɜːrfɪkt]",ex:"Perfect timing.",cat:"adj",type:"must"},
 {en:"possible",ru:"возможный",pron:"[ˈpɒsɪbəl]",ex:"Is it possible?",cat:"adj",type:"must"},
-{en:"necessary",ru:"необходимый",pron:"[ˈnɛsɪsəri]",ex:"Is it necessary?",cat:"adj",type:"must"},
 {en:"useful",ru:"полезный",pron:"[ˈjuːsfəl]",ex:"Very useful.",cat:"adj",type:"must"},
-{en:"popular",ru:"популярный",pron:"[ˈpɒpjʊlər]",ex:"Very popular.",cat:"adj",type:"must"},
 {en:"available",ru:"доступный",pron:"[əˈveɪləbəl]",ex:"Is it available?",cat:"adj",type:"must"},
-{en:"successful",ru:"успешный",pron:"[səkˈsɛsfəl]",ex:"Successful project.",cat:"adj",type:"must"},
 {en:"obvious",ru:"очевидный",pron:"[ˈɒbviəs]",ex:"It is obvious.",cat:"adj",type:"must"},
-{en:"familiar",ru:"знакомый",pron:"[fəˈmɪliər]",ex:"Looks familiar.",cat:"adj",type:"must"},
 {en:"similar",ru:"похожий",pron:"[ˈsɪmɪlər]",ex:"Very similar.",cat:"adj",type:"must"},
-{en:"typical",ru:"типичный",pron:"[ˈtɪpɪkəl]",ex:"Typical Monday.",cat:"adj",type:"must"},
 {en:"current",ru:"текущий",pron:"[ˈkʌrənt]",ex:"Current situation.",cat:"adj",type:"must"},
 {en:"main",ru:"главный",pron:"[meɪn]",ex:"Main issue.",cat:"adj",type:"must"},
-{en:"major",ru:"крупный",pron:"[ˈmeɪdʒər]",ex:"Major problem.",cat:"adj",type:"must"},
-{en:"worth",ru:"стоящий",pron:"[wɜːrθ]",ex:"Worth it.",cat:"adj",type:"must"},
-{en:"likely",ru:"вероятный",pron:"[ˈlaɪkli]",ex:"Most likely.",cat:"adj",type:"must"},
 {en:"clear",ru:"ясный",pron:"[klɪər]",ex:"Is that clear?",cat:"adj",type:"must"},
 {en:"fair",ru:"справедливый",pron:"[fɛər]",ex:"That is fair.",cat:"adj",type:"must"},
 {en:"tough",ru:"тяжёлый",pron:"[tʌf]",ex:"Tough situation.",cat:"adj",type:"must"},
-{en:"smooth",ru:"плавный",pron:"[smuːð]",ex:"Smooth process.",cat:"adj",type:"must"},
-{en:"tight",ru:"плотный",pron:"[taɪt]",ex:"Tight schedule.",cat:"adj",type:"must"},
 {en:"strong",ru:"сильный",pron:"[strɒŋ]",ex:"Strong coffee.",cat:"adj",type:"must"},
-{en:"weak",ru:"слабый",pron:"[wiːk]",ex:"Weak signal.",cat:"adj",type:"must"},
-{en:"rich",ru:"богатый",pron:"[rɪtʃ]",ex:"Rich flavor.",cat:"adj",type:"must"},
-{en:"poor",ru:"бедный",pron:"[pʊər]",ex:"Poor quality.",cat:"adj",type:"must"},
-{en:"public",ru:"публичный",pron:"[ˈpʌblɪk]",ex:"Public transport.",cat:"adj",type:"must"},
-{en:"private",ru:"личный",pron:"[ˈpraɪvɪt]",ex:"Private message.",cat:"adj",type:"must"},
-{en:"local",ru:"местный",pron:"[ˈloʊkəl]",ex:"Local restaurant.",cat:"adj",type:"must"},
-{en:"global",ru:"глобальный",pron:"[ˈɡloʊbəl]",ex:"Global issue.",cat:"adj",type:"must"},
-{en:"entire",ru:"весь",pron:"[ɪnˈtaɪər]",ex:"Entire day.",cat:"adj",type:"must"},
-{en:"certain",ru:"уверенный",pron:"[ˈsɜːrtən]",ex:"I am certain.",cat:"adj",type:"must"},
-{en:"deep",ru:"глубокий",pron:"[diːp]",ex:"Deep thought.",cat:"adj",type:"must"},
-{en:"heavy",ru:"тяжёлый",pron:"[ˈhɛvi]",ex:"Heavy bag.",cat:"adj",type:"must"},
-{en:"light",ru:"лёгкий",pron:"[laɪt]",ex:"Light meal.",cat:"adj",type:"must"},
-{en:"official",ru:"официальный",pron:"[əˈfɪʃəl]",ex:"Official document.",cat:"adj",type:"must"},
-{en:"random",ru:"случайный",pron:"[ˈrændəm]",ex:"Random question.",cat:"adj",type:"must"},
-{en:"extra",ru:"лишний / дополнительный",pron:"[ˈɛkstrə]",ex:"Extra charge.",cat:"adj",type:"must"},
-{en:"basic",ru:"базовый / банальный",pron:"[ˈbeɪsɪk]",ex:"So basic.",cat:"adj",type:"must"},
 {en:"massive",ru:"огромный",pron:"[ˈmæsɪv]",ex:"Massive speaker.",cat:"adj",type:"must"},
-{en:"decent",ru:"приличный / нормальный",pron:"[ˈdiːsənt]",ex:"Decent place.",cat:"adj",type:"must"},
-{en:"proper",ru:"нормальный / настоящий",pron:"[ˈprɒpər]",ex:"Proper meal.",cat:"adj",type:"must"},
-{en:"solid",ru:"надёжный / крепкий",pron:"[ˈsɒlɪd]",ex:"Solid choice.",cat:"adj",type:"must"},
-{en:"rough",ru:"грубый / тяжёлый",pron:"[rʌf]",ex:"Rough week.",cat:"adj",type:"must"},
+{en:"decent",ru:"нормальный",pron:"[ˈdiːsənt]",ex:"Decent place.",cat:"adj",type:"must"},
+{en:"solid",ru:"надёжный",pron:"[ˈsɒlɪd]",ex:"Solid choice.",cat:"adj",type:"must"},
+{en:"huge",ru:"огромный",pron:"[hjuːdʒ]",ex:"Huge mistake.",cat:"adj",type:"must"},
+{en:"flexible",ru:"гибкий",pron:"[ˈflɛksɪbəl]",ex:"Flexible schedule.",cat:"adj",type:"must"},
+{en:"reliable",ru:"надёжный",pron:"[rɪˈlaɪəbəl]",ex:"Reliable person.",cat:"adj",type:"must"},
+{en:"urgent",ru:"срочный",pron:"[ˈɜːrdʒənt]",ex:"Urgent matter.",cat:"adj",type:"must"},
+{en:"weather",ru:"погода",pron:"[ˈwɛðər]",ex:"Bad weather today.",cat:"world",type:"must"},
+{en:"rain",ru:"дождь",pron:"[reɪn]",ex:"It will rain.",cat:"world",type:"must"},
+{en:"snow",ru:"снег",pron:"[snoʊ]",ex:"Heavy snow.",cat:"world",type:"must"},
+{en:"wind",ru:"ветер",pron:"[wɪnd]",ex:"Strong wind.",cat:"world",type:"must"},
+{en:"storm",ru:"буря",pron:"[stɔːrm]",ex:"Big storm.",cat:"world",type:"must"},
+{en:"cold",ru:"холодно",pron:"[koʊld]",ex:"It is cold.",cat:"world",type:"must"},
+{en:"hot",ru:"жарко",pron:"[hɒt]",ex:"So hot today.",cat:"world",type:"must"},
+{en:"warm",ru:"тепло",pron:"[wɔːrm]",ex:"Nice and warm.",cat:"world",type:"must"},
+{en:"season",ru:"сезон",pron:"[ˈsiːzən]",ex:"My favorite season.",cat:"world",type:"must"},
+{en:"morning",ru:"утро",pron:"[ˈmɔːrnɪŋ]",ex:"Good morning.",cat:"time",type:"must"},
+{en:"evening",ru:"вечер",pron:"[ˈiːvnɪŋ]",ex:"Good evening.",cat:"time",type:"must"},
+{en:"night",ru:"ночь",pron:"[naɪt]",ex:"Late at night.",cat:"time",type:"must"},
+{en:"today",ru:"сегодня",pron:"[təˈdeɪ]",ex:"Not today.",cat:"time",type:"must"},
+{en:"yesterday",ru:"вчера",pron:"[ˈjɛstərdeɪ]",ex:"I went yesterday.",cat:"time",type:"must"},
+{en:"tomorrow",ru:"завтра",pron:"[təˈmɒroʊ]",ex:"See you tomorrow.",cat:"time",type:"must"},
+{en:"week",ru:"неделя",pron:"[wiːk]",ex:"This week.",cat:"time",type:"must"},
+{en:"weekend",ru:"выходные",pron:"[ˈwiːkɛnd]",ex:"Great weekend.",cat:"time",type:"must"},
+{en:"month",ru:"месяц",pron:"[mʌnθ]",ex:"Next month.",cat:"time",type:"must"},
+{en:"year",ru:"год",pron:"[jɪər]",ex:"Last year.",cat:"time",type:"must"},
+{en:"schedule",ru:"расписание",pron:"[ˈskɛdʒuːl]",ex:"Busy schedule.",cat:"time",type:"must"},
+{en:"routine",ru:"рутина",pron:"[ruːˈtiːn]",ex:"Daily routine.",cat:"time",type:"must"},
+{en:"habit",ru:"привычка",pron:"[ˈhæbɪt]",ex:"Bad habit.",cat:"time",type:"must"},
+{en:"message",ru:"сообщение",pron:"[ˈmɛsɪdʒ]",ex:"Send me a message.",cat:"comm",type:"must"},
+{en:"call",ru:"звонок",pron:"[kɔːl]",ex:"Missed call.",cat:"comm",type:"must"},
+{en:"email",ru:"имейл",pron:"[ˈiːmeɪl]",ex:"Check your email.",cat:"comm",type:"must"},
+{en:"reply",ru:"ответ",pron:"[rɪˈplaɪ]",ex:"Wait for a reply.",cat:"comm",type:"must"},
+{en:"opinion",ru:"мнение",pron:"[əˈpɪnjən]",ex:"In my opinion.",cat:"comm",type:"must"},
+{en:"complaint",ru:"жалоба",pron:"[kəmˈpleɪnt]",ex:"File a complaint.",cat:"comm",type:"must"},
+{en:"promise",ru:"обещание",pron:"[ˈprɒmɪs]",ex:"Keep a promise.",cat:"comm",type:"must"},
+{en:"idea",ru:"идея",pron:"[aɪˈdɪə]",ex:"Great idea!",cat:"mind",type:"must"},
+{en:"thought",ru:"мысль",pron:"[θɔːt]",ex:"Deep thought.",cat:"mind",type:"must"},
+{en:"memory",ru:"память",pron:"[ˈmɛməri]",ex:"Good memory.",cat:"mind",type:"must"},
+{en:"dream",ru:"мечта",pron:"[driːm]",ex:"Wild dream.",cat:"mind",type:"must"},
+{en:"focus",ru:"фокус",pron:"[ˈfoʊkəs]",ex:"Stay focused.",cat:"mind",type:"must"},
+{en:"doubt",ru:"сомнение",pron:"[daʊt]",ex:"I have doubts.",cat:"mind",type:"must"},
+{en:"priority",ru:"приоритет",pron:"[praɪˈɒrɪti]",ex:"Top priority.",cat:"mind",type:"must"},
+{en:"government",ru:"правительство",pron:"[ˈɡʌvərnmənt]",ex:"The government.",cat:"society",type:"must"},
+{en:"law",ru:"закон",pron:"[lɔː]",ex:"Against the law.",cat:"society",type:"must"},
+{en:"freedom",ru:"свобода",pron:"[ˈfriːdəm]",ex:"Freedom of speech.",cat:"society",type:"must"},
+{en:"community",ru:"сообщество",pron:"[kəˈmjuːnɪti]",ex:"Local community.",cat:"society",type:"must"},
+{en:"policy",ru:"политика",pron:"[ˈpɒlɪsi]",ex:"Company policy.",cat:"society",type:"must"},
+{en:"crisis",ru:"кризис",pron:"[ˈkraɪsɪs]",ex:"Economic crisis.",cat:"society",type:"must"},
 ];
 
-const irregVerbs=[
-  {v1:"be",v2:"was/were",v3:"been",ru:"быть"},{v1:"become",v2:"became",v3:"become",ru:"становиться"},
-  {v1:"begin",v2:"began",v3:"begun",ru:"начинать"},{v1:"break",v2:"broke",v3:"broken",ru:"ломать"},
-  {v1:"bring",v2:"brought",v3:"brought",ru:"приносить"},{v1:"build",v2:"built",v3:"built",ru:"строить"},
-  {v1:"buy",v2:"bought",v3:"bought",ru:"покупать"},{v1:"catch",v2:"caught",v3:"caught",ru:"ловить"},
-  {v1:"choose",v2:"chose",v3:"chosen",ru:"выбирать"},{v1:"come",v2:"came",v3:"come",ru:"приходить"},
-  {v1:"cost",v2:"cost",v3:"cost",ru:"стоить"},{v1:"cut",v2:"cut",v3:"cut",ru:"резать"},
-  {v1:"do",v2:"did",v3:"done",ru:"делать"},{v1:"drink",v2:"drank",v3:"drunk",ru:"пить"},
-  {v1:"drive",v2:"drove",v3:"driven",ru:"вести машину"},{v1:"eat",v2:"ate",v3:"eaten",ru:"есть"},
-  {v1:"fall",v2:"fell",v3:"fallen",ru:"падать"},{v1:"feel",v2:"felt",v3:"felt",ru:"чувствовать"},
-  {v1:"fight",v2:"fought",v3:"fought",ru:"бороться"},{v1:"find",v2:"found",v3:"found",ru:"находить"},
-  {v1:"fly",v2:"flew",v3:"flown",ru:"летать"},{v1:"forget",v2:"forgot",v3:"forgotten",ru:"забывать"},
-  {v1:"get",v2:"got",v3:"got/gotten",ru:"получать"},{v1:"give",v2:"gave",v3:"given",ru:"давать"},
-  {v1:"go",v2:"went",v3:"gone",ru:"идти"},{v1:"grow",v2:"grew",v3:"grown",ru:"расти"},
-  {v1:"have",v2:"had",v3:"had",ru:"иметь"},{v1:"hear",v2:"heard",v3:"heard",ru:"слышать"},
-  {v1:"hide",v2:"hid",v3:"hidden",ru:"прятать"},{v1:"hit",v2:"hit",v3:"hit",ru:"ударять"},
-  {v1:"hold",v2:"held",v3:"held",ru:"держать"},{v1:"hurt",v2:"hurt",v3:"hurt",ru:"болеть"},
-  {v1:"keep",v2:"kept",v3:"kept",ru:"держать"},{v1:"know",v2:"knew",v3:"known",ru:"знать"},
-  {v1:"lead",v2:"led",v3:"led",ru:"вести"},{v1:"leave",v2:"left",v3:"left",ru:"уходить"},
-  {v1:"let",v2:"let",v3:"let",ru:"позволять"},{v1:"lose",v2:"lost",v3:"lost",ru:"терять"},
-  {v1:"make",v2:"made",v3:"made",ru:"делать"},{v1:"mean",v2:"meant",v3:"meant",ru:"значить"},
-  {v1:"meet",v2:"met",v3:"met",ru:"встречать"},{v1:"pay",v2:"paid",v3:"paid",ru:"платить"},
-  {v1:"put",v2:"put",v3:"put",ru:"класть"},{v1:"read",v2:"read",v3:"read",ru:"читать"},
-  {v1:"ride",v2:"rode",v3:"ridden",ru:"кататься"},{v1:"ring",v2:"rang",v3:"rung",ru:"звонить"},
-  {v1:"run",v2:"ran",v3:"run",ru:"бегать"},{v1:"say",v2:"said",v3:"said",ru:"говорить"},
-  {v1:"see",v2:"saw",v3:"seen",ru:"видеть"},{v1:"sell",v2:"sold",v3:"sold",ru:"продавать"},
-  {v1:"send",v2:"sent",v3:"sent",ru:"отправлять"},{v1:"set",v2:"set",v3:"set",ru:"устанавливать"},
-  {v1:"shake",v2:"shook",v3:"shaken",ru:"трясти"},{v1:"show",v2:"showed",v3:"shown",ru:"показывать"},
-  {v1:"shut",v2:"shut",v3:"shut",ru:"закрывать"},{v1:"sing",v2:"sang",v3:"sung",ru:"петь"},
-  {v1:"sit",v2:"sat",v3:"sat",ru:"сидеть"},{v1:"sleep",v2:"slept",v3:"slept",ru:"спать"},
-  {v1:"speak",v2:"spoke",v3:"spoken",ru:"говорить"},{v1:"spend",v2:"spent",v3:"spent",ru:"тратить"},
-  {v1:"stand",v2:"stood",v3:"stood",ru:"стоять"},{v1:"steal",v2:"stole",v3:"stolen",ru:"красть"},
-  {v1:"swim",v2:"swam",v3:"swum",ru:"плавать"},{v1:"take",v2:"took",v3:"taken",ru:"брать"},
-  {v1:"teach",v2:"taught",v3:"taught",ru:"учить"},{v1:"tell",v2:"told",v3:"told",ru:"рассказывать"},
-  {v1:"think",v2:"thought",v3:"thought",ru:"думать"},{v1:"throw",v2:"threw",v3:"thrown",ru:"бросать"},
-  {v1:"understand",v2:"understood",v3:"understood",ru:"понимать"},{v1:"wake",v2:"woke",v3:"woken",ru:"просыпаться"},
-  {v1:"wear",v2:"wore",v3:"worn",ru:"носить"},{v1:"win",v2:"won",v3:"won",ru:"побеждать"},
-  {v1:"write",v2:"wrote",v3:"written",ru:"писать"},{v1:"rise",v2:"rose",v3:"risen",ru:"подниматься"},
-  {v1:"stick",v2:"stuck",v3:"stuck",ru:"приклеивать"},{v1:"swing",v2:"swung",v3:"swung",ru:"качаться"},
+const nativeThinking=[
+  {ru:"Я имею 25 лет.",en:"I am 25.",note:"Возраст — через 'to be', не 'to have'"},
+  {ru:"Очень нравится.",en:"I really like it.",note:"'Нравится' = like/love, не 'it likes me'"},
+  {ru:"Сделать фото.",en:"Take a photo.",note:"Фото 'берут', не 'делают'"},
+  {ru:"Сегодня хорошая погода.",en:"The weather is nice today.",note:"Погода — через 'is', без 'have'"},
+  {ru:"Как тебя зовут?",en:"What's your name?",note:"Буквально: 'Какое твоё имя?'"},
+  {ru:"Мне холодно.",en:"I'm cold.",note:"Физическое состояние — через 'to be'"},
+  {ru:"Мне скучно.",en:"I'm bored.",note:"Не 'I have boredom' — просто 'I'm bored'"},
+  {ru:"Я устал.",en:"I'm tired.",note:"Состояние через 'to be'"},
+  {ru:"Мне повезло.",en:"I got lucky.",note:"'Got lucky' — не 'I have luck'"},
+  {ru:"Это стоит того.",en:"It's worth it.",note:"Worth + it, не 'it costs it'"},
+  {ru:"Мне нужно идти.",en:"I have to go.",note:"'Have to' для обязанности"},
+  {ru:"Позвони мне.",en:"Give me a call.",note:"Звонок — give a call / call me"},
+  {ru:"Пойдём!",en:"Let's go!",note:"Let's = let us"},
+  {ru:"Не беспокойся.",en:"Don't worry.",note:"Не 'no worry' — Don't worry"},
+  {ru:"Как дела?",en:"How's it going? / What's up?",note:"Более живо чем 'How are you?'"},
+  {ru:"Всё нормально.",en:"I'm doing well. / All good.",note:"'Fine' звучит немного холодно"},
+  {ru:"Подожди секунду.",en:"Give me a second.",note:"Или: Hold on. / One sec."},
+  {ru:"Не могу поверить.",en:"I can't believe it.",note:"Классическая реакция"},
+  {ru:"Это имеет смысл.",en:"That makes sense.",note:"'Makes sense' — очень частая фраза"},
+  {ru:"Я понял.",en:"I get it. / Got it.",note:"Got it — самый разговорный вариант"},
+  {ru:"Я поехал на такси.",en:"I took a taxi.",note:"Такси 'берут', не 'едут'"},
+  {ru:"Сдать экзамен.",en:"Pass an exam.",note:"Сдать = pass, не 'give'"},
+  {ru:"Делать домашнее задание.",en:"Do homework.",note:"'Do' для homework, не 'make'"},
+  {ru:"Сделать ошибку.",en:"Make a mistake.",note:"Ошибки 'делают' через make, не do"},
+  {ru:"Принять решение.",en:"Make a decision.",note:"Решения тоже через make"},
+  {ru:"Провести время.",en:"Spend time.",note:"Потратить продуктивно = spend"},
+  {ru:"Чувствовать себя хорошо.",en:"Feel good.",note:"'Feel' без 'myself'"},
+  {ru:"Я не в настроении.",en:"I'm not in the mood.",note:"Нет настроения — not in the mood"},
+  {ru:"Мне всё равно.",en:"I don't care.",note:"Не 'to me equally' — I don't care"},
+];
+
+const stories=[
+  {title:"🛫 At the Airport",lines:[
+    {word:"arrive",en:"I arrived at the airport two hours early.",ru:"Я приехал в аэропорт за два часа."},
+    {word:"check in",en:"I checked in online and got my boarding pass.",ru:"Зарегистрировался онлайн и получил талон."},
+    {word:"luggage",en:"My luggage was overweight — I had to pay extra.",ru:"Багаж был перегружен — пришлось доплатить."},
+    {word:"customs",en:"I went through customs without any issues.",ru:"Прошёл таможню без проблем."},
+    {word:"gate",en:"I found my gate and waited for boarding.",ru:"Нашёл гейт и ждал посадки."},
+  ]},
+  {title:"🏙️ Moving to Warsaw",lines:[
+    {word:"move",en:"We decided to move to Warsaw last year.",ru:"Мы решили переехать в Варшаву в прошлом году."},
+    {word:"apartment",en:"We found a great apartment in the city center.",ru:"Нашли хорошую квартиру в центре."},
+    {word:"landlord",en:"Our landlord is nice but the rent is high.",ru:"Наш арендодатель приятный, но аренда дорогая."},
+    {word:"neighborhood",en:"The neighborhood has a great vibe — lots of cafes.",ru:"В районе классная атмосфера — много кафе."},
+    {word:"settle in",en:"It took a month to fully settle in.",ru:"Понадобился месяц чтобы полностью освоиться."},
+  ]},
+  {title:"💼 Job Interview",lines:[
+    {word:"apply",en:"I applied for a risk analyst position at Allegro.",ru:"Я подал заявку на позицию риск-аналитика."},
+    {word:"resume",en:"I updated my resume and wrote a cover letter.",ru:"Обновил резюме и написал сопроводительное письмо."},
+    {word:"interview",en:"The interview was tough — lots of case questions.",ru:"Собеседование было жёстким — много кейсов."},
+    {word:"experience",en:"They asked about my experience at Bolt.",ru:"Спросили об опыте в Bolt."},
+    {word:"offer",en:"Two days later they made me an offer.",ru:"Через два дня прислали оффер."},
+  ]},
+  {title:"🛍️ Shopping Day",lines:[
+    {word:"go shopping",en:"We went shopping on Saturday afternoon.",ru:"Мы поехали за покупками в субботу."},
+    {word:"find",en:"We found this insane JBL speaker — literally my height.",ru:"Нашли нереальную JBL колонку — буквально с мой рост."},
+    {word:"afford",en:"It was expensive but totally worth it.",ru:"Дорого, но того стоило."},
+    {word:"receipt",en:"They gave us a receipt for the warranty.",ru:"Дали чек для гарантии."},
+    {word:"head home",en:"After that we headed home and just chilled.",ru:"После этого поехали домой и просто отдыхали."},
+  ]},
+  {title:"🏋️ Weekend Routine",lines:[
+    {word:"wake up",en:"I woke up late on Sunday — no alarm.",ru:"В воскресенье встал поздно — без будильника."},
+    {word:"workout",en:"I hit the gym around noon.",ru:"Пошёл в зал около полудня."},
+    {word:"film",en:"We filmed a couple of reels after training.",ru:"Сняли пару рилсов после тренировки."},
+    {word:"post",en:"I posted them on Instagram.",ru:"Выставил их в инсту."},
+    {word:"hang out",en:"Then we hung out with friends and had dinner.",ru:"Потом потусили с друзьями и поужинали."},
+  ]},
+  {title:"🍕 At a Restaurant",lines:[
+    {word:"reservation",en:"We made a reservation for 8pm.",ru:"Забронировали столик на 8 вечера."},
+    {word:"menu",en:"The waiter brought us the menu.",ru:"Официант принёс меню."},
+    {word:"order",en:"I ordered a grilled steak and a glass of wine.",ru:"Я заказал стейк на гриле и бокал вина."},
+    {word:"bill",en:"When we finished, we asked for the bill.",ru:"Когда закончили — попросили счёт."},
+    {word:"tip",en:"We left a 15% tip — the service was great.",ru:"Оставили 15% чаевых — сервис был отличный."},
+  ]},
+];
+
+const pairs=[
+  {a:"big",aru:"большой",b:"small",bru:"маленький"},
+  {a:"buy",aru:"покупать",b:"sell",bru:"продавать"},
+  {a:"come",aru:"приходить",b:"go",bru:"уходить"},
+  {a:"give",aru:"давать",b:"take",bru:"брать"},
+  {a:"ask",aru:"спрашивать",b:"answer",bru:"отвечать"},
+  {a:"start",aru:"начинать",b:"finish",bru:"заканчивать"},
+  {a:"win",aru:"побеждать",b:"lose",bru:"проигрывать"},
+  {a:"love",aru:"любить",b:"hate",bru:"ненавидеть"},
+  {a:"remember",aru:"помнить",b:"forget",bru:"забывать"},
+  {a:"open",aru:"открывать",b:"close",bru:"закрывать"},
+  {a:"early",aru:"ранний",b:"late",bru:"поздний"},
+  {a:"empty",aru:"пустой",b:"full",bru:"полный"},
+  {a:"cheap",aru:"дешёвый",b:"expensive",bru:"дорогой"},
+  {a:"easy",aru:"лёгкий",b:"hard",bru:"сложный"},
+  {a:"fast",aru:"быстрый",b:"slow",bru:"медленный"},
+  {a:"old",aru:"старый",b:"new",bru:"новый"},
+  {a:"safe",aru:"безопасный",b:"dangerous",bru:"опасный"},
+  {a:"agree",aru:"соглашаться",b:"disagree",bru:"не соглашаться"},
+  {a:"save",aru:"экономить",b:"spend",bru:"тратить"},
+  {a:"trust",aru:"доверять",b:"doubt",bru:"сомневаться"},
+  {a:"accept",aru:"принимать",b:"reject",bru:"отклонять"},
+  {a:"arrive",aru:"прибывать",b:"leave",bru:"уходить"},
+  {a:"hire",aru:"нанимать",b:"fire",bru:"увольнять"},
+];
+
+const families=[
+  {root:"WORK",words:[
+    {en:"work",pos:"v/n",ru:"работать / работа"},
+    {en:"worker",pos:"n",ru:"рабочий"},
+    {en:"workplace",pos:"n",ru:"рабочее место"},
+    {en:"workout",pos:"n",ru:"тренировка"},
+    {en:"teamwork",pos:"n",ru:"командная работа"},
+    {en:"network",pos:"n/v",ru:"сеть / налаживать связи"},
+  ]},
+  {root:"CREATE",words:[
+    {en:"create",pos:"v",ru:"создавать"},
+    {en:"creation",pos:"n",ru:"создание"},
+    {en:"creative",pos:"adj",ru:"творческий"},
+    {en:"creativity",pos:"n",ru:"творчество"},
+    {en:"creator",pos:"n",ru:"создатель"},
+  ]},
+  {root:"CONNECT",words:[
+    {en:"connect",pos:"v",ru:"подключать"},
+    {en:"connection",pos:"n",ru:"связь"},
+    {en:"connected",pos:"adj",ru:"связанный"},
+    {en:"disconnect",pos:"v",ru:"отключить"},
+    {en:"reconnect",pos:"v",ru:"переподключить"},
+  ]},
+  {root:"KNOW",words:[
+    {en:"know",pos:"v",ru:"знать"},
+    {en:"knowledge",pos:"n",ru:"знание"},
+    {en:"known",pos:"adj",ru:"известный"},
+    {en:"unknown",pos:"adj",ru:"неизвестный"},
+    {en:"acknowledge",pos:"v",ru:"признавать"},
+  ]},
+  {root:"PAY",words:[
+    {en:"pay",pos:"v",ru:"платить"},
+    {en:"payment",pos:"n",ru:"оплата"},
+    {en:"overpay",pos:"v",ru:"переплатить"},
+    {en:"underpay",pos:"v",ru:"недоплатить"},
+    {en:"prepay",pos:"v",ru:"предоплатить"},
+  ]},
+  {root:"RISK",words:[
+    {en:"risk",pos:"v/n",ru:"рисковать / риск"},
+    {en:"risky",pos:"adj",ru:"рискованный"},
+    {en:"at risk",pos:"phrase",ru:"под угрозой"},
+    {en:"risk-free",pos:"adj",ru:"без риска"},
+    {en:"high-risk",pos:"adj",ru:"высокорискованный"},
+  ]},
+  {root:"TRUST",words:[
+    {en:"trust",pos:"v/n",ru:"доверять / доверие"},
+    {en:"trusted",pos:"adj",ru:"надёжный"},
+    {en:"trustworthy",pos:"adj",ru:"заслуживающий доверия"},
+    {en:"distrust",pos:"v/n",ru:"не доверять"},
+    {en:"mistrust",pos:"n",ru:"недоверие"},
+  ]},
+  {root:"MOVE",words:[
+    {en:"move",pos:"v",ru:"двигаться"},
+    {en:"movement",pos:"n",ru:"движение"},
+    {en:"remove",pos:"v",ru:"удалить"},
+    {en:"improve",pos:"v",ru:"улучшать"},
+    {en:"motivate",pos:"v",ru:"мотивировать"},
+  ]},
 ];
 
 const tenseExercises=[
-  {q:"She ___ (work) here every day.",a:"works",hint:"Present Simple — факт/привычка, He/She → +s"},
-  {q:"I ___ (eat) lunch right now.",a:"am eating",hint:"Present Continuous — прямо сейчас → am/is/are + -ing"},
-  {q:"We ___ (go) to Warsaw last year.",a:"went",hint:"Past Simple — прошлое, go → went (неправильный)"},
-  {q:"I ___ (live) here for 5 years.",a:"have lived",hint:"Present Perfect — до сих пор → have/has + V3"},
-  {q:"It ___ (rain) tomorrow probably.",a:"will rain",hint:"Future — предсказание → will + V1"},
-  {q:"He ___ (call) me when I ___ (sleep).",a:"called / was sleeping",hint:"Past Simple + Past Continuous — событие + фон"},
-  {q:"I ___ (not go) to the gym yesterday.",a:"didn't go",hint:"Past Simple отрицание → didn't + V1 (не went!)"},
-  {q:"___ you ever ___ (be) to London?",a:"Have you ever been",hint:"Present Perfect — опыт → Have + V3"},
-  {q:"She ___ (not like) coffee. She drinks tea.",a:"doesn't like",hint:"Present Simple отрицание → doesn't + V1"},
+  {q:"She ___ (work) here every day.",a:"works",hint:"Present Simple — He/She +s"},
+  {q:"I ___ (eat) lunch right now.",a:"am eating",hint:"Continuous — прямо сейчас"},
+  {q:"We ___ (go) to Warsaw last year.",a:"went",hint:"Past Simple — go went"},
+  {q:"I ___ (live) here for 5 years.",a:"have lived",hint:"Perfect — до сих пор"},
+  {q:"It ___ (rain) tomorrow probably.",a:"will rain",hint:"Future — предсказание"},
+  {q:"I ___ (not go) to the gym yesterday.",a:"didn't go",hint:"Past отрицание — didn't + V1"},
+  {q:"Have you ever ___ (be) to London?",a:"been",hint:"Perfect — опыт"},
+  {q:"She ___ (not like) coffee.",a:"doesn't like",hint:"Present Simple отрицание"},
   {q:"I ___ (meet) him next Friday.",a:"am meeting",hint:"Continuous для договорённого плана"},
-  {q:"They ___ (build) a new office last year.",a:"built",hint:"Past Simple — прошлое, build → built"},
-  {q:"I ___ (just finish) the project.",a:"have just finished",hint:"Present Perfect + just → have + V3"},
-  {q:"He ___ (drive) when the accident happened.",a:"was driving",hint:"Past Continuous — фон → was/were + -ing"},
-  {q:"If I ___ (have) more time, I ___ (travel).",a:"had / would travel",hint:"Conditional 2 — нереально → past + would"},
-  {q:"She ___ (work) on it right now.",a:"is working",hint:"Present Continuous → is + V-ing"},
-  {q:"I ___ (buy) a new laptop last week.",a:"bought",hint:"Past Simple — прошлое, buy → bought"},
-  {q:"We ___ (not see) each other since March.",a:"haven't seen",hint:"Present Perfect + since → haven't + V3"},
-  {q:"He ___ (move) to Warsaw two years ago.",a:"moved",hint:"Past Simple — правильный глагол → +ed"},
-  {q:"___ she ___ (speak) English well?",a:"Does she speak",hint:"Present Simple вопрос → Does + V1"},
-  {q:"I ___ (call) you when I ___ (arrive).",a:"will call / arrive",hint:"Future в главной, Present в if/when clause"},
+  {q:"I ___ (just finish) the project.",a:"have just finished",hint:"Perfect + just"},
+  {q:"He ___ (drive) when it happened.",a:"was driving",hint:"Past Continuous"},
+  {q:"She ___ (work) on it right now.",a:"is working",hint:"Continuous — is + V-ing"},
+  {q:"I ___ (buy) a new laptop last week.",a:"bought",hint:"Past Simple — buy bought"},
 ];
 
 const sentenceBuilders=[
   {ru:"Я работаю в Варшаве",words:["I","work","in","Warsaw","yesterday","playing"],answer:"I work in Warsaw"},
   {ru:"Что ты делаешь прямо сейчас?",words:["What","are","you","doing","right","now","did","was"],answer:"What are you doing right now"},
   {ru:"Мы переехали сюда 5 лет назад",words:["We","moved","here","5","years","ago","have","move"],answer:"We moved here 5 years ago"},
-  {ru:"Ты когда-нибудь был в Лондоне?",words:["Have","you","ever","been","to","London","Did","go"],answer:"Have you ever been to London"},
   {ru:"Я не пойду на работу завтра",words:["I","won't","go","to","work","tomorrow","didn't","going"],answer:"I won't go to work tomorrow"},
-  {ru:"Она работала когда я позвонил",words:["She","was","working","when","I","called","worked","did"],answer:"She was working when I called"},
   {ru:"Это звучит как хорошая идея",words:["That","sounds","like","a","good","idea","sound","is"],answer:"That sounds like a good idea"},
-  {ru:"Я не знал что это произойдёт",words:["I","didn't","know","that","would","happen","knew","happening"],answer:"I didn't know that would happen"},
   {ru:"Он уже закончил проект",words:["He","has","already","finished","the","project","did","finish"],answer:"He has already finished the project"},
-  {ru:"Мы собираемся переехать в новую квартиру",words:["We","are","going","to","move","to","a","new","apartment","will","moved"],answer:"We are going to move to a new apartment"},
+  {ru:"Я поехал в аэропорт на такси",words:["I","took","a","taxi","to","the","airport","did","go"],answer:"I took a taxi to the airport"},
 ];
 
-// DEDUP VOCAB
-const seen=new Set();
-const uniq=vocab.filter(w=>{if(seen.has(w.en))return false;seen.add(w.en);return true;});
-const cats=["all","daily","tech","work","-tion","food","health","travel","emotions","relations","money","life","verbs","adj","phrases","slang"];
-let aTab="all",sQ="";
-let known=new Set();
-try{known=new Set(JSON.parse(localStorage.getItem("ehv3")||"[]"));}catch(e){}
-function sk(){try{localStorage.setItem("ehv3",JSON.stringify([...known]));}catch(e){}}
+const irregVerbs=[
+  {v1:"be",v2:"was/were",v3:"been",ru:"быть",e1:"I am here.",e2:"She was tired.",e3:"I have been busy."},
+  {v1:"become",v2:"became",v3:"become",ru:"становиться",e1:"It becomes clear.",e2:"He became famous.",e3:"She has become strong."},
+  {v1:"begin",v2:"began",v3:"begun",ru:"начинать",e1:"Let's begin.",e2:"It began to rain.",e3:"Work has begun."},
+  {v1:"break",v2:"broke",v3:"broken",ru:"ломать",e1:"Don't break it.",e2:"He broke his phone.",e3:"It was broken."},
+  {v1:"bring",v2:"brought",v3:"brought",ru:"приносить",e1:"Bring your ID.",e2:"She brought coffee.",e3:"I have brought it."},
+  {v1:"build",v2:"built",v3:"built",ru:"строить",e1:"We build apps.",e2:"They built a wall.",e3:"It was built in 2020."},
+  {v1:"buy",v2:"bought",v3:"bought",ru:"покупать",e1:"Let's buy it.",e2:"I bought a speaker.",e3:"She has bought groceries."},
+  {v1:"catch",v2:"caught",v3:"caught",ru:"ловить",e1:"Catch the bus.",e2:"I caught a cold.",e3:"He was caught lying."},
+  {v1:"choose",v2:"chose",v3:"chosen",ru:"выбирать",e1:"Choose wisely.",e2:"I chose this job.",e3:"He was chosen."},
+  {v1:"come",v2:"came",v3:"come",ru:"приходить",e1:"Come here.",e2:"She came late.",e3:"They have come a long way."},
+  {v1:"cost",v2:"cost",v3:"cost",ru:"стоить",e1:"How much does it cost?",e2:"It cost a lot.",e3:"It has cost us time."},
+  {v1:"do",v2:"did",v3:"done",ru:"делать",e1:"Do your best.",e2:"I did it.",e3:"It's done."},
+  {v1:"drink",v2:"drank",v3:"drunk",ru:"пить",e1:"I drink coffee.",e2:"He drank too much.",e3:"She has drunk water."},
+  {v1:"drive",v2:"drove",v3:"driven",ru:"вести машину",e1:"I drive to work.",e2:"She drove to Warsaw.",e3:"I have driven this road."},
+  {v1:"eat",v2:"ate",v3:"eaten",ru:"есть",e1:"I eat at 8.",e2:"We ate dinner.",e3:"Have you eaten?"},
+  {v1:"fall",v2:"fell",v3:"fallen",ru:"падать",e1:"Prices fall.",e2:"She fell down.",e3:"It has fallen apart."},
+  {v1:"feel",v2:"felt",v3:"felt",ru:"чувствовать",e1:"I feel great.",e2:"She felt tired.",e3:"Have you felt this way?"},
+  {v1:"find",v2:"found",v3:"found",ru:"находить",e1:"Find a solution.",e2:"I found my keys.",e3:"A bug was found."},
+  {v1:"fly",v2:"flew",v3:"flown",ru:"летать",e1:"Birds fly south.",e2:"We flew to Dubai.",e3:"He has flown many times."},
+  {v1:"forget",v2:"forgot",v3:"forgotten",ru:"забывать",e1:"Don't forget.",e2:"I forgot my passport.",e3:"It was forgotten."},
+  {v1:"get",v2:"got",v3:"got/gotten",ru:"получать",e1:"Get some rest.",e2:"I got a message.",e3:"She has gotten better."},
+  {v1:"give",v2:"gave",v3:"given",ru:"давать",e1:"Give me a sec.",e2:"He gave a speech.",e3:"Permission was given."},
+  {v1:"go",v2:"went",v3:"gone",ru:"идти",e1:"Let's go.",e2:"I went shopping.",e3:"She has gone home."},
+  {v1:"grow",v2:"grew",v3:"grown",ru:"расти",e1:"Businesses grow.",e2:"The team grew fast.",e3:"It has grown a lot."},
+  {v1:"have",v2:"had",v3:"had",ru:"иметь",e1:"I have a dog.",e2:"We had dinner.",e3:"I have had enough."},
+  {v1:"hear",v2:"heard",v3:"heard",ru:"слышать",e1:"I hear you.",e2:"I heard the news.",e3:"Nothing was heard."},
+  {v1:"hit",v2:"hit",v3:"hit",ru:"ударять",e1:"Hit the gym.",e2:"The song hit #1.",e3:"He was hit by a car."},
+  {v1:"hold",v2:"held",v3:"held",ru:"держать",e1:"Hold on.",e2:"She held my hand.",e3:"A meeting was held."},
+  {v1:"hurt",v2:"hurt",v3:"hurt",ru:"болеть",e1:"It hurts.",e2:"I hurt my knee.",e3:"No one was hurt."},
+  {v1:"keep",v2:"kept",v3:"kept",ru:"держать",e1:"Keep going.",e2:"I kept the receipt.",e3:"It was kept secret."},
+  {v1:"know",v2:"knew",v3:"known",ru:"знать",e1:"I know.",e2:"She knew the answer.",e3:"It was widely known."},
+  {v1:"leave",v2:"left",v3:"left",ru:"уходить",e1:"I'm leaving.",e2:"He left at 8.",e3:"A message was left."},
+  {v1:"lose",v2:"lost",v3:"lost",ru:"терять",e1:"Don't lose it.",e2:"We lost the match.",e3:"Keys were lost."},
+  {v1:"make",v2:"made",v3:"made",ru:"делать",e1:"Make a decision.",e2:"She made coffee.",e3:"Progress was made."},
+  {v1:"mean",v2:"meant",v3:"meant",ru:"значить",e1:"What does it mean?",e2:"I meant to call.",e3:"It was meant to be."},
+  {v1:"meet",v2:"met",v3:"met",ru:"встречать",e1:"Nice to meet you.",e2:"We met in 2021.",e3:"Have you met him?"},
+  {v1:"pay",v2:"paid",v3:"paid",ru:"платить",e1:"I'll pay.",e2:"She paid the bill.",e3:"Rent was paid."},
+  {v1:"put",v2:"put",v3:"put",ru:"класть",e1:"Put it here.",e2:"He put down his phone.",e3:"It was put aside."},
+  {v1:"read",v2:"read",v3:"read",ru:"читать",e1:"I read every day.",e2:"She read the report.",e3:"It has been read."},
+  {v1:"run",v2:"ran",v3:"run",ru:"бегать",e1:"I run 5km.",e2:"She ran a marathon.",e3:"The project was run by him."},
+  {v1:"say",v2:"said",v3:"said",ru:"сказать",e1:"What did you say?",e2:"She said nothing.",e3:"It was said before."},
+  {v1:"see",v2:"saw",v3:"seen",ru:"видеть",e1:"I see your point.",e2:"I saw him yesterday.",e3:"Have you seen this?"},
+  {v1:"sell",v2:"sold",v3:"sold",ru:"продавать",e1:"Do you sell this?",e2:"They sold the house.",e3:"It was sold out."},
+  {v1:"send",v2:"sent",v3:"sent",ru:"отправлять",e1:"Send me the link.",e2:"I sent the email.",e3:"The file was sent."},
+  {v1:"show",v2:"showed",v3:"shown",ru:"показывать",e1:"Show me.",e2:"He showed his ID.",e3:"It was shown on TV."},
+  {v1:"sleep",v2:"slept",v3:"slept",ru:"спать",e1:"I sleep 8 hours.",e2:"She slept well.",e3:"Have you slept?"},
+  {v1:"speak",v2:"spoke",v3:"spoken",ru:"говорить",e1:"Speak up.",e2:"We spoke last week.",e3:"Has she spoken to him?"},
+  {v1:"spend",v2:"spent",v3:"spent",ru:"тратить",e1:"Don't spend too much.",e2:"We spent the day out.",e3:"Money was well spent."},
+  {v1:"take",v2:"took",v3:"taken",ru:"брать",e1:"Take your time.",e2:"I took a taxi.",e3:"Steps were taken."},
+  {v1:"teach",v2:"taught",v3:"taught",ru:"учить",e1:"She teaches English.",e2:"He taught me a lot.",e3:"It was taught well."},
+  {v1:"tell",v2:"told",v3:"told",ru:"рассказывать",e1:"Tell me more.",e2:"She told the truth.",e3:"I was told to wait."},
+  {v1:"think",v2:"thought",v3:"thought",ru:"думать",e1:"I think so.",e2:"I thought it was fine.",e3:"It was well thought out."},
+  {v1:"understand",v2:"understood",v3:"understood",ru:"понимать",e1:"Do you understand?",e2:"I understood immediately.",e3:"It was finally understood."},
+  {v1:"wake",v2:"woke",v3:"woken",ru:"просыпаться",e1:"I wake up at 7.",e2:"I woke up late.",e3:"She was woken by noise."},
+  {v1:"win",v2:"won",v3:"won",ru:"побеждать",e1:"We can win.",e2:"They won the game.",e3:"The award was won."},
+  {v1:"write",v2:"wrote",v3:"written",ru:"писать",e1:"Write it down.",e2:"She wrote a report.",e3:"It was written clearly."},
+];
 
-// VOCAB RENDER
-function renderV(){
-  const f=uniq.filter(w=>{
-    const mc=aTab==="all"||w.cat===aTab;
-    const q=sQ.toLowerCase();
-    return mc&&(!q||w.en.toLowerCase().includes(q)||w.ru.toLowerCase().includes(q));
+// ═══ DEDUP VOCAB ═══
+var seen=new Set();
+var uniq=vocab.filter(function(w){if(seen.has(w.en))return false;seen.add(w.en);return true;});
+
+var levelMap={
+  daily:"a1",tech:"a2","-tion":"a2",food:"a1",health:"a2",
+  travel:"a2",emotions:"a2",relations:"a1",money:"b1",life:"a2",
+  work:"b1",world:"a2",time:"a1",comm:"b1",mind:"b1",society:"b1",
+  verbs:"b1",adj:"a2",phrases:"b1",slang:"b2"
+};
+
+var cats=["all","daily","tech","work","-tion","food","health","travel","emotions","relations","money","life","world","time","comm","mind","society","verbs","adj","phrases","slang"];
+var aTab="all",sQ="";
+var known=new Set();
+try{var sv=safeGet("ehv4");if(sv)known=new Set(JSON.parse(sv));}catch(e){}
+function sk(){try{safeSet("ehv4",JSON.stringify(Array.from(known)));}catch(e){}}
+
+function updateLevels(){
+  var levels={a1:{total:0,known:0},a2:{total:0,known:0},b1:{total:0,known:0},b2:{total:0,known:0}};
+  uniq.forEach(function(w){
+    var lv=levelMap[w.cat]||"b1";
+    if(levels[lv]){levels[lv].total++;if(known.has(w.en))levels[lv].known++;}
   });
-  document.getElementById("vstats").innerHTML=`showing <b>${f.length}</b> / ${uniq.length} · <b style="color:var(--accent)">${known.size}</b> known`;
-  document.getElementById("vgrid").innerHTML=f.length?f.map(w=>`
-    <div class="card t${w.type[0]} ${known.has(w.en)?'known':''}" onclick="this.classList.toggle('flipped')">
-      <span class="badge b${w.type[0]}">${w.type==="cognate"?"похожее":w.type==="must"?"must":"slang"}</span>
-      <div class="front"><div class="en">${w.en}</div><div class="ru">${w.ru}</div><div class="tap">tap→</div></div>
-      <div class="back"><div class="en">${w.en}</div><div class="pron">${w.pron}</div><div class="ex">"${w.ex}"</div>
-      <button class="kb" onclick="event.stopPropagation();tk(this,'${w.en.replace(/['"]/g,"_")}');return false">${known.has(w.en)?"✓ known":"mark known"}</button></div>
-    </div>`).join(""):`<div class="empty">not found</div>`;
+  ["a1","a2","b1","b2"].forEach(function(lv){
+    var pct=levels[lv].total?Math.round(levels[lv].known/levels[lv].total*100):0;
+    var el=document.getElementById("lf-"+lv);
+    var pt=document.getElementById("lp-"+lv);
+    if(el)el.style.width=pct+"%";
+    if(pt)pt.textContent=pct+"%";
+  });
+  var tc=document.getElementById("total-count");
+  var kc=document.getElementById("known-count");
+  if(tc)tc.textContent=uniq.length;
+  if(kc)kc.textContent=known.size;
 }
-function tk(btn,en){
-  const orig=uniq.find(w=>w.en.replace(/['"]/g,"_")===en);
-  if(!orig)return;
-  if(known.has(orig.en)){known.delete(orig.en);btn.textContent="mark known";btn.closest(".card").classList.remove("known");}
-  else{known.add(orig.en);btn.textContent="✓ known";btn.closest(".card").classList.add("known");}sk();
+
+// ═══ VOCAB RENDER — FIXED: используем data-атрибуты вместо inline JS с кавычками ═══
+function renderV(){
+  var f=uniq.filter(function(w){
+    var mc=aTab==="all"||w.cat===aTab;
+    var q=sQ.toLowerCase();
+    return mc&&(!q||w.en.toLowerCase().indexOf(q)>=0||w.ru.toLowerCase().indexOf(q)>=0);
+  });
+  document.getElementById("vstats").innerHTML='showing <b>'+f.length+'</b> / '+uniq.length+' · <b style="color:var(--accent)">'+known.size+'</b> known';
+  if(!f.length){document.getElementById("vgrid").innerHTML='<div class="empty">not found 🤷</div>';return;}
+  var html='';
+  f.forEach(function(w,i){
+    var key=encodeURIComponent(w.en);
+    var badge=w.type==="cognate"?"≈похожее":w.type==="must"?"must":"slang";
+    var bc="b"+(w.type==="cognate"?"c":w.type==="must"?"m":"s");
+    var kn=known.has(w.en)?" known":"";
+    html+='<div class="vcard'+kn+'" data-idx="'+i+'" onclick="flipV(this)">';
+    html+='<span class="vbadge '+bc+'">'+badge+'</span>';
+    html+='<div class="vfront">';
+    html+='<div class="ven">'+w.en+' <button class="speak-btn" data-speak="'+w.en.replace(/"/g,'')+'">🔊</button></div>';
+    html+='<div class="vru">'+w.ru+'</div>';
+    html+='<div class="vtap">tap →</div>';
+    html+='</div>';
+    html+='<div class="vback">';
+    html+='<div class="ven">'+w.en+'</div>';
+    html+='<div class="vpron">'+w.pron+' <button class="speak-btn" data-speak="'+w.en.replace(/"/g,'')+'">🔊</button></div>';
+    html+='<div class="vex">'+w.ex+'</div>';
+    html+='<button class="vkb" data-en="'+key+'" onclick="event.stopPropagation();tkvBtn(this)">'+(known.has(w.en)?"✓ known":"mark known")+'</button>';
+    html+='</div>';
+    html+='</div>';
+  });
+  document.getElementById("vgrid").innerHTML=html;
 }
-function renderTabs(){document.getElementById("vtabs").innerHTML=cats.map(c=>`<button class="tab ${c===aTab?'active':''}" onclick="setTab('${c}')">${c}</button>`).join("");}
+
+function flipV(el){el.classList.toggle("flipped");}
+
+function tkvBtn(btn){
+  var key=decodeURIComponent(btn.getAttribute("data-en"));
+  if(known.has(key)){
+    known.delete(key);
+    btn.textContent="mark known";
+    btn.closest(".vcard").classList.remove("known");
+  }else{
+    known.add(key);
+    btn.textContent="✓ known";
+    btn.closest(".vcard").classList.add("known");
+  }
+  sk();updateLevels();
+}
+
+function renderTabs(){
+  document.getElementById("vtabs").innerHTML=cats.map(function(c){
+    return '<button class="tab '+(c===aTab?'active':'')+'" onclick="setTab(\''+c+'\')">'+c+'</button>';
+  }).join("");
+}
 function setTab(c){aTab=c;renderTabs();renderV();}
-document.getElementById("vsearch").addEventListener("input",e=>{sQ=e.target.value;renderV();});
+document.getElementById("vsearch").addEventListener("input",function(e){sQ=e.target.value;renderV();});
 
-// IRREG
-function renderI(q=""){
-  const f=irregVerbs.filter(v=>!q||v.v1.includes(q)||v.ru.includes(q));
-  document.getElementById("istats").innerHTML=`<b>${f.length}</b> verbs`;
-  document.getElementById("itbody").innerHTML=f.map(v=>`<tr><td class="v1c">${v.v1}</td><td class="v2c">${v.v2}</td><td class="v3c">${v.v3}</td><td class="ruc">${v.ru}</td></tr>`).join("");
+// ═══ IRREG VERBS ═══
+function renderI(q){
+  q=q||"";
+  var f=irregVerbs.filter(function(v){return !q||v.v1.indexOf(q)>=0||v.v2.indexOf(q)>=0||v.ru.indexOf(q)>=0;});
+  document.getElementById("istats").innerHTML="<b>"+f.length+"</b> verbs";
+  document.getElementById("itbody").innerHTML=f.map(function(v){
+    return '<tr><td><span class="v1c">'+v.v1+'</span> <button class="speak-btn" data-speak="'+v.v1+'">🔊</button><div class="v-example">'+v.e1+'</div></td>'+
+    '<td><span class="v2c">'+v.v2+'</span><div class="v-example">'+v.e2+'</div></td>'+
+    '<td><span class="v3c">'+v.v3+'</span><div class="v-example">'+v.e3+'</div></td>'+
+    '<td class="ruc">'+v.ru+'</td></tr>';
+  }).join("");
 }
-document.getElementById("isearch").addEventListener("input",e=>renderI(e.target.value.toLowerCase()));
+document.getElementById("isearch").addEventListener("input",function(e){renderI(e.target.value.toLowerCase());});
 
-// QUIZ
-let qp=[],qi=0,qs=0;
-function initQ(){qp=[...uniq].sort(()=>Math.random()-.5);qi=0;qs=0;loadQ();}
+// ═══ QUIZ ═══
+var qp=[],qi=0,qs=0;
+function initQ(){qp=uniq.slice().sort(function(){return Math.random()-.5;});qi=0;qs=0;loadQ();}
 function loadQ(){
   if(qi>=qp.length){
     document.getElementById("qword").textContent="Done! 🎉";
     document.getElementById("qhint").textContent="Score: "+qs+"/"+qp.length;
-    ["qans","qpron2","qex2"].forEach(id=>document.getElementById(id).style.display="none");
+    ["qans","qpron2","qex2"].forEach(function(id){document.getElementById(id).style.display="none";});
     document.getElementById("qshowbtn").textContent="Restart";
     document.getElementById("qshowbtn").onclick=initQ;
     document.getElementById("qratebtns").style.display="none";return;
   }
-  const w=qp[qi];
+  var w=qp[qi];
   document.getElementById("qword").textContent=w.en;
   document.getElementById("qhint").textContent="what does this mean?";
   document.getElementById("qans").textContent=w.ru;
   document.getElementById("qpron2").textContent=w.pron;
   document.getElementById("qex2").textContent='"'+w.ex+'"';
-  ["qans","qpron2","qex2"].forEach(id=>document.getElementById(id).style.display="none");
+  ["qans","qpron2","qex2"].forEach(function(id){document.getElementById(id).style.display="none";});
   document.getElementById("qshowbtn").style.display="block";
   document.getElementById("qshowbtn").textContent="Show answer";
   document.getElementById("qshowbtn").onclick=showAns;
@@ -1069,207 +1378,301 @@ function loadQ(){
   document.getElementById("qscore").textContent="known: "+qs;
   document.getElementById("qcard").style.borderColor="var(--border)";
 }
-function showAns(){["qans","qpron2","qex2"].forEach(id=>document.getElementById(id).style.display="block");document.getElementById("qshowbtn").style.display="none";document.getElementById("qratebtns").style.display="flex";}
-function nextQ(ok){if(ok){qs++;known.add(qp[qi].en);sk();document.getElementById("qcard").style.borderColor="var(--accent)";}else{document.getElementById("qcard").style.borderColor="var(--orange)";}qi++;setTimeout(loadQ,300);}
+function showAns(){
+  ["qans","qpron2","qex2"].forEach(function(id){document.getElementById(id).style.display="block";});
+  document.getElementById("qshowbtn").style.display="none";
+  document.getElementById("qratebtns").style.display="flex";
+  speak(qp[qi].en);
+}
+function nextQ(ok){
+  if(ok){qs++;known.add(qp[qi].en);sk();document.getElementById("qcard").style.borderColor="var(--accent)";}
+  else{document.getElementById("qcard").style.borderColor="var(--orange)";}
+  qi++;updateLevels();setTimeout(loadQ,300);
+}
 
-// TRAINING
-let trainMode="mc",trainScore=0,trainTotal=0,trainIdx=0,trainPool=[],trainAnswered=false;
-let sbAnswer=[],sbPool=[],sbIdx=0;
+// ═══ TRAINING ═══
+var trainMode="mc",trainScore=0,trainTotal=0,trainIdx=0,trainPool=[],trainAnswered=false;
+var sbAnswer=[],sbPool=[],sbIdx=0;
+var sprintTimer=null,sprintTimeLeft=60,sprintCorrect=0;
 
 function setTrainMode(m,btn){
   trainMode=m;
-  document.querySelectorAll(".tm-btn").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".tm-btn").forEach(function(b){b.classList.remove("active");});
   btn.classList.add("active");
   trainScore=0;trainTotal=0;trainIdx=0;trainAnswered=false;
+  if(sprintTimer){clearInterval(sprintTimer);sprintTimer=null;}
   updateTrainScore();
   if(m==="mc")startMC();
   else if(m==="type")startType();
   else if(m==="sent")startSent();
   else if(m==="tense")startTense();
+  else if(m==="sprint")startSprint();
 }
-
 function updateTrainScore(){document.getElementById("train-score").innerHTML="correct: <b>"+trainScore+"</b> / "+trainTotal;}
 
-// MC Mode
-function startMC(){
-  trainPool=[...uniq].sort(()=>Math.random()-.5);
-  trainIdx=0;renderMC();
-}
+function startMC(){trainPool=uniq.slice().sort(function(){return Math.random()-.5;});trainIdx=0;renderMC();}
 function renderMC(){
-  if(trainIdx>=trainPool.length){trainIdx=0;trainPool.sort(()=>Math.random()-.5);}
-  const w=trainPool[trainIdx];
-  const wrong=uniq.filter(x=>x.en!==w.en).sort(()=>Math.random()-.5).slice(0,3);
-  const opts=[w,...wrong].sort(()=>Math.random()-.5);
-  document.getElementById("train-area").innerHTML=`
-    <div class="train-card" id="tcrd">
-      <div class="train-question">${w.en}</div>
-      <div class="train-hint" style="color:var(--muted2);font-style:italic">"${w.ex}"</div>
-      <div class="mc-options">${opts.map(o=>`
-        <button class="mc-opt" onclick="checkMC(this,'${o.ru.replace(/'/g,"\\'")}','${w.ru.replace(/'/g,"\\'")}')">
-          ${o.ru}
-        </button>`).join("")}
-      </div>
-    </div>`;
+  if(trainIdx>=trainPool.length){trainIdx=0;trainPool.sort(function(){return Math.random()-.5;});}
+  var w=trainPool[trainIdx];
+  var wrong=uniq.filter(function(x){return x.en!==w.en;}).sort(function(){return Math.random()-.5;}).slice(0,3);
+  var opts=[w].concat(wrong).sort(function(){return Math.random()-.5;});
+  var html='<div class="train-card"><div class="train-question">'+w.en+' <button class="speak-btn" data-speak="'+w.en+'">🔊</button></div>';
+  html+='<div class="train-hint" style="font-style:italic;color:#444">"'+w.ex+'"</div>';
+  html+='<div class="mc-options">';
+  opts.forEach(function(o){
+    html+='<button class="mc-opt" data-ru="'+encodeURIComponent(o.ru)+'" data-correct="'+encodeURIComponent(w.ru)+'" onclick="checkMC(this)">'+o.ru+'</button>';
+  });
+  html+='</div></div>';
+  document.getElementById("train-area").innerHTML=html;
   trainAnswered=false;
 }
-function checkMC(btn,chosen,correct){
+function checkMC(btn){
   if(trainAnswered)return;
   trainAnswered=true;trainTotal++;
-  if(chosen===correct){btn.classList.add("correct");trainScore++;}
-  else{btn.classList.add("wrong");document.querySelectorAll(".mc-opt").forEach(b=>{if(b.textContent.trim()===correct)b.classList.add("correct");});}
+  var chosen=btn.getAttribute("data-ru");
+  var correct=btn.getAttribute("data-correct");
+  if(chosen===correct){btn.classList.add("correct");trainScore++;speak(trainPool[trainIdx].en);}
+  else{
+    btn.classList.add("wrong");
+    document.querySelectorAll(".mc-opt").forEach(function(b){
+      if(b.getAttribute("data-ru")===correct)b.classList.add("correct");
+    });
+  }
   updateTrainScore();
-  setTimeout(()=>{trainIdx++;renderMC();},1200);
+  setTimeout(function(){trainIdx++;renderMC();},1400);
 }
 
-// TYPE Mode
-function startType(){
-  trainPool=[...uniq].sort(()=>Math.random()-.5);
-  trainIdx=0;renderType();
-}
+function startType(){trainPool=uniq.slice().sort(function(){return Math.random()-.5;});trainIdx=0;renderType();}
 function renderType(){
-  if(trainIdx>=trainPool.length){trainIdx=0;trainPool.sort(()=>Math.random()-.5);}
-  const w=trainPool[trainIdx];
-  document.getElementById("train-area").innerHTML=`
-    <div class="train-card">
-      <div class="train-question">${w.ru}</div>
-      <div class="train-hint">Напиши по-английски:</div>
-      <input class="train-input" id="tinput" placeholder="type here..." autocomplete="off" autocorrect="off" spellcheck="false">
-      <button class="train-check-btn" onclick="checkType('${w.en.replace(/'/g,"\\'")}','${w.pron.replace(/'/g,"\\'")}')">Check ✓</button>
-      <div class="train-result" id="tres"></div>
-      <button class="train-next" id="tnext" onclick="trainIdx++;renderType()">Next →</button>
-    </div>`;
-  document.getElementById("tinput").addEventListener("keydown",e=>{if(e.key==="Enter")checkType(w.en,w.pron);});
+  if(trainIdx>=trainPool.length){trainIdx=0;trainPool.sort(function(){return Math.random()-.5;});}
+  var w=trainPool[trainIdx];
+  document.getElementById("train-area").innerHTML='<div class="train-card">'+
+    '<div class="train-question">'+w.ru+'</div>'+
+    '<div class="train-hint">Type in English:</div>'+
+    '<input class="train-input" id="tinput" placeholder="type here..." autocomplete="off" autocorrect="off" spellcheck="false">'+
+    '<button class="train-check-btn" onclick="checkType()">Check ✓</button>'+
+    '<div class="train-result" id="tres"></div>'+
+    '<button class="train-next" id="tnext" onclick="trainIdx++;renderType()">Next →</button>'+
+    '</div>';
+  document.getElementById("tinput").addEventListener("keydown",function(e){if(e.key==="Enter")checkType();});
   document.getElementById("tinput").focus();
+  window._trainWord=w;
 }
-function checkType(correct,pron){
-  const inp=document.getElementById("tinput");
-  const val=inp.value.trim().toLowerCase();
-  const ans=correct.toLowerCase();
-  const res=document.getElementById("tres");
-  const nxt=document.getElementById("tnext");
+function checkType(){
+  var w=window._trainWord;
+  var inp=document.getElementById("tinput");
+  var val=inp.value.trim().toLowerCase();
   if(!val)return;
   trainTotal++;
-  if(val===ans||val.replace(/[^a-z ]/g,"")==ans.replace(/[^a-z ]/g,"")){
-    res.className="train-result tr-correct";
-    res.textContent="✓ Correct! "+pron;
-    trainScore++;
+  var clean=function(s){return s.replace(/[^a-z ]/g,"").trim();};
+  var res=document.getElementById("tres");
+  var nxt=document.getElementById("tnext");
+  if(clean(val)===clean(w.en.toLowerCase())){
+    res.className="train-result tr-correct";res.textContent="✓ Correct! "+w.pron;trainScore++;speak(w.en);
   }else{
-    res.className="train-result tr-wrong";
-    res.textContent="✗ Answer: "+correct+" "+pron;
+    res.className="train-result tr-wrong";res.innerHTML="✗ Answer: <b>"+w.en+"</b> "+w.pron;
   }
-  res.style.display="block";
-  nxt.style.display="block";
-  inp.disabled=true;
-  updateTrainScore();
+  res.style.display="block";nxt.style.display="block";inp.disabled=true;updateTrainScore();
 }
 
-// SENTENCE BUILDER
-function startSent(){
-  sbPool=[...sentenceBuilders].sort(()=>Math.random()-.5);
-  sbIdx=0;sbAnswer=[];renderSent();
-}
+function startSent(){sbPool=sentenceBuilders.slice().sort(function(){return Math.random()-.5;});sbIdx=0;sbAnswer=[];renderSent();}
 function renderSent(){
-  if(sbIdx>=sbPool.length){sbIdx=0;sbPool.sort(()=>Math.random()-.5);}
-  const s=sbPool[sbIdx];
-  sbAnswer=[];
-  const available=[...s.words].sort(()=>Math.random()-.5);
-  document.getElementById("train-area").innerHTML=`
-    <div class="train-card">
-      <div class="train-question" style="font-size:14px;color:var(--muted2)">Переведи:</div>
-      <div class="train-question" style="color:var(--accent);margin-bottom:8px">${s.ru}</div>
-      <div class="train-hint">Tap words to build the sentence:</div>
-      <div class="sent-answer" id="sent-ans"></div>
-      <div class="sent-words" id="sent-pool">
-        ${available.map((w,i)=>`<button class="sent-word" id="sw${i}" onclick="addWord(this,'${w.replace(/'/g,"\\'")}',${i})">${w}</button>`).join("")}
-      </div>
-      <button class="train-check-btn" onclick="checkSent('${s.answer.replace(/'/g,"\\'")}')">Check ✓</button>
-      <div class="train-result" id="sres"></div>
-      <button class="train-next" id="snext" onclick="sbIdx++;startSent()">Next →</button>
-    </div>`;
+  if(sbIdx>=sbPool.length){sbIdx=0;sbPool.sort(function(){return Math.random()-.5;});}
+  var s=sbPool[sbIdx];sbAnswer=[];
+  var available=s.words.slice().sort(function(){return Math.random()-.5;});
+  var html='<div class="train-card">'+
+    '<div class="train-question" style="color:var(--muted2);font-size:13px">Переведи:</div>'+
+    '<div class="train-question" style="color:var(--accent)">'+s.ru+'</div>'+
+    '<div class="train-hint">Нажми слова по порядку:</div>'+
+    '<div class="sent-answer" id="sent-ans"></div>'+
+    '<div class="sent-words" id="sent-pool">';
+  available.forEach(function(w,i){
+    html+='<button class="sent-word" id="sw'+i+'" data-word="'+w+'" data-idx="'+i+'" onclick="addWord(this)">'+w+'</button>';
+  });
+  html+='</div>'+
+    '<button class="train-check-btn" onclick="checkSent()">Check ✓</button>'+
+    '<div class="train-result" id="sres"></div>'+
+    '<button class="train-next" id="snext" onclick="sbIdx++;renderSent()">Next →</button>'+
+    '</div>';
+  document.getElementById("train-area").innerHTML=html;
+  window._sbCurrent=s;
 }
-function addWord(btn,word,idx){
-  sbAnswer.push({word,idx});
+function addWord(btn){
+  var word=btn.getAttribute("data-word");
+  var idx=btn.getAttribute("data-idx");
+  sbAnswer.push({word:word,idx:idx});
   btn.style.opacity="0.3";btn.disabled=true;
-  const ans=document.getElementById("sent-ans");
-  const span=document.createElement("button");
-  span.className="sent-word";
-  span.textContent=word;
-  span.onclick=()=>{
-    sbAnswer=sbAnswer.filter(x=>x.idx!==idx);
-    document.getElementById("sw"+idx).style.opacity="1";
-    document.getElementById("sw"+idx).disabled=false;
+  var span=document.createElement("button");
+  span.className="sent-word";span.textContent=word;
+  span.onclick=function(){
+    sbAnswer=sbAnswer.filter(function(x){return x.idx!==idx;});
+    var orig=document.getElementById("sw"+idx);
+    if(orig){orig.style.opacity="1";orig.disabled=false;}
     span.remove();
   };
-  ans.appendChild(span);
+  document.getElementById("sent-ans").appendChild(span);
 }
-function checkSent(correct){
-  const built=sbAnswer.map(x=>x.word).join(" ");
-  const res=document.getElementById("sres");
-  const nxt=document.getElementById("snext");
+function checkSent(){
+  var s=window._sbCurrent;
+  var built=sbAnswer.map(function(x){return x.word;}).join(" ");
   trainTotal++;
-  if(built.toLowerCase()===correct.toLowerCase()){
-    res.className="train-result tr-correct";res.textContent="✓ Perfect!";trainScore++;
+  var res=document.getElementById("sres");var nxt=document.getElementById("snext");
+  if(built.toLowerCase()===s.answer.toLowerCase()){
+    res.className="train-result tr-correct";res.textContent="✓ Perfect!";trainScore++;speak(s.answer);
   }else{
-    res.className="train-result tr-wrong";res.textContent="✗ Should be: "+correct;
+    res.className="train-result tr-wrong";res.textContent="✗ Should be: "+s.answer;
   }
-  res.style.display="block";nxt.style.display="block";
-  updateTrainScore();
+  res.style.display="block";nxt.style.display="block";updateTrainScore();
 }
 
-// TENSE DRILL
-function startTense(){
-  trainPool=[...tenseExercises].sort(()=>Math.random()-.5);
-  trainIdx=0;renderTense();
-}
+function startTense(){trainPool=tenseExercises.slice().sort(function(){return Math.random()-.5;});trainIdx=0;renderTense();}
 function renderTense(){
-  if(trainIdx>=trainPool.length){trainIdx=0;trainPool.sort(()=>Math.random()-.5);}
-  const t=trainPool[trainIdx];
-  document.getElementById("train-area").innerHTML=`
-    <div class="train-card">
-      <div class="train-question" style="font-size:15px;line-height:1.6">${t.q.replace("___","<span style='color:var(--accent)'>___</span>")}</div>
-      <div class="train-hint">Fill in the blank (вставь правильную форму):</div>
-      <input class="train-input" id="tinput2" placeholder="your answer..." autocomplete="off" autocorrect="off" spellcheck="false">
-      <button class="train-check-btn" onclick="checkTense('${t.a.replace(/'/g,"\\'")}','${t.hint.replace(/'/g,"\\'")}')">Check ✓</button>
-      <div class="train-result" id="tres2"></div>
-      <button class="train-next" id="tnext2" onclick="trainIdx++;renderTense()">Next →</button>
-    </div>`;
-  document.getElementById("tinput2").addEventListener("keydown",e=>{if(e.key==="Enter")checkTense(t.a,t.hint);});
+  if(trainIdx>=trainPool.length){trainIdx=0;trainPool.sort(function(){return Math.random()-.5;});}
+  var t=trainPool[trainIdx];
+  var qtext=t.q.replace(/___/g,'<span style="color:var(--accent)">___</span>');
+  document.getElementById("train-area").innerHTML='<div class="train-card">'+
+    '<div class="train-question" style="font-size:14px;line-height:1.6">'+qtext+'</div>'+
+    '<div class="train-hint">Fill in the blank:</div>'+
+    '<input class="train-input" id="tinput2" placeholder="your answer..." autocomplete="off" autocorrect="off" spellcheck="false">'+
+    '<button class="train-check-btn" onclick="checkTense()">Check ✓</button>'+
+    '<div class="train-result" id="tres2"></div>'+
+    '<button class="train-next" id="tnext2" onclick="trainIdx++;renderTense()">Next →</button>'+
+    '</div>';
+  document.getElementById("tinput2").addEventListener("keydown",function(e){if(e.key==="Enter")checkTense();});
   document.getElementById("tinput2").focus();
+  window._tCurrent=t;
 }
-function checkTense(correct,hint){
-  const inp=document.getElementById("tinput2");
-  const val=inp.value.trim().toLowerCase();
-  const ans=correct.toLowerCase();
-  const res=document.getElementById("tres2");
-  const nxt=document.getElementById("tnext2");
+function checkTense(){
+  var t=window._tCurrent;
+  var inp=document.getElementById("tinput2");
+  var val=inp.value.trim().toLowerCase();
   if(!val)return;
   trainTotal++;
-  const clean=s=>s.replace(/[^a-z \/]/g,"").trim();
-  if(clean(val)===clean(ans)){
-    res.className="train-result tr-correct";
-    res.textContent="✓ Correct!";
-    trainScore++;
+  var clean=function(s){return s.replace(/[^a-z /]/g,"").trim();};
+  var res=document.getElementById("tres2");var nxt=document.getElementById("tnext2");
+  if(clean(val)===clean(t.a.toLowerCase())){
+    res.className="train-result tr-correct";res.textContent="✓ Correct!";trainScore++;speak(t.a);
   }else{
-    res.className="train-result tr-wrong";
-    res.innerHTML="✗ Answer: <b>"+correct+"</b><br><span style='color:var(--muted2);font-size:11px'>"+hint+"</span>";
+    res.className="train-result tr-wrong";res.innerHTML="✗ Answer: <b>"+t.a+"</b><br><span style='color:var(--muted2);font-size:10px'>"+t.hint+"</span>";
   }
-  res.style.display="block";nxt.style.display="block";inp.disabled=true;
-  updateTrainScore();
+  res.style.display="block";nxt.style.display="block";inp.disabled=true;updateTrainScore();
 }
 
-// SECTIONS
+function startSprint(){
+  sprintCorrect=0;sprintTimeLeft=60;
+  trainPool=uniq.slice().sort(function(){return Math.random()-.5;});trainIdx=0;
+  renderSprintCard();
+  sprintTimer=setInterval(function(){
+    sprintTimeLeft--;
+    var el=document.getElementById("sprint-time");
+    if(el)el.textContent=sprintTimeLeft;
+    if(sprintTimeLeft<=0){
+      clearInterval(sprintTimer);sprintTimer=null;
+      document.getElementById("train-area").innerHTML='<div class="train-card" style="text-align:center">'+
+        '<div style="font-family:Syne,sans-serif;font-weight:800;font-size:32px;color:var(--accent)">'+sprintCorrect+'</div>'+
+        '<div style="font-size:14px;color:var(--muted2);margin-top:8px">words in 60 seconds!</div>'+
+        '<button class="train-check-btn" style="margin-top:16px" onclick="startSprint()">Try Again</button></div>';
+    }
+  },1000);
+}
+function renderSprintCard(){
+  if(trainIdx>=trainPool.length){trainIdx=0;trainPool.sort(function(){return Math.random()-.5;});}
+  var w=trainPool[trainIdx];
+  var wrong=uniq.filter(function(x){return x.en!==w.en;}).sort(function(){return Math.random()-.5;}).slice(0,3);
+  var opts=[w].concat(wrong).sort(function(){return Math.random()-.5;});
+  var html='<div class="train-card">'+
+    '<div style="display:flex;justify-content:space-between;margin-bottom:10px">'+
+    '<span style="font-size:20px;color:var(--accent);font-weight:700">'+sprintCorrect+' ✓</span>'+
+    '<span style="font-size:20px;color:var(--orange)" id="sprint-time">'+sprintTimeLeft+'</span></div>'+
+    '<div class="train-question">'+w.en+' <button class="speak-btn" data-speak="'+w.en+'">🔊</button></div>'+
+    '<div class="mc-options" style="margin-top:8px">';
+  opts.forEach(function(o){
+    html+='<button class="mc-opt" style="padding:8px 12px" data-ru="'+encodeURIComponent(o.ru)+'" data-correct="'+encodeURIComponent(w.ru)+'" onclick="sprintCheck(this)">'+o.ru+'</button>';
+  });
+  html+='</div></div>';
+  document.getElementById("train-area").innerHTML=html;
+}
+function sprintCheck(btn){
+  var chosen=btn.getAttribute("data-ru");
+  var correct=btn.getAttribute("data-correct");
+  if(chosen===correct){btn.classList.add("correct");sprintCorrect++;}
+  else{btn.classList.add("wrong");}
+  trainIdx++;
+  setTimeout(renderSprintCard,500);
+}
+
+// ═══ RENDER NATIVE ═══
+function renderNative(){
+  document.getElementById("native-list").innerHTML=nativeThinking.map(function(n){
+    return '<div class="native-card">'+
+      '<div class="nt-side nt-ru"><div class="nt-label nt-ru-label">🇷🇺 Русский думает</div><div class="nt-text">'+n.ru+'</div></div>'+
+      '<div class="nt-divider"></div>'+
+      '<div class="nt-side nt-en"><div class="nt-label nt-en-label">🇺🇸 Носитель говорит</div>'+
+      '<div class="nt-text">'+n.en+' <button class="speak-btn" data-speak="'+n.en.replace(/"/g,'')+'">🔊</button></div>'+
+      '<div class="nt-note">'+n.note+'</div></div></div>';
+  }).join("");
+}
+
+// ═══ RENDER STORIES ═══
+function renderStories(){
+  document.getElementById("stories-list").innerHTML=stories.map(function(s){
+    return '<div class="story-card"><div class="story-title">'+s.title+'</div>'+
+      s.lines.map(function(l){
+        return '<div class="story-line"><span class="story-word">'+l.word+'</span>'+
+          '<div><div class="story-en">'+l.en+' <button class="speak-btn" data-speak="'+l.en.replace(/"/g,'')+'">🔊</button></div>'+
+          '<div class="story-ru">'+l.ru+'</div></div></div>';
+      }).join("")+'</div>';
+  }).join("");
+}
+
+// ═══ RENDER PAIRS ═══
+function renderPairs(){
+  document.getElementById("pairs-list").innerHTML=pairs.map(function(p){
+    return '<div class="pair-card">'+
+      '<div class="pair-word">'+p.a+' <button class="speak-btn" data-speak="'+p.a+'">🔊</button></div>'+
+      '<div class="pair-ru">'+p.aru+'</div>'+
+      '<div class="pair-arrow">↕</div>'+
+      '<div class="pair-opp">'+p.b+' <button class="speak-btn" data-speak="'+p.b+'">🔊</button></div>'+
+      '<div class="pair-opp-ru">'+p.bru+'</div></div>';
+  }).join("");
+}
+
+// ═══ RENDER FAMILIES ═══
+function renderFamilies(){
+  document.getElementById("families-list").innerHTML=families.map(function(f){
+    return '<div class="family-card">'+
+      '<div class="family-root">'+f.root+' <button class="speak-btn" data-speak="'+f.root.toLowerCase()+'">🔊</button></div>'+
+      '<div class="family-words">'+f.words.map(function(w){
+        return '<div class="fw"><div><span class="fw-en">'+w.en+'</span><span class="fw-pos">'+w.pos+'</span>'+
+          ' <button class="speak-btn" style="font-size:11px" data-speak="'+w.en+'">🔊</button></div>'+
+          '<div class="fw-ru">'+w.ru+'</div></div>';
+      }).join("")+'</div></div>';
+  }).join("");
+}
+
+// ═══ SECTIONS ═══
 function showSec(id,btn){
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-  document.querySelectorAll(".nb").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".section").forEach(function(s){s.classList.remove("active");});
+  document.querySelectorAll(".nb").forEach(function(b){b.classList.remove("active");});
   document.getElementById("sec-"+id).classList.add("active");
   btn.classList.add("active");
   if(id==="quiz")initQ();
   if(id==="irreg")renderI();
   if(id==="train")startMC();
+  if(id==="native")renderNative();
+  if(id==="stories")renderStories();
+  if(id==="pairs")renderPairs();
+  if(id==="families")renderFamilies();
 }
 
-renderTabs();renderV();
+// ═══ GLOBAL SPEAK VIA DATA-SPEAK ═══
+document.addEventListener('click',function(e){
+  var btn=e.target.closest('[data-speak]');
+  if(btn){e.stopPropagation();speak(btn.dataset.speak);}
+});
 
+// ═══ INIT ═══
+renderTabs();renderV();updateLevels();
 </script>
 </body>
 </html>
