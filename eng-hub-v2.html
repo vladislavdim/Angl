@@ -6,177 +6,508 @@
 <title>ENG HUB — American English</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+@import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;600;700;800&display=swap');
+
 :root{
-  --bg:#080808;--card:#111;--card2:#181818;--border:#1e1e1e;
-  --accent:#c8ff00;--orange:#ff6b35;--blue:#4fc3f7;--purple:#ce93d8;
-  --pink:#f48fb1;--red:#ff5252;--green:#69ff47;
-  --text:#f0f0f0;--muted:#555;--muted2:#888;
+  --bg:linear-gradient(135deg,#0a0015 0%,#000820 40%,#001a10 100%);
+  --bg-solid:#06000f;
+  --glass:rgba(255,255,255,0.06);
+  --glass-strong:rgba(255,255,255,0.10);
+  --glass-border:rgba(255,255,255,0.12);
+  --glass-shine:rgba(255,255,255,0.18);
+  --accent:#a8ff3e;
+  --accent2:#00e5ff;
+  --accent3:#bf5fff;
+  --orange:#ff8c42;
+  --blue:#00d4ff;
+  --purple:#c77dff;
+  --pink:#ff6eb4;
+  --red:#ff4d6d;
+  --green:#a8ff3e;
+  --text:#ffffff;
+  --text2:rgba(255,255,255,0.7);
+  --muted:rgba(255,255,255,0.25);
+  --muted2:rgba(255,255,255,0.45);
+  --card:rgba(255,255,255,0.07);
+  --card2:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.10);
 }
+
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--text);font-family:"IBM Plex Mono",monospace;min-height:100vh;padding:16px 12px 120px;}
-.header{margin-bottom:16px;}
-h1{font-family:"Syne",sans-serif;font-weight:800;font-size:clamp(24px,7vw,48px);line-height:.9;letter-spacing:-2px;margin-bottom:3px;}
-.g{color:var(--accent);}.o{color:var(--orange);}
-.sub{color:var(--muted);font-size:10px;line-height:1.7;margin-bottom:14px;}
-.level-bar{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px;}
-.level-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-.level-name{font-size:11px;font-weight:700;width:28px;color:var(--muted2);}
-.level-track{flex:1;height:6px;background:#1a1a1a;border-radius:3px;overflow:hidden;}
-.level-fill{height:100%;border-radius:3px;transition:width 1s ease;}
+
+body{
+  background:#06000f;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 20% -10%,rgba(168,100,255,0.35) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 110%,rgba(0,200,255,0.25) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 40% at 50% 50%,rgba(100,255,150,0.08) 0%,transparent 70%);
+  background-attachment:fixed;
+  color:var(--text);
+  font-family:"IBM Plex Mono",monospace;
+  min-height:100vh;
+  padding:16px 12px 120px;
+}
+
+/* HEADER */
+.header{margin-bottom:20px;}
+h1{
+  font-family:"Syne",sans-serif;
+  font-weight:800;
+  font-size:clamp(28px,8vw,56px);
+  line-height:.88;
+  letter-spacing:-3px;
+  margin-bottom:4px;
+}
+.g{
+  background:linear-gradient(135deg,#a8ff3e,#00e5ff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.o{
+  background:linear-gradient(135deg,#bf5fff,#ff6eb4);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.sub{color:var(--muted2);font-size:10px;line-height:1.7;margin-bottom:14px;}
+
+/* GLASS MIXIN */
+.glass{
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--glass-border);
+  border-radius:20px;
+}
+
+/* LEVEL BAR */
+.level-bar{
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--glass-border);
+  border-radius:20px;
+  padding:16px;
+  margin-bottom:14px;
+  position:relative;
+  overflow:hidden;
+}
+.level-bar::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--glass-shine),transparent);
+}
+.level-row{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+.level-row:last-child{margin-bottom:0;}
+.level-name{font-size:10px;font-weight:700;width:24px;color:var(--muted2);}
+.level-track{flex:1;height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;}
+.level-fill{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
 .level-pct{font-size:10px;color:var(--muted2);width:36px;text-align:right;}
-.lf-a1{background:var(--accent);}.lf-a2{background:var(--blue);}.lf-b1{background:var(--orange);}.lf-b2{background:var(--purple);}
-.total-words{font-size:11px;color:var(--muted);text-align:center;margin-top:4px;}
+.lf-a1{background:linear-gradient(90deg,#a8ff3e,#00e5ff);}
+.lf-a2{background:linear-gradient(90deg,#00d4ff,#bf5fff);}
+.lf-b1{background:linear-gradient(90deg,#bf5fff,#ff6eb4);}
+.lf-b2{background:linear-gradient(90deg,#ff6eb4,#ff8c42);}
+.total-words{font-size:11px;color:var(--muted2);text-align:center;margin-top:8px;}
 .total-words b{color:var(--accent);}
+
+/* NAV */
 .nav{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px;}
-.nb{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:10px;padding:6px 12px;border-radius:20px;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap;}
-.nb:hover{border-color:var(--accent);color:var(--text);}
-.nb.active{background:var(--accent);color:#000;font-weight:700;}
+.nb{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.10);
+  color:var(--muted2);
+  font-family:"IBM Plex Mono",monospace;
+  font-size:10px;
+  padding:7px 13px;
+  border-radius:30px;
+  cursor:pointer;
+  transition:all .2s;
+  text-transform:uppercase;
+  letter-spacing:.3px;
+  white-space:nowrap;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+.nb:hover{
+  background:rgba(255,255,255,0.12);
+  border-color:rgba(255,255,255,0.22);
+  color:var(--text);
+}
+.nb.active{
+  background:linear-gradient(135deg,rgba(168,255,62,0.25),rgba(0,229,255,0.15));
+  border-color:rgba(168,255,62,0.5);
+  color:var(--accent);
+  font-weight:700;
+  box-shadow:0 0 20px rgba(168,255,62,0.15);
+}
 .section{display:none;}.section.active{display:block;}
-.sw{position:relative;margin-bottom:9px;}
-.sw input{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:13px;padding:9px 14px 9px 34px;border-radius:8px;outline:none;transition:border-color .2s;}
-.sw input:focus{border-color:var(--accent);}
-.sw::before{content:"⌕";position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:15px;}
-.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:9px;}
-.tab{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:9px;padding:4px 9px;border-radius:20px;cursor:pointer;transition:all .2s;text-transform:uppercase;}
-.tab.active{background:var(--accent);color:#000;font-weight:700;}
-.vstats{font-size:10px;color:var(--muted);margin-bottom:8px;}.vstats b{color:var(--accent);}
+
+/* SEARCH & FILTERS */
 .vfilters{display:flex;flex-direction:column;gap:7px;margin-bottom:9px;}
 .vselects{display:flex;gap:7px;}
-.vselects select{flex:1;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:12px;padding:9px 12px;border-radius:8px;outline:none;appearance:none;-webkit-appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23555' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;}
-.vselects select:focus{border-color:var(--accent);}
-.vselects select option{background:#111;color:var(--text);}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:7px;}
-.vcard{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;cursor:pointer;transition:all .2s;position:relative;min-height:72px;}
-.vcard:hover{border-color:var(--accent);transform:translateY(-1px);}
-.vcard.flipped{border-color:var(--orange);}
+.sw{position:relative;margin-bottom:0;}
+.sw input{
+  width:100%;
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.12);
+  color:var(--text);
+  font-family:"IBM Plex Mono",monospace;
+  font-size:13px;
+  padding:11px 14px 11px 38px;
+  border-radius:14px;
+  outline:none;
+  transition:all .2s;
+}
+.sw input:focus{border-color:rgba(168,255,62,0.5);box-shadow:0 0 0 3px rgba(168,255,62,0.08);}
+.sw input::placeholder{color:var(--muted);}
+.sw::before{content:"⌕";position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:16px;}
+.vselects select{
+  flex:1;
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.12);
+  color:var(--text);
+  font-family:"IBM Plex Mono",monospace;
+  font-size:11px;
+  padding:10px 28px 10px 12px;
+  border-radius:14px;
+  outline:none;
+  appearance:none;
+  -webkit-appearance:none;
+  cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(255,255,255,0.4)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 10px center;
+}
+.vselects select:focus{border-color:rgba(168,255,62,0.4);}
+.vselects select option{background:#0d0020;color:var(--text);}
+.vstats{font-size:10px;color:var(--muted2);margin-bottom:8px;}.vstats b{color:var(--accent);}
+
+/* VOCAB GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;}
+.vcard{
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:16px;
+  padding:12px;
+  cursor:pointer;
+  transition:all .22s;
+  position:relative;
+  min-height:76px;
+  overflow:hidden;
+}
+.vcard::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);
+}
+.vcard:hover{
+  background:rgba(255,255,255,0.09);
+  border-color:rgba(168,255,62,0.3);
+  transform:translateY(-2px);
+  box-shadow:0 8px 32px rgba(0,0,0,0.3),0 0 0 1px rgba(168,255,62,0.1);
+}
+.vcard.flipped{border-color:rgba(0,229,255,0.4);}
 .vcard.flipped .vfront{display:none;}
 .vcard.flipped .vback{display:flex;}
-.vcard.known{opacity:.22;}
+.vcard.known{opacity:.2;}
 .vfront,.vback{display:flex;flex-direction:column;gap:3px;}
 .vback{display:none;}
-.ven{font-family:"Syne",sans-serif;font-weight:700;font-size:14px;}
-.tc .ven{color:var(--accent);}.tm .ven{color:var(--blue);}.ts .ven{color:var(--orange);}
+.ven{font-family:"Syne",sans-serif;font-weight:700;font-size:14px;color:var(--text);}
 .vru{font-size:11px;color:var(--muted2);}
-.vpron{font-size:11px;color:var(--orange);}
-.vex{font-size:11px;color:#666;font-style:italic;line-height:1.4;}
-.vbadge{position:absolute;top:5px;right:5px;font-size:8px;text-transform:uppercase;padding:2px 4px;border-radius:3px;}
-.bc{background:#1a2200;color:var(--accent);}.bm{background:#001a2c;color:var(--blue);}.bs{background:#2c1000;color:var(--orange);}
-.vtap{font-size:9px;color:#222;text-align:right;margin-top:2px;}
-.vkb{margin-top:3px;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:9px;padding:2px 6px;border-radius:3px;cursor:pointer;font-family:"IBM Plex Mono",monospace;}
-.vkb:hover{border-color:var(--accent);color:var(--accent);}
-.speak-btn{background:transparent;border:none;cursor:pointer;font-size:14px;padding:0 2px;vertical-align:middle;opacity:.7;transition:opacity .2s;}
+.vpron{font-size:11px;color:var(--accent2);}
+.vex{font-size:11px;color:var(--muted);font-style:italic;line-height:1.4;}
+.vbadge{
+  position:absolute;top:7px;right:7px;
+  font-size:8px;text-transform:uppercase;
+  padding:2px 6px;border-radius:8px;
+  font-weight:700;
+}
+.bc{background:rgba(168,255,62,0.15);color:var(--accent);}
+.bm{background:rgba(0,212,255,0.15);color:var(--blue);}
+.bs{background:rgba(191,95,255,0.15);color:var(--purple);}
+.vtap{font-size:9px;color:var(--muted);text-align:right;margin-top:3px;}
+.vkb{
+  margin-top:4px;
+  background:rgba(168,255,62,0.08);
+  border:1px solid rgba(168,255,62,0.2);
+  color:var(--accent);
+  font-size:9px;padding:3px 7px;
+  border-radius:8px;cursor:pointer;
+  font-family:"IBM Plex Mono",monospace;
+  transition:all .15s;
+}
+.vkb:hover{background:rgba(168,255,62,0.18);}
+.speak-btn{background:transparent;border:none;cursor:pointer;font-size:14px;padding:0 2px;vertical-align:middle;opacity:.6;transition:opacity .2s;}
 .speak-btn:hover{opacity:1;}
 .empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px;font-size:13px;}
-.tbox{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:13px;margin-bottom:8px;}
-.tbox.must{border-color:var(--accent);}.tbox.should{border-color:var(--blue);}.tbox.later{border-color:var(--purple);}.tbox.skip{opacity:.38;}
+
+/* GLASS CARD (generic) */
+.tbox,.hero,.hack,.sblock,.cs-block,.family-card,.story-card,.native-card,.pair-card,.train-card,.level-bar{
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.10);
+}
+.tbox{border-radius:18px;padding:14px;margin-bottom:10px;position:relative;overflow:hidden;}
+.tbox::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent);}
+.tbox.must{border-color:rgba(168,255,62,0.3);}
+.tbox.should{border-color:rgba(0,212,255,0.3);}
+.tbox.later{border-color:rgba(191,95,255,0.3);}
+.tbox.skip{opacity:.3;}
 .tname{font-family:"Syne",sans-serif;font-weight:800;font-size:15px;margin-bottom:3px;}
-.ttag{display:inline-block;font-size:8px;padding:2px 6px;border-radius:3px;text-transform:uppercase;font-weight:700;margin-bottom:6px;}
-.tag-must{background:#1a2200;color:var(--accent);}.tag-should{background:#001a2c;color:var(--blue);}.tag-later{background:#1a0030;color:var(--purple);}.tag-skip{background:#222;color:var(--muted);}
+.ttag{display:inline-block;font-size:8px;padding:3px 8px;border-radius:10px;text-transform:uppercase;font-weight:700;margin-bottom:7px;}
+.tag-must{background:rgba(168,255,62,0.12);color:var(--accent);}
+.tag-should{background:rgba(0,212,255,0.12);color:var(--blue);}
+.tag-later{background:rgba(191,95,255,0.12);color:var(--purple);}
+.tag-skip{background:rgba(255,255,255,0.06);color:var(--muted2);}
 .twhen{font-size:11px;color:var(--muted2);margin-bottom:6px;}
-.formula{background:#0d1600;border:1px solid #243600;border-radius:7px;padding:8px 10px;font-size:11px;color:var(--accent);margin:6px 0;line-height:1.8;}
-.formula.bl{background:#001220;border-color:#003050;color:var(--blue);}
-.formula.pu{background:#0c001e;border-color:#350055;color:var(--purple);}
+.formula{
+  background:rgba(168,255,62,0.05);
+  border:1px solid rgba(168,255,62,0.15);
+  border-radius:10px;padding:9px 11px;
+  font-size:11px;color:var(--accent);
+  margin:6px 0;line-height:1.8;
+}
+.formula.bl{background:rgba(0,212,255,0.05);border-color:rgba(0,212,255,0.15);color:var(--blue);}
+.formula.pu{background:rgba(191,95,255,0.05);border-color:rgba(191,95,255,0.15);color:var(--purple);}
 .erow{display:flex;flex-direction:column;gap:4px;margin-top:5px;}
-.eg{background:#0a1600;border-left:3px solid var(--accent);padding:5px 8px;border-radius:0 5px 5px 0;font-size:11px;color:#ccc;}
-.eb{background:#160a00;border-left:3px solid var(--orange);padding:5px 8px;border-radius:0 5px 5px 0;font-size:11px;color:#ccc;}
-.elabel{font-size:9px;margin-bottom:1px;}
-.trick{background:#0a0a00;border:1px dashed #252500;border-radius:7px;padding:8px;margin-top:6px;font-size:11px;color:var(--muted2);line-height:1.7;}
+.eg{background:rgba(168,255,62,0.04);border-left:3px solid rgba(168,255,62,0.4);padding:6px 9px;border-radius:0 8px 8px 0;font-size:11px;color:var(--text2);}
+.eb{background:rgba(255,140,66,0.05);border-left:3px solid rgba(255,140,66,0.4);padding:6px 9px;border-radius:0 8px 8px 0;font-size:11px;color:var(--text2);}
+.elabel{font-size:9px;margin-bottom:2px;color:var(--muted2);}
+.trick{background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.1);border-radius:10px;padding:9px;margin-top:7px;font-size:11px;color:var(--muted2);line-height:1.7;}
 .trick b{color:var(--accent);}
-.hero{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:14px;margin-bottom:11px;}
-.hero h2{font-family:"Syne",sans-serif;font-weight:800;font-size:16px;color:var(--accent);margin-bottom:5px;}
+.hero{border-radius:18px;padding:16px;margin-bottom:12px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);}
+.hero h2{font-family:"Syne",sans-serif;font-weight:800;font-size:16px;color:var(--accent);margin-bottom:6px;}
 .hero p{font-size:11px;color:var(--muted2);line-height:1.7;margin-bottom:8px;}
-.hack{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;}
+.hack{border-radius:16px;padding:14px;margin-bottom:9px;position:relative;overflow:hidden;}
+.hack::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,140,66,0.3),transparent);}
 .ht{font-family:"Syne",sans-serif;font-weight:800;font-size:13px;color:var(--orange);margin-bottom:3px;}
-.htag{display:inline-block;background:#2c1000;color:var(--orange);font-size:8px;padding:2px 6px;border-radius:3px;text-transform:uppercase;margin-bottom:6px;}
+.htag{display:inline-block;background:rgba(255,140,66,0.1);color:var(--orange);font-size:8px;padding:2px 7px;border-radius:8px;text-transform:uppercase;margin-bottom:7px;}
 .hb{font-size:11px;color:var(--muted2);line-height:1.8;}.hb b{color:var(--text);}
-.hex{background:#0c0c0c;border-radius:6px;padding:8px;margin-top:6px;font-size:11px;line-height:1.9;}
+.hex{background:rgba(255,255,255,0.03);border-radius:10px;padding:9px;margin-top:7px;font-size:11px;line-height:2.0;}
 .yes{color:var(--accent);}.no2{color:var(--orange);}
-.sblock{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;}
-.stitle{font-family:"Syne",sans-serif;font-weight:800;font-size:15px;color:var(--accent);margin-bottom:6px;}
-.sbody{font-size:11px;color:var(--muted2);line-height:1.9;}.sbody b{color:var(--text);}.sbody .hl{color:var(--accent);}.sbody .no{color:var(--orange);}
-.step{display:flex;gap:8px;margin-bottom:8px;align-items:flex-start;}
-.snum{background:var(--accent);color:#000;font-family:"Syne",sans-serif;font-weight:800;font-size:10px;padding:2px 6px;border-radius:4px;flex-shrink:0;}
-.stxt{font-size:11px;color:var(--muted2);line-height:1.7;}.stxt b{color:var(--text);}
-.isearch{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:12px;padding:9px 13px;border-radius:8px;outline:none;margin-bottom:10px;}
+.isearch{
+  width:100%;
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.12);
+  color:var(--text);
+  font-family:"IBM Plex Mono",monospace;
+  font-size:12px;padding:10px 14px;border-radius:14px;outline:none;margin-bottom:10px;
+}
 .itbl{width:100%;border-collapse:collapse;font-size:11px;}
-.itbl th{text-align:left;color:var(--muted);font-size:9px;text-transform:uppercase;padding:5px 6px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:1;}
-.itbl td{padding:5px 6px;border-bottom:1px solid #141414;vertical-align:top;}
-.itbl tr:hover td{background:var(--card);}
+.itbl th{text-align:left;color:var(--muted2);font-size:9px;text-transform:uppercase;padding:6px 7px;border-bottom:1px solid var(--border);}
+.itbl td{padding:6px 7px;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:top;}
+.itbl tr:hover td{background:rgba(255,255,255,0.04);}
 .v1c{color:var(--blue);font-weight:700;}.v2c{color:var(--accent);}.v3c{color:var(--purple);}.ruc{color:var(--muted2);font-size:10px;}
-.v-example{font-size:10px;color:#444;font-style:italic;line-height:1.5;margin-top:3px;}
-.qscore{color:var(--accent);font-size:12px;text-align:center;margin-bottom:5px;}
-.qprog{font-size:10px;color:var(--muted);text-align:center;margin-bottom:10px;}
-.qcard{background:var(--card);border:2px solid var(--border);border-radius:12px;padding:22px 16px;text-align:center;margin-bottom:11px;min-height:130px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;transition:border-color .3s;}
-.qword{font-family:"Syne",sans-serif;font-weight:800;font-size:28px;}
-.qhint{font-size:11px;color:var(--muted);}
-.qans{font-size:15px;color:var(--accent);display:none;}
-.qpron2{font-size:11px;color:var(--orange);display:none;}
-.qex2{font-size:10px;color:#666;font-style:italic;display:none;}
-.qbtns{display:flex;gap:7px;}
-.qbtn{flex:1;padding:10px;border-radius:8px;border:none;font-family:"IBM Plex Mono",monospace;font-size:11px;cursor:pointer;font-weight:600;transition:all .15s;}
-.qshow{background:var(--accent);color:#000;}
-.qknow{background:#1a3300;color:var(--accent);border:1px solid var(--accent);}
-.qskip{background:var(--card);color:var(--muted);border:1px solid var(--border);}
-.train-modes{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
-.tm-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:10px;padding:6px 12px;border-radius:20px;cursor:pointer;transition:all .2s;text-transform:uppercase;}
-.tm-btn:hover{border-color:var(--accent);color:var(--text);}
-.tm-btn.active{background:var(--accent);color:#000;font-weight:700;}
-.train-card{background:var(--card);border:2px solid var(--border);border-radius:12px;padding:18px;margin-bottom:11px;transition:border-color .3s;}
-.train-question{font-family:"Syne",sans-serif;font-weight:700;font-size:16px;margin-bottom:5px;color:var(--text);line-height:1.4;}
-.train-hint{font-size:10px;color:var(--muted);margin-bottom:10px;}
-.train-input{width:100%;background:#0c0c0c;border:1px solid var(--border);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:13px;padding:10px 12px;border-radius:7px;outline:none;margin-bottom:9px;transition:border-color .2s;}
-.train-input:focus{border-color:var(--accent);}
-.train-check-btn{width:100%;background:var(--accent);color:#000;border:none;font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:700;padding:10px;border-radius:7px;cursor:pointer;margin-bottom:9px;}
-.train-result{font-size:12px;padding:9px 11px;border-radius:7px;display:none;line-height:1.6;}
-.tr-correct{background:#0a1600;border:1px solid var(--accent);color:var(--accent);}
-.tr-wrong{background:#160900;border:1px solid var(--orange);color:var(--orange);}
-.train-next{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:11px;padding:8px;border-radius:7px;cursor:pointer;display:none;}
-.train-score{font-size:11px;color:var(--muted);text-align:center;margin-bottom:9px;}.train-score b{color:var(--accent);}
-.mc-options{display:flex;flex-direction:column;gap:6px;margin-bottom:9px;}
-.mc-opt{background:#0c0c0c;border:1px solid var(--border);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:12px;padding:9px 12px;border-radius:7px;cursor:pointer;text-align:left;transition:all .15s;}
-.mc-opt:hover{border-color:var(--accent);}
-.mc-opt.correct{background:#0a1600;border-color:var(--accent);color:var(--accent);}
-.mc-opt.wrong{background:#160900;border-color:var(--orange);color:var(--orange);}
-.sent-words{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;min-height:40px;background:#0c0c0c;border-radius:7px;padding:8px;}
-.sent-word{background:var(--card);border:1px solid var(--border);color:var(--text);font-family:"IBM Plex Mono",monospace;font-size:11px;padding:4px 9px;border-radius:5px;cursor:pointer;transition:all .15s;user-select:none;}
+.v-example{font-size:10px;color:var(--muted);font-style:italic;line-height:1.5;margin-top:3px;}
+
+/* QUIZ FLIP CARDS */
+.quiz-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.qscore{color:var(--accent);font-size:12px;}
+.qscore b{font-size:18px;font-family:"Syne",sans-serif;font-weight:800;}
+.qprog{font-size:11px;color:var(--muted2);}
+.qflip-wrap{width:100%;height:250px;position:relative;cursor:pointer;margin-bottom:12px;}
+.qflip-front,.qflip-back{
+  position:absolute;top:0;left:0;width:100%;height:250px;
+  border-radius:24px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:8px;padding:28px 20px;box-sizing:border-box;
+}
+.qflip-front{
+  background:rgba(255,255,255,0.07);
+  backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
+  border:1px solid rgba(255,255,255,0.14);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.15),0 20px 60px rgba(0,0,0,0.4);
+}
+.qflip-back{
+  background:rgba(168,255,62,0.07);
+  backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
+  border:1px solid rgba(168,255,62,0.25);
+  box-shadow:inset 0 1px 0 rgba(168,255,62,0.2),0 20px 60px rgba(0,0,0,0.4);
+  display:none;
+}
+.qflip-wrap.flipped .qflip-front{display:none;}
+.qflip-wrap.flipped .qflip-back{display:flex;}
+.qf-label{font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--muted2);font-weight:700;}
+.qf-word{font-family:"Syne",sans-serif;font-weight:800;font-size:34px;color:var(--text);text-align:center;line-height:1.1;}
+.qf-cat{font-size:10px;color:var(--muted2);background:rgba(255,255,255,0.07);padding:3px 10px;border-radius:10px;margin-top:2px;}
+.qf-ru{font-family:"Syne",sans-serif;font-weight:800;font-size:24px;color:var(--accent);text-align:center;line-height:1.2;}
+.qf-pron{font-size:12px;color:var(--accent2);margin-top:2px;}
+.qf-ex{font-size:12px;color:var(--muted2);font-style:italic;text-align:center;margin-top:8px;line-height:1.5;padding:0 8px;}
+.qbtns{display:flex;gap:8px;}
+.qbtn{
+  flex:1;padding:13px;border-radius:14px;border:none;
+  font-family:"IBM Plex Mono",monospace;font-size:12px;
+  cursor:pointer;font-weight:700;transition:all .18s;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.qskip{
+  background:rgba(255,77,109,0.12);
+  color:#ff4d6d;
+  border:1px solid rgba(255,77,109,0.25);
+}
+.qskip:hover{background:rgba(255,77,109,0.22);}
+.qknow{
+  background:rgba(168,255,62,0.12);
+  color:var(--accent);
+  border:1px solid rgba(168,255,62,0.3);
+}
+.qknow:hover{background:rgba(168,255,62,0.22);}
+
+/* TRAINING */
+.train-modes{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.tm-btn{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.10);
+  color:var(--muted2);
+  font-family:"IBM Plex Mono",monospace;font-size:10px;
+  padding:7px 14px;border-radius:30px;cursor:pointer;
+  transition:all .2s;text-transform:uppercase;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.tm-btn:hover{background:rgba(255,255,255,0.1);color:var(--text);}
+.tm-btn.active{
+  background:rgba(168,255,62,0.15);
+  border-color:rgba(168,255,62,0.4);
+  color:var(--accent);font-weight:700;
+}
+.train-card{
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:20px;padding:20px;margin-bottom:12px;
+}
+.train-question{font-family:"Syne",sans-serif;font-weight:700;font-size:16px;margin-bottom:6px;color:var(--text);line-height:1.4;}
+.train-hint{font-size:10px;color:var(--muted2);margin-bottom:10px;}
+.train-input{
+  width:100%;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.12);
+  color:var(--text);
+  font-family:"IBM Plex Mono",monospace;font-size:13px;
+  padding:11px 14px;border-radius:12px;outline:none;
+  margin-bottom:10px;transition:all .2s;
+}
+.train-input:focus{border-color:rgba(168,255,62,0.4);background:rgba(168,255,62,0.04);}
+.train-check-btn{
+  width:100%;
+  background:linear-gradient(135deg,rgba(168,255,62,0.25),rgba(0,229,255,0.15));
+  color:var(--accent);
+  border:1px solid rgba(168,255,62,0.3);
+  font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:700;
+  padding:12px;border-radius:12px;cursor:pointer;margin-bottom:10px;
+  transition:all .2s;
+}
+.train-check-btn:hover{background:linear-gradient(135deg,rgba(168,255,62,0.35),rgba(0,229,255,0.25));}
+.train-result{font-size:12px;padding:10px 12px;border-radius:12px;display:none;line-height:1.6;}
+.tr-correct{background:rgba(168,255,62,0.08);border:1px solid rgba(168,255,62,0.25);color:var(--accent);}
+.tr-wrong{background:rgba(255,140,66,0.08);border:1px solid rgba(255,140,66,0.25);color:var(--orange);}
+.train-next{
+  width:100%;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.10);
+  color:var(--text2);
+  font-family:"IBM Plex Mono",monospace;font-size:11px;
+  padding:9px;border-radius:12px;cursor:pointer;display:none;
+  transition:all .15s;
+}
+.train-next:hover{background:rgba(255,255,255,0.09);}
+.train-score{font-size:11px;color:var(--muted2);text-align:center;margin-bottom:10px;}.train-score b{color:var(--accent);}
+.mc-options{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;}
+.mc-opt{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.10);
+  color:var(--text);
+  font-family:"IBM Plex Mono",monospace;font-size:12px;
+  padding:11px 14px;border-radius:12px;cursor:pointer;
+  text-align:left;transition:all .15s;
+}
+.mc-opt:hover{background:rgba(255,255,255,0.09);border-color:rgba(255,255,255,0.2);}
+.mc-opt.correct{background:rgba(168,255,62,0.10);border-color:rgba(168,255,62,0.35);color:var(--accent);}
+.mc-opt.wrong{background:rgba(255,77,109,0.10);border-color:rgba(255,77,109,0.3);color:#ff4d6d;}
+.sent-words{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;min-height:44px;background:rgba(255,255,255,0.03);border-radius:12px;padding:10px;}
+.sent-word{
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.12);
+  color:var(--text);
+  font-family:"IBM Plex Mono",monospace;font-size:11px;
+  padding:5px 10px;border-radius:8px;cursor:pointer;
+  transition:all .15s;user-select:none;
+}
 .sent-word:hover{border-color:var(--orange);color:var(--orange);}
-.sent-answer{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;min-height:40px;background:#080808;border:1px dashed var(--border);border-radius:7px;padding:8px;}
-.sent-answer .sent-word{border-color:var(--accent);color:var(--accent);}
-.pairs-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
-.pair-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px;text-align:center;}
-.pair-word{font-family:"Syne",sans-serif;font-weight:800;font-size:16px;color:var(--accent);margin-bottom:3px;}
-.pair-ru{font-size:11px;color:var(--muted2);margin-bottom:5px;}
-.pair-arrow{font-size:12px;color:var(--border);text-align:center;margin:2px 0;}
-.pair-opp{font-family:"Syne",sans-serif;font-weight:800;font-size:16px;color:var(--orange);}
-.pair-opp-ru{font-size:11px;color:var(--muted2);}
-.story-card{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:14px;margin-bottom:9px;}
-.story-title{font-family:"Syne",sans-serif;font-weight:800;font-size:14px;color:var(--accent);margin-bottom:8px;}
-.story-line{display:flex;gap:8px;align-items:flex-start;margin-bottom:7px;padding-bottom:7px;border-bottom:1px solid var(--border);}
+.sent-answer{
+  display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;min-height:44px;
+  background:rgba(168,255,62,0.03);
+  border:1px dashed rgba(168,255,62,0.2);
+  border-radius:12px;padding:10px;
+}
+.sent-answer .sent-word{border-color:rgba(168,255,62,0.3);color:var(--accent);}
+
+/* PAIRS */
+.pairs-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.pair-card{
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:16px;padding:13px;text-align:center;
+}
+.pair-word{font-family:"Syne",sans-serif;font-weight:800;font-size:15px;color:var(--accent);margin-bottom:3px;}
+.pair-ru{font-size:10px;color:var(--muted2);margin-bottom:6px;}
+.pair-arrow{font-size:12px;color:var(--muted);text-align:center;margin:2px 0;}
+.pair-opp{font-family:"Syne",sans-serif;font-weight:800;font-size:15px;color:var(--accent2);}
+.pair-opp-ru{font-size:10px;color:var(--muted2);}
+
+/* STORIES */
+.story-card{border-radius:18px;padding:15px;margin-bottom:10px;}
+.story-title{font-family:"Syne",sans-serif;font-weight:800;font-size:14px;color:var(--accent);margin-bottom:9px;}
+.story-line{display:flex;gap:9px;align-items:flex-start;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.06);}
 .story-line:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
-.story-word{background:#0d1600;border:1px solid var(--accent);color:var(--accent);font-family:"Syne",sans-serif;font-weight:700;font-size:12px;padding:3px 8px;border-radius:4px;flex-shrink:0;}
-.story-en{font-size:12px;color:var(--text);line-height:1.5;flex:1;}
-.story-ru{font-size:11px;color:var(--muted2);margin-top:1px;}
-.native-card{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:13px;margin-bottom:8px;display:flex;gap:12px;}
+.story-word{background:rgba(168,255,62,0.1);border:1px solid rgba(168,255,62,0.2);color:var(--accent);font-family:"Syne",sans-serif;font-weight:700;font-size:11px;padding:3px 9px;border-radius:8px;flex-shrink:0;}
+.story-en{font-size:12px;color:var(--text2);line-height:1.5;flex:1;}
+.story-ru{font-size:11px;color:var(--muted2);margin-top:2px;}
+
+/* NATIVE THINKING */
+.native-card{
+  border-radius:18px;padding:14px;margin-bottom:9px;
+  display:flex;gap:12px;
+}
 .nt-side{flex:1;}
-.nt-label{font-size:9px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;font-weight:700;}
-.nt-ru-label{color:var(--red);}.nt-en-label{color:var(--accent);}
+.nt-label{font-size:9px;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;font-weight:700;}
+.nt-ru-label{color:#ff4d6d;}.nt-en-label{color:var(--accent);}
 .nt-text{font-size:13px;line-height:1.6;}
-.nt-ru .nt-text{color:#888;font-style:italic;}
+.nt-ru .nt-text{color:var(--muted2);font-style:italic;}
 .nt-en .nt-text{color:var(--accent);font-family:"Syne",sans-serif;font-weight:700;}
-.nt-divider{width:1px;background:var(--border);margin:0 2px;}
+.nt-divider{width:1px;background:rgba(255,255,255,0.08);margin:0 2px;}
 .nt-note{font-size:10px;color:var(--muted2);margin-top:5px;line-height:1.5;}
-.family-card{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:13px;margin-bottom:8px;}
-.family-root{font-family:"Syne",sans-serif;font-weight:800;font-size:18px;color:var(--accent);margin-bottom:8px;}
-.family-words{display:flex;flex-wrap:wrap;gap:6px;}
-.fw{background:#0d1600;border:1px solid #243600;border-radius:5px;padding:4px 9px;font-size:11px;}
+
+/* FAMILIES */
+.family-card{border-radius:18px;padding:14px;margin-bottom:9px;}
+.family-root{font-family:"Syne",sans-serif;font-weight:800;font-size:18px;color:var(--accent);margin-bottom:9px;}
+.family-words{display:flex;flex-wrap:wrap;gap:7px;}
+.fw{background:rgba(168,255,62,0.06);border:1px solid rgba(168,255,62,0.12);border-radius:10px;padding:5px 10px;font-size:11px;}
 .fw-en{color:var(--accent);font-weight:700;}
-.fw-pos{font-size:9px;color:var(--muted);margin-left:3px;}
-.fw-ru{color:var(--muted2);font-size:10px;margin-top:1px;}
-.cs-block{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:13px;margin-bottom:9px;}
-.cs-title{font-family:"Syne",sans-serif;font-weight:800;font-size:14px;color:var(--blue);margin-bottom:8px;}
+.fw-pos{font-size:9px;color:var(--muted2);margin-left:3px;}
+.fw-ru{color:var(--muted2);font-size:10px;margin-top:2px;}
+
+/* CHEATSHEETS */
+.cs-block{border-radius:18px;padding:14px;margin-bottom:10px;}
+.cs-title{font-family:"Syne",sans-serif;font-weight:800;font-size:14px;color:var(--blue);margin-bottom:9px;}
 .cs-table{width:100%;border-collapse:collapse;font-size:11px;}
-.cs-table th{text-align:left;color:var(--muted);font-size:9px;text-transform:uppercase;padding:4px 7px;border-bottom:1px solid var(--border);}
-.cs-table td{padding:5px 7px;border-bottom:1px solid #141414;color:var(--text);}
+.cs-table th{text-align:left;color:var(--muted2);font-size:9px;text-transform:uppercase;padding:5px 8px;border-bottom:1px solid rgba(255,255,255,0.08);}
+.cs-table td{padding:6px 8px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text2);}
 .cs-table tr:last-child td{border-bottom:none;}
 .cs-table .key{color:var(--accent);font-weight:700;font-family:"Syne",sans-serif;}
 .cs-table .en{color:var(--blue);}
@@ -185,6 +516,18 @@ h1{font-family:"Syne",sans-serif;font-weight:800;font-size:clamp(24px,7vw,48px);
 </head>
 <body>
 
+<!-- Liquid glass orbs -->
+<div style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;">
+  <div style="position:absolute;width:500px;height:500px;top:-100px;left:-150px;background:radial-gradient(circle,rgba(168,100,255,0.3) 0%,transparent 65%);animation:orb1 12s ease-in-out infinite alternate;border-radius:50%;filter:blur(40px);"></div>
+  <div style="position:absolute;width:400px;height:400px;bottom:-100px;right:-100px;background:radial-gradient(circle,rgba(0,200,255,0.25) 0%,transparent 65%);animation:orb2 15s ease-in-out infinite alternate;border-radius:50%;filter:blur(40px);"></div>
+  <div style="position:absolute;width:300px;height:300px;top:40%;left:30%;background:radial-gradient(circle,rgba(100,255,150,0.12) 0%,transparent 65%);animation:orb3 10s ease-in-out infinite alternate;border-radius:50%;filter:blur(50px);"></div>
+</div>
+<style>
+@keyframes orb1{0%{transform:translate(0,0) scale(1);}100%{transform:translate(60px,80px) scale(1.15);}}
+@keyframes orb2{0%{transform:translate(0,0) scale(1);}100%{transform:translate(-50px,-70px) scale(1.1);}}
+@keyframes orb3{0%{transform:translate(0,0) scale(1);}100%{transform:translate(40px,-60px) scale(0.9);}}
+</style>
+<div style="position:relative;z-index:1;">
 <div class="header">
   <h1><span class="g">ENG</span><br><span class="o">HUB</span></h1>
   <p class="sub">🇺🇸 American English · 3000+ words · stories · native thinking · families · cheatsheets</p>
@@ -557,19 +900,33 @@ h1{font-family:"Syne",sans-serif;font-weight:800;font-size:clamp(24px,7vw,48px);
 </div>
 
 <div class="section" id="sec-quiz">
-  <div class="qscore" id="qscore">known: 0</div>
-  <div class="qprog" id="qprog"></div>
-  <div class="qcard" id="qcard">
-    <div class="qword" id="qword"></div>
-    <div class="qhint" id="qhint">what does this mean?</div>
-    <div class="qans" id="qans"></div>
-    <div class="qpron2" id="qpron2"></div>
-    <div class="qex2" id="qex2"></div>
+  <div class="quiz-header">
+    <div class="qscore" id="qscore">known: <b>0</b></div>
+    <div class="qprog" id="qprog"></div>
   </div>
-  <div class="qbtns"><button class="qbtn qshow" id="qshowbtn" onclick="showAns()">Show answer</button></div>
-  <div class="qbtns" id="qratebtns" style="display:none;margin-top:7px;">
-    <button class="qbtn qskip" onclick="nextQ(false)">Don't know</button>
-    <button class="qbtn qknow" onclick="nextQ(true)">Know it ✓</button>
+
+  <div class="qflip-wrap" id="qflip-wrap" onclick="qFlip()">
+      <!-- FRONT -->
+      <div class="qflip-front" id="qflip-front">
+        <div class="qf-label">EN 👆</div>
+        <div class="qf-word" id="qf-word"></div>
+        <div class="qf-cat" id="qf-cat"></div>
+      </div>
+      <!-- BACK -->
+      <div class="qflip-back" id="qflip-back">
+        <div class="qf-label" style="color:var(--orange)">RU</div>
+        <div class="qf-ru" id="qf-ru"></div>
+        <div class="qf-pron" id="qf-pron"></div>
+        <div class="qf-ex" id="qf-ex"></div>
+      </div>
+  </div>
+
+  <div class="qbtns" id="qratebtns" style="display:none;margin-top:10px;">
+    <button class="qbtn qskip" onclick="nextQ(false)">❌ Не знал</button>
+    <button class="qbtn qknow" onclick="nextQ(true)">✅ Знал</button>
+  </div>
+  <div class="qbtns" style="margin-top:7px;">
+    <button class="qbtn" style="background:var(--card);border:1px solid var(--border);color:var(--muted);font-size:10px;" onclick="initQ()">🔀 Restart</button>
   </div>
 </div>
 
@@ -1784,6 +2141,332 @@ var extraVocab=[
 ];
 // merge extra into main vocab array
 vocab.push.apply(vocab, extraVocab);
+// EXTRA WORDS 2
+var extraVocab2=[{en:"forehead",ru:"лоб",pron:"[ˈfɔːrhɛd]",ex:"Sunburn on my forehead.",cat:"daily",type:"must"},
+{en:"chin",ru:"подбородок",pron:"[tʃɪn]",ex:"Scratched my chin.",cat:"daily",type:"must"},
+{en:"cheek",ru:"щека",pron:"[tʃiːk]",ex:"Kiss on the cheek.",cat:"daily",type:"must"},
+{en:"eyebrow",ru:"бровь",pron:"[ˈaɪbraʊ]",ex:"Raise an eyebrow.",cat:"daily",type:"must"},
+{en:"eyelash",ru:"ресница",pron:"[ˈaɪlæʃ]",ex:"Long eyelashes.",cat:"daily",type:"must"},
+{en:"wrist",ru:"запястье",pron:"[rɪst]",ex:"Hurt my wrist.",cat:"daily",type:"must"},
+{en:"elbow",ru:"локоть",pron:"[ˈɛlboʊ]",ex:"Elbow pain.",cat:"daily",type:"must"},
+{en:"heel",ru:"пятка",pron:"[hiːl]",ex:"Blisters on my heel.",cat:"daily",type:"must"},
+{en:"ankle",ru:"лодыжка",pron:"[ˈæŋkəl]",ex:"Twisted ankle.",cat:"daily",type:"must"},
+{en:"thumb",ru:"большой палец",pron:"[θʌm]",ex:"Thumbs up.",cat:"daily",type:"must"},
+{en:"fist",ru:"кулак",pron:"[fɪst]",ex:"Make a fist.",cat:"daily",type:"must"},
+{en:"spine",ru:"позвоночник",pron:"[spaɪn]",ex:"Back spine issue.",cat:"daily",type:"must"},
+{en:"lung",ru:"лёгкое",pron:"[lʌŋ]",ex:"Healthy lungs.",cat:"health",type:"must"},
+{en:"liver",ru:"печень",pron:"[ˈlɪvər]",ex:"Liver health.",cat:"health",type:"must"},
+{en:"kidney",ru:"почка",pron:"[ˈkɪdni]",ex:"Kidney stones.",cat:"health",type:"must"},
+{en:"muscle",ru:"мышца",pron:"[ˈmʌsəl]",ex:"Sore muscles.",cat:"health",type:"must"},
+{en:"vein",ru:"вена",pron:"[veɪn]",ex:"Blue vein.",cat:"health",type:"must"},
+{en:"bone",ru:"кость",pron:"[boʊn]",ex:"Broken bone.",cat:"health",type:"must"},
+{en:"joint",ru:"сустав",pron:"[dʒɔɪnt]",ex:"Stiff joints.",cat:"health",type:"must"},
+{en:"nerve",ru:"нерв",pron:"[nɜːrv]",ex:"Pinched nerve.",cat:"health",type:"must"},
+{en:"hoodie",ru:"худи",pron:"[ˈhʊdi]",ex:"Oversized hoodie.",cat:"life",type:"must"},
+{en:"sweatshirt",ru:"свитшот",pron:"[ˈswɛtʃɜːrt]",ex:"Vintage sweatshirt.",cat:"life",type:"must"},
+{en:"turtleneck",ru:"водолазка",pron:"[ˈtɜːrtlnɛk]",ex:"Black turtleneck.",cat:"life",type:"must"},
+{en:"blazer",ru:"блейзер",pron:"[ˈbleɪzər]",ex:"Smart blazer.",cat:"life",type:"must"},
+{en:"vest",ru:"жилет",pron:"[vɛst]",ex:"Puffer vest.",cat:"life",type:"must"},
+{en:"trench coat",ru:"тренч",pron:"[trɛntʃ koʊt]",ex:"Classic trench coat.",cat:"life",type:"must"},
+{en:"tracksuit",ru:"спортивный костюм",pron:"[ˈtræksʊt]",ex:"Nike tracksuit.",cat:"life",type:"must"},
+{en:"leggings",ru:"леггинсы",pron:"[ˈlɛɡɪŋz]",ex:"Yoga leggings.",cat:"life",type:"must"},
+{en:"shorts",ru:"шорты",pron:"[ʃɔːrts]",ex:"Cargo shorts.",cat:"life",type:"must"},
+{en:"tights",ru:"колготки",pron:"[taɪts]",ex:"Black tights.",cat:"life",type:"must"},
+{en:"sneakers",ru:"кроссовки",pron:"[ˈsniːkərz]",ex:"White sneakers.",cat:"life",type:"must"},
+{en:"loafers",ru:"лоферы",pron:"[ˈloʊfərz]",ex:"Brown loafers.",cat:"life",type:"must"},
+{en:"heels",ru:"каблуки",pron:"[hiːlz]",ex:"Wearing heels.",cat:"life",type:"must"},
+{en:"boots",ru:"ботинки",pron:"[buːts]",ex:"Chelsea boots.",cat:"life",type:"must"},
+{en:"flip flops",ru:"шлёпанцы",pron:"[flɪp flɒps]",ex:"Beach flip flops.",cat:"life",type:"must"},
+{en:"belt",ru:"ремень",pron:"[bɛlt]",ex:"Leather belt.",cat:"life",type:"must"},
+{en:"scarf",ru:"шарф",pron:"[skɑːrf]",ex:"Wool scarf.",cat:"life",type:"must"},
+{en:"gloves",ru:"перчатки",pron:"[ɡlʌvz]",ex:"Leather gloves.",cat:"life",type:"must"},
+{en:"beanie",ru:"шапка",pron:"[ˈbiːni]",ex:"Warm beanie.",cat:"life",type:"must"},
+{en:"sunglasses",ru:"солнечные очки",pron:"[ˈsʌnɡlɑːsɪz]",ex:"Designer sunglasses.",cat:"life",type:"must"},
+{en:"bracelet",ru:"браслет",pron:"[ˈbreɪslɪt]",ex:"Gold bracelet.",cat:"life",type:"must"},
+{en:"necklace",ru:"ожерелье",pron:"[ˈnɛklɪs]",ex:"Pearl necklace.",cat:"life",type:"must"},
+{en:"ring",ru:"кольцо",pron:"[rɪŋ]",ex:"Diamond ring.",cat:"life",type:"must"},
+{en:"earrings",ru:"серьги",pron:"[ˈɪərɪŋz]",ex:"Silver earrings.",cat:"life",type:"must"},
+{en:"avocado",ru:"авокадо",pron:"[ˌævəˈkɑːdoʊ]",ex:"Avocado toast.",cat:"food",type:"cognate"},
+{en:"broccoli",ru:"брокколи",pron:"[ˈbrɒkəli]",ex:"Steam the broccoli.",cat:"food",type:"cognate"},
+{en:"spinach",ru:"шпинат",pron:"[ˈspɪnɪtʃ]",ex:"Fresh spinach.",cat:"food",type:"must"},
+{en:"zucchini",ru:"кабачок",pron:"[zuːˈkiːni]",ex:"Grilled zucchini.",cat:"food",type:"must"},
+{en:"eggplant",ru:"баклажан",pron:"[ˈɛɡplænt]",ex:"Baked eggplant.",cat:"food",type:"must"},
+{en:"cucumber",ru:"огурец",pron:"[ˈkjuːkʌmbər]",ex:"Sliced cucumber.",cat:"food",type:"must"},
+{en:"cherry",ru:"вишня",pron:"[ˈtʃɛri]",ex:"Cherry on top.",cat:"food",type:"must"},
+{en:"strawberry",ru:"клубника",pron:"[ˈstrɔːbɛri]",ex:"Fresh strawberries.",cat:"food",type:"must"},
+{en:"blueberry",ru:"черника",pron:"[ˈbluːbɛri]",ex:"Blueberry smoothie.",cat:"food",type:"must"},
+{en:"mango",ru:"манго",pron:"[ˈmæŋɡoʊ]",ex:"Ripe mango.",cat:"food",type:"cognate"},
+{en:"pineapple",ru:"ананас",pron:"[ˈpaɪnæpəl]",ex:"Fresh pineapple.",cat:"food",type:"must"},
+{en:"watermelon",ru:"арбуз",pron:"[ˈwɔːtərˌmɛlən]",ex:"Sweet watermelon.",cat:"food",type:"must"},
+{en:"grapefruit",ru:"грейпфрут",pron:"[ˈɡreɪpfruːt]",ex:"Bitter grapefruit.",cat:"food",type:"cognate"},
+{en:"peach",ru:"персик",pron:"[piːtʃ]",ex:"Juicy peach.",cat:"food",type:"must"},
+{en:"mushroom",ru:"гриб",pron:"[ˈmʌʃruːm]",ex:"Wild mushrooms.",cat:"food",type:"must"},
+{en:"garlic",ru:"чеснок",pron:"[ˈɡɑːrlɪk]",ex:"Minced garlic.",cat:"food",type:"must"},
+{en:"ginger",ru:"имбирь",pron:"[ˈdʒɪndʒər]",ex:"Fresh ginger.",cat:"food",type:"must"},
+{en:"cinnamon",ru:"корица",pron:"[ˈsɪnəmən]",ex:"Cinnamon roll.",cat:"food",type:"must"},
+{en:"vanilla",ru:"ваниль",pron:"[vəˈnɪlə]",ex:"Vanilla latte.",cat:"food",type:"cognate"},
+{en:"honey",ru:"мёд",pron:"[ˈhʌni]",ex:"Honey in tea.",cat:"food",type:"must"},
+{en:"olive oil",ru:"оливковое масло",pron:"[ˈɒlɪv ɔɪl]",ex:"Extra virgin olive oil.",cat:"food",type:"must"},
+{en:"vinegar",ru:"уксус",pron:"[ˈvɪnɪɡər]",ex:"Apple cider vinegar.",cat:"food",type:"must"},
+{en:"noodles",ru:"лапша",pron:"[ˈnuːdəlz]",ex:"Rice noodles.",cat:"food",type:"must"},
+{en:"dumpling",ru:"пельмень",pron:"[ˈdʌmplɪŋ]",ex:"Steamed dumplings.",cat:"food",type:"must"},
+{en:"croissant",ru:"круассан",pron:"[kwɑːˈsɒnt]",ex:"Butter croissant.",cat:"food",type:"cognate"},
+{en:"muffin",ru:"маффин",pron:"[ˈmʌfɪn]",ex:"Blueberry muffin.",cat:"food",type:"cognate"},
+{en:"waffle",ru:"вафля",pron:"[ˈwɒfəl]",ex:"Belgian waffle.",cat:"food",type:"must"},
+{en:"pancake",ru:"блин",pron:"[ˈpænkeɪk]",ex:"Stack of pancakes.",cat:"food",type:"must"},
+{en:"oatmeal",ru:"овсянка",pron:"[ˈoʊtmiːl]",ex:"Morning oatmeal.",cat:"food",type:"must"},
+{en:"yogurt",ru:"йогурт",pron:"[ˈjoʊɡərt]",ex:"Greek yogurt.",cat:"food",type:"cognate"},
+{en:"cottage cheese",ru:"творог",pron:"[ˈkɒtɪdʒ tʃiːz]",ex:"Low-fat cottage cheese.",cat:"food",type:"must"},
+{en:"sour cream",ru:"сметана",pron:"[ˈsaʊər kriːm]",ex:"Sour cream on top.",cat:"food",type:"must"},
+{en:"mayonnaise",ru:"майонез",pron:"[ˌmeɪəˈneɪz]",ex:"Light mayonnaise.",cat:"food",type:"cognate"},
+{en:"ketchup",ru:"кетчуп",pron:"[ˈkɛtʃəp]",ex:"Extra ketchup.",cat:"food",type:"cognate"},
+{en:"mustard",ru:"горчица",pron:"[ˈmʌstərd]",ex:"Dijon mustard.",cat:"food",type:"must"},
+{en:"hot sauce",ru:"острый соус",pron:"[hɒt sɔːs]",ex:"Add hot sauce.",cat:"food",type:"must"},
+{en:"pigeon",ru:"голубь",pron:"[ˈpɪdʒən]",ex:"City pigeons.",cat:"world",type:"must"},
+{en:"sparrow",ru:"воробей",pron:"[ˈspæroʊ]",ex:"Little sparrow.",cat:"world",type:"must"},
+{en:"crow",ru:"ворона",pron:"[kroʊ]",ex:"Black crow.",cat:"world",type:"must"},
+{en:"eagle",ru:"орёл",pron:"[ˈiːɡəl]",ex:"Bald eagle.",cat:"world",type:"must"},
+{en:"owl",ru:"сова",pron:"[aʊl]",ex:"Night owl.",cat:"world",type:"must"},
+{en:"bat",ru:"летучая мышь",pron:"[bæt]",ex:"Bats at night.",cat:"world",type:"must"},
+{en:"fox",ru:"лиса",pron:"[fɒks]",ex:"Red fox.",cat:"world",type:"must"},
+{en:"wolf",ru:"волк",pron:"[wʊlf]",ex:"Gray wolf.",cat:"world",type:"must"},
+{en:"bear",ru:"медведь",pron:"[bɛər]",ex:"Polar bear.",cat:"world",type:"must"},
+{en:"deer",ru:"олень",pron:"[dɪər]",ex:"Spotted deer.",cat:"world",type:"must"},
+{en:"rabbit",ru:"кролик",pron:"[ˈræbɪt]",ex:"White rabbit.",cat:"world",type:"must"},
+{en:"squirrel",ru:"белка",pron:"[ˈskwɪrəl]",ex:"Squirrel in the park.",cat:"world",type:"must"},
+{en:"hedgehog",ru:"ёж",pron:"[ˈhɛdʒhɒɡ]",ex:"Cute hedgehog.",cat:"world",type:"must"},
+{en:"dolphin",ru:"дельфин",pron:"[ˈdɒlfɪn]",ex:"Swimming dolphin.",cat:"world",type:"cognate"},
+{en:"whale",ru:"кит",pron:"[weɪl]",ex:"Blue whale.",cat:"world",type:"must"},
+{en:"shark",ru:"акула",pron:"[ʃɑːrk]",ex:"Great white shark.",cat:"world",type:"must"},
+{en:"penguin",ru:"пингвин",pron:"[ˈpɛŋɡwɪn]",ex:"Emperor penguin.",cat:"world",type:"cognate"},
+{en:"flamingo",ru:"фламинго",pron:"[fləˈmɪŋɡoʊ]",ex:"Pink flamingo.",cat:"world",type:"cognate"},
+{en:"crocodile",ru:"крокодил",pron:"[ˈkrɒkədaɪl]",ex:"Nile crocodile.",cat:"world",type:"cognate"},
+{en:"snake",ru:"змея",pron:"[sneɪk]",ex:"Venomous snake.",cat:"world",type:"must"},
+{en:"turtle",ru:"черепаха",pron:"[ˈtɜːrtəl]",ex:"Sea turtle.",cat:"world",type:"must"},
+{en:"frog",ru:"лягушка",pron:"[frɒɡ]",ex:"Green frog.",cat:"world",type:"must"},
+{en:"butterfly",ru:"бабочка",pron:"[ˈbʌtərflaɪ]",ex:"Colorful butterfly.",cat:"world",type:"must"},
+{en:"bee",ru:"пчела",pron:"[biː]",ex:"Honey bee.",cat:"world",type:"must"},
+{en:"mosquito",ru:"комар",pron:"[məˈskiːtoʊ]",ex:"Mosquito bite.",cat:"world",type:"cognate"},
+{en:"spider",ru:"паук",pron:"[ˈspaɪdər]",ex:"Spider web.",cat:"world",type:"must"},
+{en:"couch",ru:"диван",pron:"[kaʊtʃ]",ex:"Sit on the couch.",cat:"daily",type:"must"},
+{en:"armchair",ru:"кресло",pron:"[ˈɑːrmtʃɛər]",ex:"Cozy armchair.",cat:"daily",type:"must"},
+{en:"nightstand",ru:"прикроватная тумба",pron:"[ˈnaɪtstænd]",ex:"Lamp on the nightstand.",cat:"daily",type:"must"},
+{en:"dresser",ru:"комод",pron:"[ˈdrɛsər]",ex:"Wooden dresser.",cat:"daily",type:"must"},
+{en:"wardrobe",ru:"шкаф",pron:"[ˈwɔːrdroʊb]",ex:"Built-in wardrobe.",cat:"daily",type:"must"},
+{en:"bookshelf",ru:"книжная полка",pron:"[ˈbʊkʃɛlf]",ex:"Full bookshelf.",cat:"daily",type:"must"},
+{en:"lamp",ru:"лампа",pron:"[læmp]",ex:"Floor lamp.",cat:"daily",type:"must"},
+{en:"outlet",ru:"розетка",pron:"[ˈaʊtlɪt]",ex:"No outlet nearby.",cat:"daily",type:"must"},
+{en:"extension cord",ru:"удлинитель",pron:"[ɪkˈstɛnʃən kɔːrd]",ex:"Need an extension cord.",cat:"daily",type:"must"},
+{en:"light bulb",ru:"лампочка",pron:"[laɪt bʌlb]",ex:"Change the light bulb.",cat:"daily",type:"must"},
+{en:"switch",ru:"выключатель",pron:"[swɪtʃ]",ex:"Flip the switch.",cat:"daily",type:"must"},
+{en:"faucet",ru:"кран",pron:"[ˈfɔːsɪt]",ex:"Leaky faucet.",cat:"daily",type:"must"},
+{en:"drain",ru:"слив",pron:"[dreɪn]",ex:"Drain is clogged.",cat:"daily",type:"must"},
+{en:"pipes",ru:"трубы",pron:"[paɪps]",ex:"Frozen pipes.",cat:"daily",type:"must"},
+{en:"radiator",ru:"батарея",pron:"[ˈreɪdieɪtər]",ex:"Cold radiator.",cat:"daily",type:"must"},
+{en:"thermostat",ru:"термостат",pron:"[ˈθɜːrməstæt]",ex:"Set the thermostat.",cat:"daily",type:"cognate"},
+{en:"insulation",ru:"утепление",pron:"[ˌɪnsjʊˈleɪʃən]",ex:"Poor insulation.",cat:"daily",type:"must"},
+{en:"attic",ru:"чердак",pron:"[ˈætɪk]",ex:"Storage in attic.",cat:"daily",type:"must"},
+{en:"basement",ru:"подвал",pron:"[ˈbeɪsmənt]",ex:"Basement gym.",cat:"daily",type:"must"},
+{en:"porch",ru:"крыльцо",pron:"[pɔːrtʃ]",ex:"Sit on the porch.",cat:"daily",type:"must"},
+{en:"yard",ru:"двор",pron:"[jɑːrd]",ex:"Backyard party.",cat:"daily",type:"must"},
+{en:"fence",ru:"забор",pron:"[fɛns]",ex:"Wooden fence.",cat:"daily",type:"must"},
+{en:"driveway",ru:"подъезд к дому",pron:"[ˈdraɪvweɪ]",ex:"Park in the driveway.",cat:"daily",type:"must"},
+{en:"crossroads",ru:"перекрёсток",pron:"[ˈkrɒsroʊdz]",ex:"Meet at the crossroads.",cat:"daily",type:"must"},
+{en:"roundabout",ru:"кольцо",pron:"[ˈraʊndəbaʊt]",ex:"Go around the roundabout.",cat:"daily",type:"must"},
+{en:"toll road",ru:"платная дорога",pron:"[toʊl roʊd]",ex:"Toll road ahead.",cat:"daily",type:"must"},
+{en:"speed limit",ru:"ограничение скорости",pron:"[spiːd ˈlɪmɪt]",ex:"Speed limit 60.",cat:"daily",type:"must"},
+{en:"traffic light",ru:"светофор",pron:"[ˈtræfɪk laɪt]",ex:"Wait at traffic light.",cat:"daily",type:"must"},
+{en:"car park",ru:"парковка",pron:"[kɑːr pɑːrk]",ex:"Multi-storey car park.",cat:"daily",type:"must"},
+{en:"bus stop",ru:"автобусная остановка",pron:"[bʌs stɒp]",ex:"Wait at bus stop.",cat:"daily",type:"must"},
+{en:"train station",ru:"вокзал",pron:"[treɪn ˈsteɪʃən]",ex:"Meet at train station.",cat:"daily",type:"must"},
+{en:"platform",ru:"платформа",pron:"[ˈplætfɔːrm]",ex:"Platform 3.",cat:"daily",type:"cognate"},
+{en:"carriage",ru:"вагон",pron:"[ˈkærɪdʒ]",ex:"First class carriage.",cat:"travel",type:"must"},
+{en:"seat belt",ru:"ремень безопасности",pron:"[siːt bɛlt]",ex:"Fasten seat belt.",cat:"daily",type:"must"},
+{en:"horn",ru:"гудок",pron:"[hɔːrn]",ex:"Honk the horn.",cat:"daily",type:"must"},
+{en:"windshield",ru:"лобовое стекло",pron:"[ˈwɪndʃiːld]",ex:"Cracked windshield.",cat:"daily",type:"must"},
+{en:"bumper",ru:"бампер",pron:"[ˈbʌmpər]",ex:"Dented bumper.",cat:"daily",type:"cognate"},
+{en:"trunk",ru:"багажник",pron:"[trʌŋk]",ex:"Stuff in the trunk.",cat:"daily",type:"must"},
+{en:"hood",ru:"капот",pron:"[hʊd]",ex:"Open the hood.",cat:"daily",type:"must"},
+{en:"gear",ru:"передача",pron:"[ɡɪər]",ex:"Shift gear.",cat:"daily",type:"must"},
+{en:"brakes",ru:"тормоза",pron:"[breɪks]",ex:"Check your brakes.",cat:"daily",type:"must"},
+{en:"tire",ru:"шина",pron:"[ˈtaɪər]",ex:"Flat tire.",cat:"daily",type:"must"},
+{en:"fuel",ru:"топливо",pron:"[fjuːəl]",ex:"Low on fuel.",cat:"daily",type:"must"},
+{en:"court",ru:"корт",pron:"[kɔːrt]",ex:"Tennis court.",cat:"life",type:"must"},
+{en:"track",ru:"беговая дорожка",pron:"[træk]",ex:"Running track.",cat:"life",type:"must"},
+{en:"pool",ru:"бассейн",pron:"[puːl]",ex:"Swim in the pool.",cat:"life",type:"must"},
+{en:"locker room",ru:"раздевалка",pron:"[ˈlɒkər ruːm]",ex:"Meet in locker room.",cat:"life",type:"must"},
+{en:"referee",ru:"рефери",pron:"[ˌrɛfəˈriː]",ex:"Call the referee.",cat:"life",type:"cognate"},
+{en:"coach",ru:"тренер",pron:"[koʊtʃ]",ex:"Listen to the coach.",cat:"life",type:"must"},
+{en:"trophy",ru:"трофей",pron:"[ˈtroʊfi]",ex:"Win a trophy.",cat:"life",type:"cognate"},
+{en:"medal",ru:"медаль",pron:"[ˈmɛdəl]",ex:"Gold medal.",cat:"life",type:"cognate"},
+{en:"championship",ru:"чемпионат",pron:"[ˈtʃæmpiənʃɪp]",ex:"Win the championship.",cat:"life",type:"must"},
+{en:"tournament",ru:"турнир",pron:"[ˈtʊərnəmənt]",ex:"Weekend tournament.",cat:"life",type:"cognate"},
+{en:"league",ru:"лига",pron:"[liːɡ]",ex:"Premier League.",cat:"life",type:"must"},
+{en:"squad",ru:"состав",pron:"[skwɒd]",ex:"Strong squad.",cat:"life",type:"must"},
+{en:"striker",ru:"нападающий",pron:"[ˈstraɪkər]",ex:"Fast striker.",cat:"life",type:"must"},
+{en:"goalkeeper",ru:"голкипер",pron:"[ˈɡoʊlˌkiːpər]",ex:"Great goalkeeper.",cat:"life",type:"must"},
+{en:"penalty",ru:"штраф",pron:"[ˈpɛnəlti]",ex:"Penalty kick.",cat:"life",type:"must"},
+{en:"offside",ru:"офсайд",pron:"[ˈɒfsaɪd]",ex:"Called offside.",cat:"life",type:"must"},
+{en:"warm-up",ru:"разминка",pron:"[ˈwɔːrm ʌp]",ex:"Do a warm-up.",cat:"health",type:"must"},
+{en:"cool-down",ru:"заминка",pron:"[ˈkuːl daʊn]",ex:"Always cool-down.",cat:"health",type:"must"},
+{en:"pull-up",ru:"подтягивание",pron:"[ˈpʊl ʌp]",ex:"10 pull-ups.",cat:"health",type:"must"},
+{en:"push-up",ru:"отжимание",pron:"[ˈpʊʃ ʌp]",ex:"50 push-ups.",cat:"health",type:"must"},
+{en:"squat",ru:"присед",pron:"[skwɒt]",ex:"Deep squat.",cat:"health",type:"must"},
+{en:"plank",ru:"планка",pron:"[plæŋk]",ex:"Hold the plank.",cat:"health",type:"must"},
+{en:"lunge",ru:"выпад",pron:"[lʌndʒ]",ex:"Walking lunges.",cat:"health",type:"must"},
+{en:"deadlift",ru:"становая тяга",pron:"[ˈdɛdlɪft]",ex:"Heavy deadlift.",cat:"health",type:"must"},
+{en:"bench press",ru:"жим лёжа",pron:"[bɛntʃ prɛs]",ex:"Bench press 100kg.",cat:"health",type:"must"},
+{en:"dumbbell",ru:"гантель",pron:"[ˈdʌmbɛl]",ex:"Grab the dumbbells.",cat:"health",type:"must"},
+{en:"barbell",ru:"штанга",pron:"[ˈbɑːrbɛl]",ex:"Load the barbell.",cat:"health",type:"must"},
+{en:"treadmill",ru:"беговая дорожка",pron:"[ˈtrɛdmɪl]",ex:"Run on treadmill.",cat:"health",type:"must"},
+{en:"yoga mat",ru:"коврик для йоги",pron:"[ˈjoʊɡə mæt]",ex:"Bring your yoga mat.",cat:"health",type:"must"},
+{en:"degree",ru:"степень",pron:"[dɪˈɡriː]",ex:"Bachelor degree.",cat:"society",type:"must"},
+{en:"diploma",ru:"диплом",pron:"[dɪˈploʊmə]",ex:"Get a diploma.",cat:"society",type:"cognate"},
+{en:"scholarship",ru:"стипендия",pron:"[ˈskɒlərʃɪp]",ex:"Win a scholarship.",cat:"society",type:"must"},
+{en:"tuition",ru:"плата за обучение",pron:"[tjuˈɪʃən]",ex:"Tuition fees.",cat:"society",type:"must"},
+{en:"campus",ru:"кампус",pron:"[ˈkæmpəs]",ex:"Beautiful campus.",cat:"society",type:"cognate"},
+{en:"lecture",ru:"лекция",pron:"[ˈlɛktʃər]",ex:"Skip the lecture.",cat:"society",type:"cognate"},
+{en:"assignment",ru:"задание",pron:"[əˈsaɪnmənt]",ex:"Late assignment.",cat:"society",type:"must"},
+{en:"dissertation",ru:"диссертация",pron:"[ˌdɪsərˈteɪʃən]",ex:"Write a dissertation.",cat:"society",type:"cognate"},
+{en:"thesis",ru:"тезис",pron:"[ˈθiːsɪs]",ex:"PhD thesis.",cat:"society",type:"cognate"},
+{en:"internship",ru:"стажировка",pron:"[ˈɪntɜːrnʃɪp]",ex:"Paid internship.",cat:"work",type:"must"},
+{en:"apprentice",ru:"ученик",pron:"[əˈprɛntɪs]",ex:"Take an apprentice.",cat:"work",type:"must"},
+{en:"mentor",ru:"ментор",pron:"[ˈmɛntər]",ex:"Find a mentor.",cat:"work",type:"cognate"},
+{en:"curriculum",ru:"учебная программа",pron:"[kəˈrɪkjʊləm]",ex:"New curriculum.",cat:"society",type:"cognate"},
+{en:"syllabus",ru:"учебный план",pron:"[ˈsɪləbəs]",ex:"Check the syllabus.",cat:"society",type:"must"},
+{en:"grade",ru:"оценка",pron:"[ɡreɪd]",ex:"Good grades.",cat:"society",type:"must"},
+{en:"GPA",ru:"средний балл",pron:"[dʒiː piː eɪ]",ex:"High GPA.",cat:"society",type:"must"},
+{en:"ATM",ru:"банкомат",pron:"[eɪ tiː ɛm]",ex:"Find an ATM.",cat:"money",type:"must"},
+{en:"PIN",ru:"пин-код",pron:"[pɪn]",ex:"Enter your PIN.",cat:"money",type:"must"},
+{en:"balance",ru:"баланс",pron:"[ˈbæləns]",ex:"Check balance.",cat:"money",type:"cognate"},
+{en:"statement",ru:"выписка",pron:"[ˈsteɪtmənt]",ex:"Bank statement.",cat:"money",type:"must"},
+{en:"wire transfer",ru:"банковский перевод",pron:"[waɪər ˈtrænsf3ːr]",ex:"Wire transfer done.",cat:"money",type:"must"},
+{en:"currency exchange",ru:"обмен валют",pron:"[ˈkʌrənsi ɪksˈtʃeɪndʒ]",ex:"Currency exchange desk.",cat:"money",type:"must"},
+{en:"inflation",ru:"инфляция",pron:"[ɪnˈfleɪʃən]",ex:"High inflation.",cat:"money",type:"cognate"},
+{en:"recession",ru:"рецессия",pron:"[rɪˈsɛʃən]",ex:"Economic recession.",cat:"money",type:"cognate"},
+{en:"bankruptcy",ru:"банкротство",pron:"[ˈbæŋkrʌptsi]",ex:"File for bankruptcy.",cat:"money",type:"must"},
+{en:"collateral",ru:"залог",pron:"[kəˈlætərəl]",ex:"Provide collateral.",cat:"money",type:"must"},
+{en:"hedge",ru:"хеджировать",pron:"[hɛdʒ]",ex:"Hedge your bets.",cat:"money",type:"must"},
+{en:"equity",ru:"акционерный капитал",pron:"[ˈɛkwɪti]",ex:"Build equity.",cat:"money",type:"must"},
+{en:"asset",ru:"актив",pron:"[ˈæsɛt]",ex:"Liquid asset.",cat:"money",type:"must"},
+{en:"liability",ru:"обязательство",pron:"[ˌlaɪəˈbɪlɪti]",ex:"Financial liability.",cat:"money",type:"must"},
+{en:"acquaintance",ru:"знакомый",pron:"[əˈkweɪntəns]",ex:"Just an acquaintance.",cat:"relations",type:"must"},
+{en:"roommate",ru:"сосед по комнате",pron:"[ˈruːmmeɪt]",ex:"Good roommate.",cat:"relations",type:"must"},
+{en:"flatmate",ru:"сосед по квартире",pron:"[ˈflætmeɪt]",ex:"Looking for flatmate.",cat:"relations",type:"must"},
+{en:"mentor",ru:"наставник",pron:"[ˈmɛntər]",ex:"Life mentor.",cat:"relations",type:"cognate"},
+{en:"rival",ru:"соперник",pron:"[ˈraɪvəl]",ex:"Old rival.",cat:"relations",type:"must"},
+{en:"ally",ru:"союзник",pron:"[ˈælaɪ]",ex:"Trusted ally.",cat:"relations",type:"must"},
+{en:"gossip",ru:"сплетни",pron:"[ˈɡɒsɪp]",ex:"Spreading gossip.",cat:"comm",type:"must"},
+{en:"rumour",ru:"слух",pron:"[ˈruːmər]",ex:"Just a rumour.",cat:"comm",type:"must"},
+{en:"compliment",ru:"комплимент",pron:"[ˈkɒmplɪmənt]",ex:"Nice compliment.",cat:"comm",type:"cognate"},
+{en:"insult",ru:"оскорбление",pron:"[ˈɪnsʌlt]",ex:"Terrible insult.",cat:"comm",type:"must"},
+{en:"threat",ru:"угроза",pron:"[θrɛt]",ex:"Empty threat.",cat:"comm",type:"must"},
+{en:"blackmail",ru:"шантаж",pron:"[ˈblækmeɪl]",ex:"Blackmail attempt.",cat:"comm",type:"must"},
+{en:"manipulation",ru:"манипуляция",pron:"[məˌnɪpjʊˈleɪʃən]",ex:"Emotional manipulation.",cat:"comm",type:"cognate"},
+{en:"boundary",ru:"граница",pron:"[ˈbaʊndri]",ex:"Set clear boundaries.",cat:"relations",type:"must"},
+{en:"commitment",ru:"обязательство",pron:"[kəˈmɪtmənt]",ex:"Serious commitment.",cat:"relations",type:"must"},
+{en:"loyalty",ru:"лояльность",pron:"[ˈlɔɪəlti]",ex:"Show loyalty.",cat:"relations",type:"must"},
+{en:"betrayal",ru:"предательство",pron:"[bɪˈtreɪəl]",ex:"Felt like betrayal.",cat:"relations",type:"must"},
+{en:"reconciliation",ru:"примирение",pron:"[ˌrɛkənsɪliˈeɪʃən]",ex:"Time for reconciliation.",cat:"relations",type:"must"},
+{en:"proposal",ru:"предложение",pron:"[prəˈpoʊzəl]",ex:"Marriage proposal.",cat:"relations",type:"must"},
+{en:"engagement",ru:"помолвка",pron:"[ɪnˈɡeɪdʒmənt]",ex:"Engagement ring.",cat:"relations",type:"must"},
+{en:"honeymoon",ru:"медовый месяц",pron:"[ˈhʌnimuːn]",ex:"Honeymoon in Paris.",cat:"relations",type:"must"},
+{en:"divorce",ru:"развод",pron:"[dɪˈvɔːrs]",ex:"Going through divorce.",cat:"relations",type:"must"},
+{en:"custody",ru:"опека",pron:"[ˈkʌstədi]",ex:"Child custody.",cat:"relations",type:"must"},
+{en:"selfie",ru:"селфи",pron:"[ˈsɛlfi]",ex:"Take a selfie.",cat:"life",type:"must"},
+{en:"hashtag",ru:"хэштег",pron:"[ˈhæʃtæɡ]",ex:"Use a hashtag.",cat:"life",type:"must"},
+{en:"trending",ru:"в тренде",pron:"[ˈtrɛndɪŋ]",ex:"Trending topic.",cat:"life",type:"must"},
+{en:"viral",ru:"вирусный",pron:"[ˈvaɪrəl]",ex:"Gone viral.",cat:"life",type:"must"},
+{en:"feed",ru:"лента",pron:"[fiːd]",ex:"Instagram feed.",cat:"life",type:"must"},
+{en:"filter",ru:"фильтр",pron:"[ˈfɪltər]",ex:"Apply a filter.",cat:"life",type:"must"},
+{en:"tag",ru:"отметить",pron:"[tæɡ]",ex:"Tag me in it.",cat:"life",type:"must"},
+{en:"unfollow",ru:"отписаться",pron:"[ˌʌnˈfɒloʊ]",ex:"I had to unfollow.",cat:"life",type:"must"},
+{en:"mute",ru:"заглушить",pron:"[mjuːt]",ex:"Mute notifications.",cat:"tech",type:"must"},
+{en:"block",ru:"заблокировать",pron:"[blɒk]",ex:"Block that account.",cat:"tech",type:"must"},
+{en:"swipe",ru:"свайп",pron:"[swaɪp]",ex:"Swipe right.",cat:"tech",type:"must"},
+{en:"pinch",ru:"жест щипка",pron:"[pɪntʃ]",ex:"Pinch to zoom.",cat:"tech",type:"must"},
+{en:"drag",ru:"перетащить",pron:"[dræɡ]",ex:"Drag and drop.",cat:"tech",type:"must"},
+{en:"refresh",ru:"обновить",pron:"[rɪˈfrɛʃ]",ex:"Pull to refresh.",cat:"tech",type:"must"},
+{en:"notification",ru:"уведомление",pron:"[ˌnoʊtɪfɪˈkeɪʃən]",ex:"Push notification.",cat:"tech",type:"cognate"},
+{en:"username",ru:"имя пользователя",pron:"[ˈjuːzərneɪm]",ex:"Pick a username.",cat:"tech",type:"must"},
+{en:"two-factor auth",ru:"двухфакторная аутентификация",pron:"[tuː ˈfæktər ɔːθ]",ex:"Enable two-factor auth.",cat:"tech",type:"must"},
+{en:"dark web",ru:"тёмная паутина",pron:"[dɑːrk wɛb]",ex:"Not on dark web.",cat:"tech",type:"must"},
+{en:"VPN",ru:"VPN",pron:"[viː piː ɛn]",ex:"Use a VPN.",cat:"tech",type:"must"},
+{en:"cloud storage",ru:"облачное хранилище",pron:"[klaʊd ˈstɔːrɪdʒ]",ex:"Back up to cloud storage.",cat:"tech",type:"must"},
+{en:"open source",ru:"открытый исходный код",pron:"[ˈoʊpən sɔːrs]",ex:"Open source project.",cat:"tech",type:"must"},
+{en:"API",ru:"API",pron:"[eɪ piː aɪ]",ex:"Call the API.",cat:"tech",type:"must"},
+{en:"framework",ru:"фреймворк",pron:"[ˈfreɪmwɜːrk]",ex:"Choose a framework.",cat:"tech",type:"must"},
+{en:"startup",ru:"стартап",pron:"[ˈstɑːrtʌp]",ex:"Join a startup.",cat:"work",type:"must"},
+{en:"unicorn",ru:"единорог (стартап)",pron:"[ˈjuːnɪkɔːrn]",ex:"Become a unicorn.",cat:"work",type:"must"},
+{en:"MVP",ru:"минимальный продукт",pron:"[ˌɛm viː ˈpiː]",ex:"Launch the MVP.",cat:"work",type:"must"},
+{en:"pivot",ru:"разворот",pron:"[ˈpɪvət]",ex:"Time to pivot.",cat:"work",type:"must"},
+{en:"scale",ru:"масштабировать",pron:"[skeɪl]",ex:"Ready to scale.",cat:"work",type:"must"},
+{en:"traction",ru:"тяга / рост",pron:"[ˈtrækʃən]",ex:"Gaining traction.",cat:"work",type:"must"},
+{en:"valuation",ru:"оценка компании",pron:"[ˌvæljuˈeɪʃən]",ex:"High valuation.",cat:"work",type:"must"},
+{en:"seed round",ru:"посевной раунд",pron:"[siːd raʊnd]",ex:"Closed seed round.",cat:"work",type:"must"},
+{en:"venture capital",ru:"венчурный капитал",pron:"[ˈvɛntʃər ˈkæpɪtəl]",ex:"Venture capital deal.",cat:"work",type:"must"},
+{en:"exit",ru:"выход",pron:"[ˈɛɡzɪt]",ex:"Plan the exit.",cat:"work",type:"must"},
+{en:"at your own risk",ru:"на свой страх и риск",pron:"[æt jɔːr oʊn rɪsk]",ex:"Do it at your own risk.",cat:"phrases",type:"must"},
+{en:"on purpose",ru:"намеренно",pron:"[ɒn ˈpɜːrpəs]",ex:"Did it on purpose.",cat:"phrases",type:"must"},
+{en:"by accident",ru:"случайно",pron:"[baɪ ˈæksɪdənt]",ex:"It happened by accident.",cat:"phrases",type:"must"},
+{en:"for good",ru:"навсегда",pron:"[fər ɡʊd]",ex:"Left for good.",cat:"phrases",type:"must"},
+{en:"for now",ru:"пока что",pron:"[fər naʊ]",ex:"That's enough for now.",cat:"phrases",type:"must"},
+{en:"all at once",ru:"всё сразу",pron:"[ɔːl æt wʌns]",ex:"Don't do it all at once.",cat:"phrases",type:"must"},
+{en:"one by one",ru:"по одному",pron:"[wʌn baɪ wʌn]",ex:"One by one.",cat:"phrases",type:"must"},
+{en:"back and forth",ru:"туда-сюда",pron:"[bæk ænd fɔːrθ]",ex:"Going back and forth.",cat:"phrases",type:"must"},
+{en:"up and running",ru:"работает",pron:"[ʌp ænd ˈrʌnɪŋ]",ex:"System is up and running.",cat:"phrases",type:"must"},
+{en:"on the go",ru:"на ходу",pron:"[ɒn ðə ɡoʊ]",ex:"Always on the go.",cat:"phrases",type:"must"},
+{en:"in advance",ru:"заранее",pron:"[ɪn ədˈvɑːns]",ex:"Book in advance.",cat:"phrases",type:"must"},
+{en:"from now on",ru:"с этого момента",pron:"[frəm naʊ ɒn]",ex:"From now on.",cat:"phrases",type:"must"},
+{en:"as of now",ru:"на данный момент",pron:"[æz ɒv naʊ]",ex:"As of now.",cat:"phrases",type:"must"},
+{en:"take it easy",ru:"не напрягайся",pron:"[teɪk ɪt ˈiːzi]",ex:"Take it easy.",cat:"phrases",type:"must"},
+{en:"hang in there",ru:"держись",pron:"[hæŋ ɪn ðɛər]",ex:"Hang in there.",cat:"phrases",type:"must"},
+{en:"go for it",ru:"давай / вперёд",pron:"[ɡoʊ fər ɪt]",ex:"Just go for it.",cat:"phrases",type:"must"},
+{en:"never mind",ru:"не важно",pron:"[ˈnɛvər maɪnd]",ex:"Never mind.",cat:"phrases",type:"must"},
+{en:"my pleasure",ru:"пожалуйста",pron:"[maɪ ˈplɛʒər]",ex:"My pleasure.",cat:"phrases",type:"must"},
+{en:"no problem",ru:"не проблема",pron:"[noʊ ˈprɒbləm]",ex:"No problem at all.",cat:"phrases",type:"must"},
+{en:"you got it",ru:"понял / сделаю",pron:"[juː ɡɒt ɪt]",ex:"You got it.",cat:"phrases",type:"must"},
+{en:"I'm on it",ru:"уже делаю",pron:"[aɪm ɒn ɪt]",ex:"I'm on it.",cat:"phrases",type:"must"},
+{en:"what's the deal",ru:"что происходит",pron:"[wɒts ðə diːl]",ex:"What's the deal?",cat:"phrases",type:"must"},
+{en:"what's the catch",ru:"в чём подвох",pron:"[wɒts ðə kætʃ]",ex:"What's the catch?",cat:"phrases",type:"must"},
+{en:"long story short",ru:"короче говоря",pron:"[lɒŋ ˈstɔːri ʃɔːrt]",ex:"Long story short.",cat:"phrases",type:"must"},
+{en:"it is what it is",ru:"такова жизнь",pron:"[ɪt ɪz wɒt ɪt ɪz]",ex:"It is what it is.",cat:"phrases",type:"must"},
+{en:"better safe than sorry",ru:"лучше перестраховаться",pron:"[ˈbɛtər seɪf ðæn ˈsɒri]",ex:"Better safe than sorry.",cat:"phrases",type:"must"},
+{en:"the ball is in your court",ru:"мяч на вашей стороне",pron:"[ðə bɔːl ɪz ɪn jɔːr kɔːrt]",ex:"The ball is in your court.",cat:"phrases",type:"must"},
+{en:"touch base",ru:"связаться",pron:"[tʌtʃ beɪs]",ex:"Let's touch base.",cat:"phrases",type:"must"},
+{en:"circle back",ru:"вернуться к вопросу",pron:"[ˈsɜːrkəl bæk]",ex:"Circle back later.",cat:"phrases",type:"must"},
+{en:"moving forward",ru:"в дальнейшем",pron:"[ˈmuːvɪŋ ˈfɔːrwərd]",ex:"Moving forward.",cat:"phrases",type:"must"},
+{en:"at the end of the day",ru:"в конце концов",pron:"[æt ðə ɛnd ɒv ðə deɪ]",ex:"At the end of the day.",cat:"phrases",type:"must"},
+{en:"wrap up",ru:"завершить",pron:"[ræp ʌp]",ex:"Let's wrap up.",cat:"phrases",type:"must"},
+{en:"follow up",ru:"отследить",pron:"[ˈfɒloʊ ʌp]",ex:"I'll follow up.",cat:"phrases",type:"must"},
+{en:"reach out",ru:"связаться",pron:"[riːtʃ aʊt]",ex:"Reach out anytime.",cat:"phrases",type:"must"},
+{en:"heads up",ru:"предупреждение",pron:"[hɛdz ʌp]",ex:"Heads up!",cat:"phrases",type:"must"},
+{en:"catch you later",ru:"увидимся",pron:"[kætʃ juː ˈleɪtər]",ex:"Catch you later.",cat:"phrases",type:"must"},
+{en:"it hits different",ru:"это чувствуется иначе",pron:"[ɪt hɪts ˈdɪfrənt]",ex:"This song hits different.",cat:"slang",type:"slang"},
+{en:"lowkey fire",ru:"тихо огонь",pron:"[ˈloʊkiː faɪər]",ex:"This is lowkey fire.",cat:"slang",type:"slang"},
+{en:"periodt",ru:"точка / вот именно",pron:"[ˈpɪəriədt]",ex:"And that's that, periodt.",cat:"slang",type:"slang"},
+{en:"simp",ru:"подкаблучник",pron:"[sɪmp]",ex:"Don't be a simp.",cat:"slang",type:"slang"},
+{en:"ghosting",ru:"игнорирование",pron:"[ˈɡoʊstɪŋ]",ex:"Classic ghosting.",cat:"slang",type:"slang"},
+{en:"breadcrumbing",ru:"давать ложную надежду",pron:"[ˈbrɛdkrʌmɪŋ]",ex:"That's breadcrumbing.",cat:"slang",type:"slang"},
+{en:"love bombing",ru:"засыпать вниманием",pron:"[lʌv ˈbɒmɪŋ]",ex:"Red flag: love bombing.",cat:"slang",type:"slang"},
+{en:"red flag",ru:"тревожный знак",pron:"[rɛd flæɡ]",ex:"That's a red flag.",cat:"slang",type:"slang"},
+{en:"green flag",ru:"хороший знак",pron:"[ɡriːn flæɡ]",ex:"Green flag behaviour.",cat:"slang",type:"slang"},
+{en:"toxic",ru:"токсичный",pron:"[ˈtɒksɪk]",ex:"Toxic relationship.",cat:"slang",type:"slang"},
+{en:"gaslighting",ru:"газлайтинг",pron:"[ˈɡæslaɪtɪŋ]",ex:"Classic gaslighting.",cat:"slang",type:"slang"},
+{en:"slay the day",ru:"отлично провести день",pron:"[sleɪ ðə deɪ]",ex:"Go slay the day.",cat:"slang",type:"slang"},
+{en:"that's giving",ru:"это напоминает",pron:"[ðæts ˈɡɪvɪŋ]",ex:"That's giving main character.",cat:"slang",type:"slang"},
+{en:"understood the vibe",ru:"понял атмосферу",pron:"[ˌʌndəˈstʊd ðə vaɪb]",ex:"He understood the vibe.",cat:"slang",type:"slang"},
+{en:"pop off",ru:"взорваться / успех",pron:"[pɒp ɒf]",ex:"She really popped off.",cat:"slang",type:"slang"},
+{en:"no shade",ru:"без обид",pron:"[noʊ ʃeɪd]",ex:"No shade but...",cat:"slang",type:"slang"},
+{en:"shade",ru:"намёк / сарказм",pron:"[ʃeɪd]",ex:"Throwing shade.",cat:"slang",type:"slang"},
+{en:"serve",ru:"выглядеть / подавать",pron:"[sɜːrv]",ex:"She served that look.",cat:"slang",type:"slang"},
+{en:"icon",ru:"икона",pron:"[ˈaɪkɒn]",ex:"She's an icon.",cat:"slang",type:"slang"},
+{en:"boujee",ru:"богатый / понтовый",pron:"[ˈbuːʒi]",ex:"Very boujee place.",cat:"slang",type:"slang"},
+{en:"slay queen",ru:"королева",pron:"[sleɪ kwiːn]",ex:"Absolute slay queen.",cat:"slang",type:"slang"},
+{en:"thirsty",ru:"отчаянный / нуждающийся",pron:"[ˈθɜːrsti]",ex:"Looking thirsty.",cat:"slang",type:"slang"},
+{en:"salty",ru:"обиженный",pron:"[ˈsɔːlti]",ex:"Why you so salty?",cat:"slang",type:"slang"},
+{en:"swerve",ru:"избегать",pron:"[swɜːrv]",ex:"Swerve that drama.",cat:"slang",type:"slang"}];
+vocab.push.apply(vocab, extraVocab2);
 
 // ═══ DEDUP VOCAB ═══
 var seen=new Set();
@@ -1903,43 +2586,96 @@ function renderI(q){
 }
 document.getElementById("isearch").addEventListener("input",function(e){renderI(e.target.value.toLowerCase());});
 
-// ═══ QUIZ ═══
-var qp=[],qi=0,qs=0;
-function initQ(){qp=uniq.slice().sort(function(){return Math.random()-.5;});qi=0;qs=0;loadQ();}
+// ═══ QUIZ — FLIP CARDS ═══
+var qp=[],qi=0,qs=0,qFlipped=false;
+
+function initQ(){
+  qp=uniq.slice().sort(function(){return Math.random()-.5;});
+  qi=0;qs=0;qFlipped=false;
+  loadQ();
+}
+
 function loadQ(){
-  if(qi>=qp.length){
-    document.getElementById("qword").textContent="Done! 🎉";
-    document.getElementById("qhint").textContent="Score: "+qs+"/"+qp.length;
-    ["qans","qpron2","qex2"].forEach(function(id){document.getElementById(id).style.display="none";});
-    document.getElementById("qshowbtn").textContent="Restart";
-    document.getElementById("qshowbtn").onclick=initQ;
-    document.getElementById("qratebtns").style.display="none";return;
-  }
-  var w=qp[qi];
-  document.getElementById("qword").textContent=w.en;
-  document.getElementById("qhint").textContent="what does this mean?";
-  document.getElementById("qans").textContent=w.ru;
-  document.getElementById("qpron2").textContent=w.pron;
-  document.getElementById("qex2").textContent='"'+w.ex+'"';
-  ["qans","qpron2","qex2"].forEach(function(id){document.getElementById(id).style.display="none";});
-  document.getElementById("qshowbtn").style.display="block";
-  document.getElementById("qshowbtn").textContent="Show answer";
-  document.getElementById("qshowbtn").onclick=showAns;
+  qFlipped=false;
+  var wrap=document.getElementById("qflip-wrap");
+  if(wrap)wrap.classList.remove("flipped");
   document.getElementById("qratebtns").style.display="none";
+
+  if(qi>=qp.length){
+    document.getElementById("qf-word").textContent="Done! 🎉";
+    document.getElementById("qf-cat").textContent="Score: "+qs+" / "+qp.length;
+    document.getElementById("qf-ru").textContent="Молодец!";
+    document.getElementById("qf-pron").textContent="";
+    document.getElementById("qf-ex").textContent="Нажми Restart чтобы заново";
+    document.getElementById("qprog").textContent="";
+    document.getElementById("qscore").innerHTML="known: <b>"+qs+"</b>";
+    return;
+  }
+
+  var w=qp[qi];
+  var catLabels={daily:"Daily Life",food:"Food",time:"Time",relations:"Relations",tech:"Tech",health:"Health",travel:"Travel",emotions:"Emotions",life:"Lifestyle",world:"World",adj:"Adjectives","-tion":"-tion words",work:"Work",money:"Money",comm:"Communication",mind:"Mind",society:"Society",verbs:"Verbs",phrases:"Phrases",slang:"Slang"};
+
+  document.getElementById("qf-word").textContent=w.en;
+  document.getElementById("qf-cat").textContent=catLabels[w.cat]||w.cat;
+  document.getElementById("qf-ru").textContent=w.ru;
+  document.getElementById("qf-pron").textContent=w.pron;
+  document.getElementById("qf-ex").textContent='"'+w.ex+'"';
   document.getElementById("qprog").textContent=(qi+1)+" / "+qp.length;
-  document.getElementById("qscore").textContent="known: "+qs;
-  document.getElementById("qcard").style.borderColor="var(--border)";
+  document.getElementById("qscore").innerHTML="known: <b>"+qs+"</b>";
+
+  // reset card sides
+  var front=document.getElementById("qflip-front");
+  var back=document.getElementById("qflip-back");
+  if(front){front.style.display="flex";front.style.borderColor="var(--border)";front.style.opacity="1";front.style.transform="scale(1)";front.style.transition="";}
+  if(back){back.style.display="none";back.style.borderColor="var(--accent)";back.style.opacity="";back.style.transform="";back.style.transition="";}
 }
-function showAns(){
-  ["qans","qpron2","qex2"].forEach(function(id){document.getElementById(id).style.display="block";});
-  document.getElementById("qshowbtn").style.display="none";
-  document.getElementById("qratebtns").style.display="flex";
-  speak(qp[qi].en);
+
+function qFlip(){
+  if(qi>=qp.length)return;
+  if(qFlipped)return;
+  qFlipped=true;
+  var front=document.getElementById("qflip-front");
+  var back=document.getElementById("qflip-back");
+  var wrap=document.getElementById("qflip-wrap");
+  // animate out front
+  front.style.transition="opacity 0.18s,transform 0.18s";
+  front.style.opacity="0";
+  front.style.transform="scale(0.92)";
+  setTimeout(function(){
+    front.style.display="none";
+    front.style.transition="";
+    front.style.opacity="";
+    front.style.transform="";
+    back.style.display="flex";
+    back.style.opacity="0";
+    back.style.transform="scale(0.92)";
+    back.style.transition="opacity 0.18s,transform 0.18s";
+    setTimeout(function(){
+      back.style.opacity="1";
+      back.style.transform="scale(1)";
+    },20);
+    document.getElementById("qratebtns").style.display="flex";
+    try{speak(qp[qi].en);}catch(e){}
+  },200);
 }
+
 function nextQ(ok){
-  if(ok){qs++;known.add(qp[qi].en);sk();document.getElementById("qcard").style.borderColor="var(--accent)";}
-  else{document.getElementById("qcard").style.borderColor="var(--orange)";}
-  qi++;updateLevels();setTimeout(loadQ,300);
+  var back=document.getElementById("qflip-back");
+  if(ok){
+    qs++;known.add(qp[qi].en);sk();
+    if(back)back.style.borderColor="var(--accent)";
+  }else{
+    if(back)back.style.borderColor="#ff5252";
+  }
+  updateLevels();
+  // animate out
+  if(back){
+    back.style.transition="opacity 0.15s,transform 0.15s";
+    back.style.opacity="0";
+    back.style.transform="scale(0.92)";
+  }
+  qi++;
+  setTimeout(loadQ,200);
 }
 
 // ═══ TRAINING ═══
@@ -2226,5 +2962,5 @@ document.addEventListener('click',function(e){
 // ═══ INIT ═══
 renderV();updateLevels();
 </script>
-</body>
+</div></body>
 </html>
