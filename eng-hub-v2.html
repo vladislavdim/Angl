@@ -235,6 +235,16 @@ h1{
 .bc{background:rgba(232,213,163,0.15);color:var(--accent);}
 .bm{background:rgba(0,212,255,0.15);color:var(--blue);}
 .bs{background:rgba(191,95,255,0.15);color:var(--purple);}
+.vfav{
+  position:absolute;top:5px;left:6px;
+  background:transparent;border:none;cursor:pointer;
+  font-size:15px;line-height:1;padding:2px;
+  color:var(--muted);
+  transition:all .15s;
+  z-index:2;
+}
+.vfav.active{color:#f0c14b;}
+.vfav:hover{transform:scale(1.15);}
 .vtap{font-size:9px;color:var(--muted);text-align:right;margin-top:3px;}
 .vkb{
   margin-top:4px;
@@ -611,6 +621,32 @@ h1{
 .tw-mean:first-of-type{margin-top:0;}
 .tw-ex{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:2px;}
 .tw-ex b{color:var(--text);}
+
+/* CONVERSATIONS */
+.convo-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.convo-tab{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.10);
+  color:var(--muted2);
+  font-family:"IBM Plex Mono",monospace;font-size:10px;
+  padding:7px 13px;border-radius:30px;cursor:pointer;
+  transition:all .2s;
+}
+.convo-tab:hover{background:rgba(255,255,255,0.1);color:var(--text);}
+.convo-tab.active{
+  background:rgba(232,213,163,0.12);
+  border-color:rgba(232,213,163,0.35);
+  color:var(--accent);font-weight:700;
+}
+.convo-card{
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:16px;padding:13px 15px;margin-bottom:9px;
+}
+.convo-en{font-family:"Syne",sans-serif;font-weight:700;font-size:14px;color:var(--text);margin-bottom:3px;}
+.convo-ru{font-size:12px;color:var(--muted2);}
+.convo-role{font-size:9px;text-transform:uppercase;color:var(--blue);font-weight:700;margin-bottom:3px;letter-spacing:.5px;}
 </style>
 </head>
 <body>
@@ -641,6 +677,7 @@ h1{
 
 <div class="nav">
   <button class="nb active" onclick="showSec('vocab',this)">📚 Слова</button>
+  <button class="nb" onclick="showSec('favorites',this)">⭐ Избранное</button>
   <button class="nb" onclick="showSec('quiz',this)">🃏 Квиз</button>
   <button class="nb" onclick="showSec('train',this)">🎯 Тренинг</button>
   <button class="nb" onclick="showSec('tenses',this)">⏱ Времена</button>
@@ -648,6 +685,9 @@ h1{
   <button class="nb" onclick="showSec('stories',this)">📖 Истории</button>
   <button class="nb" onclick="showSec('irreg',this)">🔀 Irregular</button>
   <button class="nb" onclick="showSec('phrasal',this)">🌸 Phrasal Hub</button>
+  <button class="nb" onclick="showSec('order',this)">🧩 Порядок слов</button>
+  <button class="nb" onclick="showSec('verbprep',this)">🔗 Глагол+Предлог</button>
+  <button class="nb" onclick="showSec('convo',this)">💬 Разговорник</button>
   <button class="nb" onclick="showSec('pairs',this)">⇄ Пары</button>
   <button class="nb" onclick="showSec('tricky',this)">🎭 Слова-хитрецы</button>
   <button class="nb" onclick="showSec('families',this)">🌱 Семьи</button>
@@ -693,6 +733,16 @@ h1{
   </div>
   <div class="vstats" id="vstats"></div>
   <div class="grid" id="vgrid"></div>
+</div>
+
+<!-- ═══ FAVORITES ═══ -->
+<div class="section" id="sec-favorites">
+  <div class="hero">
+    <h2>⭐ Избранное</h2>
+    <p>Слова, которые ты отметил звёздочкой — сложные, важные, нужные. Нажми ★ на любой карточке слова в разделе Слова, чтобы добавить сюда.</p>
+  </div>
+  <div class="vstats" id="fav-stats"></div>
+  <div class="grid" id="fav-grid"></div>
 </div>
 
 <div class="section" id="sec-tenses">
@@ -1243,6 +1293,120 @@ h1{
   <div class="ph-tabs" id="ph-tabs"></div>
   <div class="ph-flower-wrap" id="ph-flower-wrap"></div>
   <div class="ph-detail" id="ph-detail"></div>
+</div>
+
+<!-- ═══ WORD ORDER ═══ -->
+<div class="section" id="sec-order">
+  <div class="hero">
+    <h2>🧩 Порядок слов</h2>
+    <p>Главная разница между русским и английским: в английском порядок слов почти всегда строгий — Subject → Verb → Object.</p>
+  </div>
+
+  <div class="tw-card">
+    <div class="tw-word">Базовая формула</div>
+    <div class="tw-mean">S + V + O (Кто → Действие → Объект)</div>
+    <div class="tw-ex"><b>I</b> (S) <b>love</b> (V) <b>coffee</b> (O). — Я люблю кофе.</div>
+    <div class="trick">🔑 В русском можно сказать "Кофе я люблю" — в английском так нельзя! Порядок всегда S-V-O.</div>
+  </div>
+
+  <div class="tw-card">
+    <div class="tw-word">Наречия частоты — где ставить?</div>
+    <div class="tw-mean">always / usually / often / never — ПЕРЕД основным глаголом</div>
+    <div class="tw-ex">I <b>always</b> drink coffee. — Я всегда пью кофе.</div>
+    <div class="tw-mean">Но ПОСЛЕ глагола to be</div>
+    <div class="tw-ex">She <b>is</b> always <b>late</b>. — Она всегда опаздывает.</div>
+    <div class="trick">❌ "I drink always coffee" — неправильно!<br>✅ "I always drink coffee" — правильно.</div>
+  </div>
+
+  <div class="tw-card">
+    <div class="tw-word">Порядок прилагательных</div>
+    <div class="tw-mean">Mнение → Размер → Возраст → Форма → Цвет → Происхождение → Материал → Сущ.</div>
+    <div class="tw-ex">a <b>beautiful small old round</b> wooden table — красивый маленький старый круглый деревянный стол</div>
+    <div class="tw-ex">a <b>nice big new</b> red Italian car — хорошая большая новая красная итальянская машина</div>
+    <div class="trick">💡 Запомни порядок: OSASCOMP (opinion-size-age-shape-color-origin-material-purpose). На практике редко используют больше 2-3 прилагательных подряд.</div>
+  </div>
+
+  <div class="tw-card">
+    <div class="tw-word">Вопросы — инверсия</div>
+    <div class="tw-mean">Утверждение: S + V</div>
+    <div class="tw-ex">You <b>are</b> tired. — Ты устал.</div>
+    <div class="tw-mean">Вопрос: Auxiliary + S + V</div>
+    <div class="tw-ex"><b>Are</b> you tired? — Ты устал?</div>
+    <div class="tw-ex"><b>Do</b> you like coffee? — Тебе нравится кофе?</div>
+    <div class="trick">🔑 Без вспомогательного глагола (do/does/did/am/is/are/have) вопрос не построить правильно.</div>
+  </div>
+
+  <div class="tw-card">
+    <div class="tw-word">Двойное отрицание — нельзя!</div>
+    <div class="tw-mean">В русском можно: "Я никого не видел"</div>
+    <div class="tw-ex">❌ I <b>didn't</b> see <b>nobody</b>.</div>
+    <div class="tw-ex">✅ I <b>didn't</b> see <b>anybody</b>. — Я никого не видел.</div>
+    <div class="tw-ex">✅ I saw <b>nobody</b>. — Я не видел никого.</div>
+    <div class="trick">🔑 Только ОДНО отрицание в предложении! didn't + anybody ИЛИ saw + nobody.</div>
+  </div>
+
+  <div class="tw-card">
+    <div class="tw-word">Место и время в конце</div>
+    <div class="tw-mean">Место → Время (обычно в этом порядке)</div>
+    <div class="tw-ex">I met her <b>at the cafe</b> (место) <b>yesterday</b> (время). — Я встретил её в кафе вчера.</div>
+    <div class="trick">💡 Если в начале предложения — порядок наоборот: "Yesterday, I met her at the cafe."</div>
+  </div>
+</div>
+
+<!-- ═══ VERB + PREPOSITION ═══ -->
+<div class="section" id="sec-verbprep">
+  <div class="hero">
+    <h2>🔗 Глагол + Предлог</h2>
+    <p>Многие глаголы требуют определённого предлога — и часто он не совпадает с русским. Запоминай парами!</p>
+  </div>
+
+  <div class="cs-block">
+    <div class="cs-title">Самые частые связки</div>
+    <table class="cs-table">
+      <tr><th>Глагол + предлог</th><th>Значение</th><th>Пример</th></tr>
+      <tr><td class="key">depend on</td><td>зависеть от</td><td class="en">It depends on you.</td></tr>
+      <tr><td class="key">wait for</td><td>ждать (кого-то)</td><td class="en">Wait for me.</td></tr>
+      <tr><td class="key">look at</td><td>смотреть на</td><td class="en">Look at this.</td></tr>
+      <tr><td class="key">look for</td><td>искать</td><td class="en">Looking for my keys.</td></tr>
+      <tr><td class="key">listen to</td><td>слушать</td><td class="en">Listen to me.</td></tr>
+      <tr><td class="key">talk to / with</td><td>говорить с</td><td class="en">Talk to your manager.</td></tr>
+      <tr><td class="key">think about</td><td>думать о</td><td class="en">Think about it.</td></tr>
+      <tr><td class="key">think of</td><td>придумать / вспомнить</td><td class="en">I can't think of his name.</td></tr>
+      <tr><td class="key">arrive at/in</td><td>прибыть в</td><td class="en">Arrive at the airport.</td></tr>
+      <tr><td class="key">apologize for</td><td>извиниться за</td><td class="en">Apologize for being late.</td></tr>
+      <tr><td class="key">agree with</td><td>согласиться с (кем)</td><td class="en">I agree with you.</td></tr>
+      <tr><td class="key">agree on</td><td>договориться о (чём)</td><td class="en">We agreed on the price.</td></tr>
+      <tr><td class="key">believe in</td><td>верить в</td><td class="en">Believe in yourself.</td></tr>
+      <tr><td class="key">care about</td><td>заботиться о / переживать</td><td class="en">I care about you.</td></tr>
+      <tr><td class="key">complain about</td><td>жаловаться на</td><td class="en">Stop complaining about it.</td></tr>
+      <tr><td class="key">deal with</td><td>разбираться с</td><td class="en">Deal with it.</td></tr>
+      <tr><td class="key">dream about/of</td><td>мечтать о</td><td class="en">I dream of traveling.</td></tr>
+      <tr><td class="key">focus on</td><td>сосредоточиться на</td><td class="en">Focus on your goals.</td></tr>
+      <tr><td class="key">insist on</td><td>настаивать на</td><td class="en">She insisted on paying.</td></tr>
+      <tr><td class="key">laugh at</td><td>смеяться над</td><td class="en">Don't laugh at me.</td></tr>
+      <tr><td class="key">pay for</td><td>платить за</td><td class="en">I'll pay for dinner.</td></tr>
+      <tr><td class="key">rely on</td><td>полагаться на</td><td class="en">You can rely on me.</td></tr>
+      <tr><td class="key">succeed in</td><td>добиться успеха в</td><td class="en">Succeed in business.</td></tr>
+      <tr><td class="key">worry about</td><td>волноваться о</td><td class="en">Don't worry about it.</td></tr>
+      <tr><td class="key">consist of</td><td>состоять из</td><td class="en">It consists of two parts.</td></tr>
+      <tr><td class="key">congratulate on</td><td>поздравлять с</td><td class="en">Congratulate her on the win.</td></tr>
+      <tr><td class="key">apply for</td><td>подавать заявку на</td><td class="en">Apply for the job.</td></tr>
+      <tr><td class="key">benefit from</td><td>извлекать выгоду из</td><td class="en">Benefit from experience.</td></tr>
+      <tr><td class="key">consist in</td><td>заключаться в</td><td class="en">Success consists in effort.</td></tr>
+      <tr><td class="key">react to</td><td>реагировать на</td><td class="en">React to the news.</td></tr>
+    </table>
+    <div style="font-size:10px;color:var(--muted2);margin-top:8px;">💡 Эти связки лучше учить целиком, а не отдельно глагол и отдельно предлог — мозг запомнит как одно слово.</div>
+  </div>
+</div>
+
+<!-- ═══ CONVERSATIONS ═══ -->
+<div class="section" id="sec-convo">
+  <div class="hero">
+    <h2>💬 Разговорник</h2>
+    <p>Готовые фразы целиком — не нужно собирать из слов, просто запомни и используй.</p>
+  </div>
+  <div class="convo-tabs" id="convo-tabs"></div>
+  <div id="convo-list"></div>
 </div>
 
 <div class="section" id="sec-quiz">
@@ -3117,6 +3281,10 @@ var known=new Set();
 try{var sv=safeGet("ehv4");if(sv)known=new Set(JSON.parse(sv));}catch(e){}
 function sk(){try{safeSet("ehv4",JSON.stringify(Array.from(known)));}catch(e){}}
 
+var favorites=new Set();
+try{var fv=safeGet("ehfav");if(fv)favorites=new Set(JSON.parse(fv));}catch(e){}
+function sf(){try{safeSet("ehfav",JSON.stringify(Array.from(favorites)));}catch(e){}}
+
 function updateLevels(){
   var levels={a1:{total:0,known:0},a2:{total:0,known:0},b1:{total:0,known:0},b2:{total:0,known:0}};
   uniq.forEach(function(w){
@@ -3149,8 +3317,10 @@ function makeCardHTML(w){
   var badge=w.type==="cognate"?"≈похожее":w.type==="must"?"must":"slang";
   var bc="b"+(w.type==="cognate"?"c":w.type==="must"?"m":"s");
   var kn=known.has(w.en)?" known":"";
+  var isFav=favorites.has(w.en);
   var h='<div class="vcard'+kn+'" onclick="flipV(this)">';
   h+='<span class="vbadge '+bc+'">'+badge+'</span>';
+  h+='<button class="vfav'+(isFav?' active':'')+'" data-en="'+key+'" onclick="event.stopPropagation();tfvBtn(this)">'+(isFav?"★":"☆")+'</button>';
   h+='<div class="vfront">';
   h+='<div class="ven">'+w.en+' <button class="speak-btn" data-speak="'+w.en.replace(/"/g,'')+'">🔊</button></div>';
   h+='<div class="vru">'+w.ru+'</div>';
@@ -3163,6 +3333,23 @@ function makeCardHTML(w){
   h+='<button class="vkb" data-en="'+key+'" onclick="event.stopPropagation();tkvBtn(this)">'+(known.has(w.en)?"✓ known":"mark known")+'</button>';
   h+='</div></div>';
   return h;
+}
+
+function tfvBtn(btn){
+  var key=decodeURIComponent(btn.getAttribute("data-en"));
+  if(favorites.has(key)){
+    favorites.delete(key);
+    btn.textContent="☆";
+    btn.classList.remove("active");
+  }else{
+    favorites.add(key);
+    btn.textContent="★";
+    btn.classList.add("active");
+  }
+  sf();
+  if(document.getElementById("sec-favorites")&&document.getElementById("sec-favorites").classList.contains("active")){
+    renderFavorites();
+  }
 }
 
 function renderV(){
@@ -3184,6 +3371,21 @@ function renderV(){
   var html='';
   f.forEach(function(w){html+=makeCardHTML(w);});
   grid.innerHTML=html;
+}
+
+function renderFavorites(){
+  var statsEl=document.getElementById("fav-stats");
+  var gridEl=document.getElementById("fav-grid");
+  if(!statsEl||!gridEl)return;
+  var favWords=uniq.filter(function(w){return favorites.has(w.en);});
+  statsEl.innerHTML='в избранном: <b style="color:#f0c14b">'+favWords.length+'</b> слов'+(favWords.length?' · нажми ★ ещё раз чтобы убрать':'');
+  if(!favWords.length){
+    gridEl.innerHTML='<div class="empty">⭐ Пока пусто.<br>Нажми ☆ на любом слове в разделе "Слова", чтобы добавить сюда.</div>';
+    return;
+  }
+  var html='';
+  favWords.forEach(function(w){html+=makeCardHTML(w);});
+  gridEl.innerHTML=html;
 }
 
 function flipV(el){el.classList.toggle("flipped");}
@@ -3743,6 +3945,126 @@ function showPhDetailFromData(el){
     '<div class="ph-detail-ex">"'+ex+'" <button class="speak-btn" data-speak="'+ex.replace(/"/g,'')+'">🔊</button></div>';
 }
 
+// ═══ CONVERSATIONS DATA ═══
+var convoData={
+  "cafe":{label:"☕ Кафе / ресторан",lines:[
+    {en:"Could I see the menu, please?",ru:"Могу я посмотреть меню?"},
+    {en:"I'll have the grilled chicken, please.",ru:"Я возьму куриный гриль."},
+    {en:"Can I get this to go?",ru:"Можно мне это с собой?"},
+    {en:"Could we get the bill, please?",ru:"Можно нам счёт?"},
+    {en:"Is service included?",ru:"Чаевые включены?"},
+    {en:"Do you have any vegetarian options?",ru:"У вас есть вегетарианские блюда?"},
+    {en:"Can I get a refill, please?",ru:"Можно мне долить?"},
+    {en:"This isn't what I ordered.",ru:"Это не то, что я заказывал."},
+    {en:"Everything was delicious, thank you.",ru:"Всё было вкусно, спасибо."},
+    {en:"Could you split the bill?",ru:"Можете разделить счёт?"},
+  ]},
+  "interview":{label:"💼 Собеседование",lines:[
+    {en:"Tell me a bit about yourself.",ru:"Расскажите немного о себе."},
+    {en:"Why are you interested in this position?",ru:"Почему вас интересует эта позиция?"},
+    {en:"What are your strengths and weaknesses?",ru:"Какие у вас сильные и слабые стороны?"},
+    {en:"Where do you see yourself in five years?",ru:"Где вы видите себя через 5 лет?"},
+    {en:"I have experience working in a fast-paced environment.",ru:"У меня есть опыт работы в динамичной среде."},
+    {en:"Could you tell me more about the team?",ru:"Расскажете подробнее о команде?"},
+    {en:"What's the next step in the process?",ru:"Какой следующий шаг в процессе?"},
+    {en:"I'm a quick learner and adapt easily.",ru:"Я быстро учусь и легко адаптируюсь."},
+    {en:"Thank you for the opportunity to interview.",ru:"Спасибо за возможность пройти собеседование."},
+    {en:"I look forward to hearing from you.",ru:"С нетерпением жду вашего ответа."},
+  ]},
+  "smalltalk":{label:"🗣️ Светская беседа",lines:[
+    {en:"How's it going?",ru:"Как дела?"},
+    {en:"Long time no see!",ru:"Сто лет не виделись!"},
+    {en:"What have you been up to lately?",ru:"Чем занимался последнее время?"},
+    {en:"Did you have a good weekend?",ru:"Хорошо провёл выходные?"},
+    {en:"How's work treating you?",ru:"Как работа?"},
+    {en:"What do you do for fun?",ru:"Чем занимаешься для развлечения?"},
+    {en:"I've been pretty busy lately.",ru:"Был довольно занят последнее время."},
+    {en:"That sounds interesting!",ru:"Звучит интересно!"},
+    {en:"We should catch up sometime.",ru:"Нам надо как-нибудь пообщаться."},
+    {en:"Anyway, it was great seeing you.",ru:"В общем, рад был тебя видеть."},
+  ]},
+  "doctor":{label:"🏥 У врача",lines:[
+    {en:"I'd like to make an appointment.",ru:"Я хотел бы записаться на приём."},
+    {en:"What seems to be the problem?",ru:"В чём проблема? (вопрос врача)"},
+    {en:"I've been feeling unwell for a few days.",ru:"Я плохо себя чувствую уже несколько дней."},
+    {en:"Where does it hurt?",ru:"Где болит?"},
+    {en:"I have a sharp pain here.",ru:"У меня острая боль здесь."},
+    {en:"Are you allergic to anything?",ru:"У вас есть на что-то аллергия?"},
+    {en:"How often should I take this medicine?",ru:"Как часто принимать это лекарство?"},
+    {en:"Is this covered by my insurance?",ru:"Это покрывается страховкой?"},
+    {en:"When should I come back?",ru:"Когда мне прийти снова?"},
+    {en:"Get well soon!",ru:"Выздоравливай!"},
+  ]},
+  "phone":{label:"📞 Телефонный разговор",lines:[
+    {en:"Hello, who am I speaking with?",ru:"Алло, с кем я говорю?"},
+    {en:"Can I speak to Mr. Smith, please?",ru:"Можно мистера Смита, пожалуйста?"},
+    {en:"I'm calling about the apartment listing.",ru:"Звоню по поводу объявления о квартире."},
+    {en:"Could you hold on a second?",ru:"Можете подождать секунду?"},
+    {en:"I'll call you back later.",ru:"Я перезвоню тебе позже."},
+    {en:"Sorry, the line is breaking up.",ru:"Извините, связь прерывается."},
+    {en:"Can you hear me okay?",ru:"Ты меня хорошо слышишь?"},
+    {en:"I'll send you the details by text.",ru:"Я отправлю тебе детали смской."},
+    {en:"Thanks for calling, talk soon.",ru:"Спасибо за звонок, скоро поговорим."},
+    {en:"Sorry, I missed your call.",ru:"Извини, я пропустил твой звонок."},
+  ]},
+  "shopping":{label:"🛍️ Шоппинг",lines:[
+    {en:"How much is this?",ru:"Сколько это стоит?"},
+    {en:"Do you have this in a different size?",ru:"У вас есть это другого размера?"},
+    {en:"Can I try this on?",ru:"Можно это примерить?"},
+    {en:"Where's the fitting room?",ru:"Где примерочная?"},
+    {en:"Is this on sale?",ru:"Это со скидкой?"},
+    {en:"Do you accept card payments?",ru:"Вы принимаете оплату картой?"},
+    {en:"I'd like to return this item.",ru:"Я хотел бы вернуть этот товар."},
+    {en:"Can I get a receipt?",ru:"Можно мне чек?"},
+    {en:"I'm just looking, thanks.",ru:"Я просто смотрю, спасибо."},
+    {en:"This is exactly what I was looking for.",ru:"Это именно то, что я искал."},
+  ]},
+  "feelings":{label:"😊 Выразить чувства",lines:[
+    {en:"I'm really proud of you.",ru:"Я очень тобой горжусь."},
+    {en:"That means a lot to me.",ru:"Это много для меня значит."},
+    {en:"I'm so sorry to hear that.",ru:"Мне так жаль это слышать."},
+    {en:"I totally understand how you feel.",ru:"Я полностью понимаю, что ты чувствуешь."},
+    {en:"I'm here for you, no matter what.",ru:"Я с тобой, что бы ни случилось."},
+    {en:"That must have been hard for you.",ru:"Это должно было быть тяжело для тебя."},
+    {en:"I really appreciate your support.",ru:"Я очень ценю твою поддержку."},
+    {en:"Don't worry, everything will be fine.",ru:"Не волнуйся, всё будет хорошо."},
+    {en:"I couldn't have done it without you.",ru:"Я бы не справился без тебя."},
+    {en:"You always know what to say.",ru:"Ты всегда знаешь, что сказать."},
+  ]},
+};
+var convoOrder=["cafe","interview","smalltalk","doctor","phone","shopping","feelings"];
+var convoCurrent="cafe";
+
+function renderConvoTabs(){
+  var tabsEl=document.getElementById("convo-tabs");
+  if(!tabsEl)return;
+  tabsEl.innerHTML=convoOrder.map(function(key){
+    return '<button class="convo-tab'+(key===convoCurrent?' active':'')+'" data-convokey="'+key+'" onclick="selectConvoFromBtn(this)">'+convoData[key].label+'</button>';
+  }).join("");
+  renderConvoList();
+}
+
+function selectConvoFromBtn(btn){
+  convoCurrent=btn.getAttribute("data-convokey");
+  document.querySelectorAll(".convo-tab").forEach(function(t){t.classList.remove("active");});
+  btn.classList.add("active");
+  renderConvoList();
+}
+
+function renderConvoList(){
+  var listEl=document.getElementById("convo-list");
+  if(!listEl)return;
+  var data=convoData[convoCurrent];
+  var html='';
+  data.lines.forEach(function(l){
+    html+='<div class="convo-card">'+
+      '<div class="convo-en">'+l.en+' <button class="speak-btn" data-speak="'+l.en.replace(/"/g,'')+'">🔊</button></div>'+
+      '<div class="convo-ru">'+l.ru+'</div>'+
+      '</div>';
+  });
+  listEl.innerHTML=html;
+}
+
 function showSec(id,btn){
   document.querySelectorAll(".section").forEach(function(s){s.classList.remove("active");});
   document.querySelectorAll(".nb").forEach(function(b){b.classList.remove("active");});
@@ -3756,6 +4078,8 @@ function showSec(id,btn){
   if(id==="pairs")renderPairs();
   if(id==="families")renderFamilies();
   if(id==="phrasal")renderPhrasalTabs();
+  if(id==="favorites")renderFavorites();
+  if(id==="convo")renderConvoTabs();
 }
 
 // ═══ GLOBAL SPEAK VIA DATA-SPEAK ═══
