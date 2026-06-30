@@ -32,9 +32,10 @@
   --border:rgba(255,255,255,0.09);
 }
 
-*{box-sizing:border-box;margin:0;padding:0;}
-
+*{box-sizing:border-box;margin:0;padding:0;overflow-wrap:break-word;word-wrap:break-word;}
 body{
+  max-width:100vw;
+  overflow-x:hidden;
   background:#080c14;
   background-image:
     radial-gradient(ellipse 70% 50% at 15% 0%,rgba(100,130,200,0.18) 0%,transparent 55%),
@@ -186,6 +187,16 @@ h1{
 }
 .vselects select:focus{border-color:rgba(232,213,163,0.4);}
 .vselects select option{background:#0d0020;color:var(--text);}
+.vhide-toggle{
+  display:flex;align-items:center;gap:7px;
+  margin-top:9px;font-size:11px;color:var(--muted2);
+  cursor:pointer;user-select:none;
+}
+.vhide-toggle input[type="checkbox"]{
+  width:16px;height:16px;
+  accent-color:var(--accent);
+  cursor:pointer;
+}
 .vstats{font-size:10px;color:var(--muted2);margin-bottom:8px;}.vstats b{color:var(--accent);}
 
 /* VOCAB GRID */
@@ -287,6 +298,8 @@ h1{
   border-radius:10px;padding:9px 11px;
   font-size:11px;color:var(--accent);
   margin:6px 0;line-height:1.8;
+  word-break:break-word;overflow-wrap:anywhere;
+  max-width:100%;
 }
 .formula.bl{background:rgba(0,212,255,0.05);border-color:rgba(0,212,255,0.15);color:var(--blue);}
 .formula.pu{background:rgba(191,95,255,0.05);border-color:rgba(191,95,255,0.15);color:var(--purple);}
@@ -316,12 +329,28 @@ h1{
   font-family:"IBM Plex Mono",monospace;
   font-size:12px;padding:10px 14px;border-radius:14px;outline:none;margin-bottom:10px;
 }
-.itbl{width:100%;border-collapse:collapse;font-size:11px;}
+.itbl{width:100%;border-collapse:collapse;font-size:11px;min-width:480px;}
+.itbl-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:14px;}
+.itbl th:last-child,.itbl td:last-child{width:34px;text-align:center;}
 .itbl th{text-align:left;color:var(--muted2);font-size:9px;text-transform:uppercase;padding:6px 7px;border-bottom:1px solid var(--border);}
 .itbl td{padding:6px 7px;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:top;}
 .itbl tr:hover td{background:rgba(255,255,255,0.04);}
 .v1c{color:var(--blue);font-weight:700;}.v2c{color:var(--accent);}.v3c{color:var(--purple);}.ruc{color:var(--muted2);font-size:10px;}
 .v-example{font-size:10px;color:var(--muted);font-style:italic;line-height:1.5;margin-top:3px;}
+.irr-know-btn{
+  width:26px;height:26px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.12);
+  color:var(--muted2);
+  font-size:13px;font-weight:700;cursor:pointer;
+  transition:all .15s;
+}
+.irr-know-btn.active{
+  background:rgba(232,213,163,0.15);
+  border-color:rgba(232,213,163,0.4);
+  color:var(--accent);
+}
 
 /* QUIZ FLIP CARDS */
 .quiz-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
@@ -514,7 +543,9 @@ h1{
 /* CHEATSHEETS */
 .cs-block{border-radius:18px;padding:14px;margin-bottom:10px;}
 .cs-title{font-family:"Syne",sans-serif;font-weight:800;font-size:14px;color:var(--blue);margin-bottom:9px;}
-.cs-table{width:100%;border-collapse:collapse;font-size:11px;}
+.cs-table{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed;}
+.cs-table td,.cs-table th{word-break:break-word;overflow-wrap:break-word;}
+.cs-table .en{word-break:break-word;}
 .cs-table th{text-align:left;color:var(--muted2);font-size:9px;text-transform:uppercase;padding:5px 8px;border-bottom:1px solid rgba(255,255,255,0.08);}
 .cs-table td{padding:6px 8px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text2);}
 .cs-table tr:last-child td{border-bottom:none;}
@@ -619,7 +650,7 @@ h1{
 }
 .tw-mean{font-size:11px;color:var(--accent);font-weight:700;margin-top:9px;margin-bottom:3px;}
 .tw-mean:first-of-type{margin-top:0;}
-.tw-ex{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:2px;}
+.tw-ex{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:2px;word-wrap:break-word;overflow-wrap:break-word;}
 .tw-ex b{color:var(--text);}
 
 /* CONVERSATIONS */
@@ -664,7 +695,7 @@ h1{
 </style>
 <div class="header">
   <h1><span class="g">ENG</span><br><span class="o">HUB</span></h1>
-  <p class="sub">🇺🇸 American English · 3000+ words · stories · native thinking · families · cheatsheets</p>
+  <p class="sub">American English · 3000+ words · stories · native thinking · families · cheatsheets</p>
 </div>
 
 <div class="level-bar" id="level-bar">
@@ -730,6 +761,10 @@ h1{
         <option value="b2">B2</option>
       </select>
     </div>
+    <label class="vhide-toggle">
+      <input type="checkbox" id="vhideknown" onchange="renderV()">
+      <span>Скрывать известные слова</span>
+    </label>
   </div>
   <div class="vstats" id="vstats"></div>
   <div class="grid" id="vgrid"></div>
@@ -760,7 +795,7 @@ h1{
   <div class="tbox must">
     <div class="tname">Present Simple</div><span class="ttag tag-must">🔥 учи сейчас</span>
     <div class="twhen">Факты, привычки, расписание</div>
-    <div class="formula">I/You/We/They + <b>V1</b> · He/She/It + <b>V1+s</b><br>Отриц: <b>don't / doesn't</b> + V1<br>Вопрос: <b>Do / Does</b> + подл + V1?</div>
+    <div class="formula">I / You / We / They + <b>V1</b><br>He / She / It + <b>V1+s</b><br>Отриц: <b>don't / doesn't</b> + V1<br>Вопрос: <b>Do / Does</b> + подл + V1?</div>
     <div class="erow">
       <div class="eg"><span class="elabel yes">✓ факт</span> I <b>live</b> in Warsaw. She <b>works</b> at Bolt.</div>
       <div class="eg"><span class="elabel yes">✓ привычка</span> I <b>go</b> to the gym every morning.</div>
@@ -773,7 +808,7 @@ h1{
   <div class="tbox must">
     <div class="tname">Present Continuous</div><span class="ttag tag-must">🔥 учи сейчас</span>
     <div class="twhen">Прямо сейчас / временно / договорённый план</div>
-    <div class="formula"><b>am/is/are</b> + V<b>-ing</b><br>Отриц: am/is/are + <b>not</b> + V-ing<br>Вопрос: Am/Is/Are + подл + V-ing?</div>
+    <div class="formula"><b>am / is / are</b> + V<b>-ing</b><br>Отриц: am/is/are + <b>not</b> + V-ing<br>Вопрос: Am / Is / Are + подл + V-ing?</div>
     <div class="erow">
       <div class="eg"><span class="elabel yes">✓ сейчас</span> I <b>am working</b> from home right now.</div>
       <div class="eg"><span class="elabel yes">✓ временно</span> We <b>are staying</b> at a hotel this week.</div>
@@ -1050,20 +1085,20 @@ h1{
   <div class="hb">Используй <b>did + V1</b> — усилительная форма, технически верно.</div>
   <div class="hex"><span class="yes">✓</span> "I <b>did go</b> there." (вместо went)<br><span class="yes">✓</span> "We <b>did find</b> it." (вместо found)<br><span class="no2">✗</span> "I did went." — нельзя, два прошлых</div></div>
   <div class="hack"><div class="ht">Прошлое без V2 → используй "was"</div><div class="htag">прошедшее</div>
-  <div class="hex"><span class="yes">✓</span> "It <b>was</b> good."<br><span class="yes">✓</span> "We <b>were</b> late."<br><span class="yes">✓</span> "I <b>was</b> tired."</div></div>
+  <div class="hex"><span class="yes">✓</span> "It <b>was</b> good." — Это было хорошо.<br><span class="yes">✓</span> "We <b>were</b> late." — Мы опоздали.<br><span class="yes">✓</span> "I <b>was</b> tired." — Я был устал.</div></div>
   <div class="hack"><div class="ht">Планы без Future → Continuous</div><div class="htag">будущее</div>
-  <div class="hex"><span class="yes">✓</span> "I'm meeting him next week."<br><span class="yes">✓</span> "We're going to Warsaw tomorrow."<br><span class="yes">✓</span> "I'm working from home on Friday."</div></div>
+  <div class="hex"><span class="yes">✓</span> "I'm meeting him next week." — Я встречаюсь с ним на следующей неделе.<br><span class="yes">✓</span> "We're going to Warsaw tomorrow." — Мы едем в Варшаву завтра.<br><span class="yes">✓</span> "I'm working from home on Friday." — Я работаю из дома в пятницу.</div></div>
   <div class="hack"><div class="ht">Забыл слово — опиши его</div><div class="htag">словарь</div>
   <div class="hb">Никогда не молчи. Описание = B2 навык.</div>
-  <div class="hex">Забыл "speaker" → <span class="yes">"A thing that plays music, like a big box"</span><br>Забыл "traffic jam" → <span class="yes">"When too many cars and nothing moves"</span></div></div>
+  <div class="hex">Забыл "speaker" → <span class="yes">"A thing that plays music, like a big box"</span> — Штука, которая играет музыку, как большая коробка<br>Забыл "traffic jam" → <span class="yes">"When too many cars and nothing moves"</span> — Когда слишком много машин и ничего не движется</div></div>
   <div class="hack"><div class="ht">Fillers — выиграй время</div><div class="htag">разговор</div>
   <div class="hex"><b style="color:var(--accent)">Well...</b> — ну...<br><b style="color:var(--accent)">You know...</b> — ты понимаешь<br><b style="color:var(--accent)">I mean...</b> — я имею в виду<br><b style="color:var(--accent)">Let me think...</b> — дай подумаю<br><b style="color:var(--accent)">How do I put it...</b> — как бы сказать<br><b style="color:var(--accent)">So basically...</b> — ну в общем-то</div></div>
   <div class="hack"><div class="ht">Contractions — звучи как носитель</div><div class="htag">произношение</div>
-  <div class="hex">I am → <b style="color:var(--accent)">I'm</b>  |  I will → <b style="color:var(--accent)">I'll</b><br>I have → <b style="color:var(--accent)">I've</b>  |  I would → <b style="color:var(--accent)">I'd</b><br>going to → <b style="color:var(--accent)">gonna</b>  |  want to → <b style="color:var(--accent)">wanna</b><br>have to → <b style="color:var(--accent)">gotta</b>  |  kind of → <b style="color:var(--accent)">kinda</b></div></div>
+  <div class="hex"><b style="color:var(--accent)">I am → I'm</b> — Я (сокращ.)<br><b style="color:var(--accent)">I will → I'll</b> — Я буду (сокращ.)<br><b style="color:var(--accent)">I have → I've</b> — У меня есть (сокращ.)<br><b style="color:var(--accent)">I would → I'd</b> — Я бы (сокращ.)<br><b style="color:var(--accent)">going to → gonna</b> — собираюсь (разг.)<br><b style="color:var(--accent)">want to → wanna</b> — хочу (разг.)<br><b style="color:var(--accent)">have to → gotta</b> — должен (разг.)<br><b style="color:var(--accent)">kind of → kinda</b> — типа / как бы (разг.)</div></div>
   <div class="hack"><div class="ht">10 универсальных реакций</div><div class="htag">разговор</div>
   <div class="hex"><b style="color:var(--accent)">That makes sense.</b> — логично<br><b style="color:var(--accent)">Exactly.</b> — именно<br><b style="color:var(--accent)">Fair enough.</b> — ну и ладно<br><b style="color:var(--accent)">Totally.</b> — согласен<br><b style="color:var(--accent)">No way!</b> — да ладно!<br><b style="color:var(--accent)">That's wild.</b> — это безумие<br><b style="color:var(--accent)">I get it.</b> — понял<br><b style="color:var(--accent)">Same here.</b> — у меня так же<br><b style="color:var(--accent)">Not really.</b> — не особо<br><b style="color:var(--accent)">Kind of.</b> — как бы да</div></div>
   <div class="hack"><div class="ht">Мягкое несогласие</div><div class="htag">мнения</div>
-  <div class="hex"><b style="color:var(--accent)">I'm not sure about that.</b><br><b style="color:var(--accent)">I see it differently.</b><br><b style="color:var(--accent)">I get what you mean, but...</b><br><b style="color:var(--accent)">I'd say it's more like...</b></div></div>
+  <div class="hex"><b style="color:var(--accent)">I'm not sure about that.</b> — Я не уверен в этом.<br><b style="color:var(--accent)">I see it differently.</b> — Я вижу это по-другому.<br><b style="color:var(--accent)">I get what you mean, but...</b> — Я понимаю, что ты имеешь в виду, но...<br><b style="color:var(--accent)">I'd say it's more like...</b> — Я бы сказал, это больше похоже на...</div></div>
 </div>
 
 <div class="section" id="sec-cheat">
@@ -1132,13 +1167,26 @@ h1{
       <tr><td class="key">on</td><td>на поверхности</td><td class="en">on the table · on the wall · on the bus</td></tr>
       <tr><td class="key">at</td><td>точка / место</td><td class="en">at home · at work · at the airport</td></tr>
       <tr><td class="key">under</td><td>под</td><td class="en">under the bed</td></tr>
-      <tr><td class="key">above</td><td>над</td><td class="en">above the door</td></tr>
+      <tr><td class="key">above</td><td>над (без контакта)</td><td class="en">above the door</td></tr>
+      <tr><td class="key">over</td><td>над / поверх</td><td class="en">jump over the fence</td></tr>
+      <tr><td class="key">below</td><td>ниже</td><td class="en">below the surface</td></tr>
+      <tr><td class="key">beneath</td><td>под (формально)</td><td class="en">beneath the bridge</td></tr>
       <tr><td class="key">next to</td><td>рядом</td><td class="en">next to the bank</td></tr>
+      <tr><td class="key">beside</td><td>рядом / возле</td><td class="en">sit beside me</td></tr>
       <tr><td class="key">between</td><td>между</td><td class="en">between us</td></tr>
+      <tr><td class="key">among</td><td>среди (3+ объектов)</td><td class="en">among the crowd</td></tr>
       <tr><td class="key">behind</td><td>за / сзади</td><td class="en">behind the car</td></tr>
       <tr><td class="key">in front of</td><td>перед</td><td class="en">in front of the office</td></tr>
       <tr><td class="key">across from</td><td>напротив</td><td class="en">across from the hotel</td></tr>
+      <tr><td class="key">opposite</td><td>напротив (формально)</td><td class="en">opposite the church</td></tr>
+      <tr><td class="key">near</td><td>рядом / близко</td><td class="en">near the station</td></tr>
+      <tr><td class="key">by</td><td>у / возле</td><td class="en">stand by the window</td></tr>
+      <tr><td class="key">inside</td><td>внутри (помещения)</td><td class="en">inside the house</td></tr>
+      <tr><td class="key">outside</td><td>снаружи</td><td class="en">outside the building</td></tr>
+      <tr><td class="key">around</td><td>вокруг</td><td class="en">around the corner</td></tr>
+      <tr><td class="key">along</td><td>вдоль</td><td class="en">walk along the river</td></tr>
       <tr><td class="key">through</td><td>через / сквозь</td><td class="en">go through customs</td></tr>
+      <tr><td class="key">against</td><td>напротив / у (опоры)</td><td class="en">lean against the wall</td></tr>
     </table>
   </div>
   <div class="cs-block">
@@ -1152,10 +1200,35 @@ h1{
       <tr><td class="key">since</td><td>с какого момента</td><td class="en">since 2020 · since Monday</td></tr>
       <tr><td class="key">ago</td><td>тому назад</td><td class="en">5 years ago · an hour ago</td></tr>
       <tr><td class="key">by</td><td>не позже чем</td><td class="en">by Friday · by 5pm</td></tr>
-      <tr><td class="key">until</td><td>до (момента)</td><td class="en">until midnight · until Friday</td></tr>
-      <tr><td class="key">during</td><td>в течение</td><td class="en">during the meeting</td></tr>
+      <tr><td class="key">until / till</td><td>до (момента)</td><td class="en">until midnight · till Friday</td></tr>
+      <tr><td class="key">during</td><td>в течение (события)</td><td class="en">during the meeting</td></tr>
+      <tr><td class="key">throughout</td><td>на протяжении всего</td><td class="en">throughout the year</td></tr>
       <tr><td class="key">before</td><td>до</td><td class="en">before dinner · before 8am</td></tr>
       <tr><td class="key">after</td><td>после</td><td class="en">after work · after that</td></tr>
+      <tr><td class="key">within</td><td>в пределах (срока)</td><td class="en">within 24 hours</td></tr>
+      <tr><td class="key">from...to</td><td>с...до</td><td class="en">from 9 to 5</td></tr>
+      <tr><td class="key">around</td><td>около (времени)</td><td class="en">around 6pm</td></tr>
+      <tr><td class="key">past</td><td>после (часа)</td><td class="en">half past three</td></tr>
+      <tr><td class="key">to</td><td>до (часа, обратный отсчёт)</td><td class="en">ten to five</td></tr>
+    </table>
+  </div>
+  <div class="cs-block">
+    <div class="cs-title">➡️ Предлоги движения</div>
+    <table class="cs-table">
+      <tr><th>Предлог</th><th>Значение</th><th>Пример</th></tr>
+      <tr><td class="key">to</td><td>направление (куда)</td><td class="en">go to the store</td></tr>
+      <tr><td class="key">into</td><td>внутрь (с движением)</td><td class="en">walk into the room</td></tr>
+      <tr><td class="key">onto</td><td>на (с движением)</td><td class="en">jump onto the bed</td></tr>
+      <tr><td class="key">out of</td><td>из / наружу</td><td class="en">get out of the car</td></tr>
+      <tr><td class="key">off</td><td>с (поверхности)</td><td class="en">get off the bus</td></tr>
+      <tr><td class="key">from</td><td>от / из</td><td class="en">I'm from Ukraine</td></tr>
+      <tr><td class="key">towards</td><td>в сторону</td><td class="en">walk towards the exit</td></tr>
+      <tr><td class="key">away from</td><td>прочь от</td><td class="en">move away from the edge</td></tr>
+      <tr><td class="key">up</td><td>вверх</td><td class="en">go up the stairs</td></tr>
+      <tr><td class="key">down</td><td>вниз</td><td class="en">go down the street</td></tr>
+      <tr><td class="key">across</td><td>через (поверхность)</td><td class="en">swim across the lake</td></tr>
+      <tr><td class="key">past</td><td>мимо</td><td class="en">drive past the school</td></tr>
+      <tr><td class="key">via</td><td>через (промежуточный пункт)</td><td class="en">fly via Istanbul</td></tr>
     </table>
   </div>
   <div class="cs-block">
@@ -1277,11 +1350,17 @@ h1{
     </div>
   </div>
   <input class="isearch" type="text" id="isearch" placeholder="search verb...">
+  <label class="vhide-toggle" style="margin-bottom:10px;">
+    <input type="checkbox" id="ihideknown" onchange="renderI(document.getElementById('isearch').value.toLowerCase())">
+    <span>Скрывать известные глаголы</span>
+  </label>
   <div class="vstats" id="istats"></div>
+  <div class="itbl-wrap">
   <table class="itbl">
-    <thead><tr><th>V1 (present)</th><th>V2 (past)</th><th>V3 (perfect)</th><th>Значение</th></tr></thead>
+    <thead><tr><th>V1 (present)</th><th>V2 (past)</th><th>V3 (perfect)</th><th>Значение</th><th></th></tr></thead>
     <tbody id="itbody"></tbody>
   </table>
+  </div>
 </div>
 
 <!-- ═══ PHRASAL HUB ═══ -->
@@ -1350,6 +1429,59 @@ h1{
     <div class="tw-mean">Место → Время (обычно в этом порядке)</div>
     <div class="tw-ex">I met her <b>at the cafe</b> (место) <b>yesterday</b> (время). — Я встретил её в кафе вчера.</div>
     <div class="trick">💡 Если в начале предложения — порядок наоборот: "Yesterday, I met her at the cafe."</div>
+  </div>
+
+  <div class="tw-card">
+    <div class="tw-word">Косвенная речь — порядок не меняется</div>
+    <div class="tw-mean">В вопросах после "ask/wonder/know" — обычный порядок S+V (без инверсии!)</div>
+    <div class="tw-ex">❌ Do you know where <b>is he</b>?</div>
+    <div class="tw-ex">✅ Do you know where <b>he is</b>? — Ты знаешь, где он?</div>
+    <div class="tw-ex">✅ I wonder what <b>she said</b>. — Интересно, что она сказала.</div>
+    <div class="trick">🔑 После вопросительного слова внутри предложения — обычный порядок, как в утверждении.</div>
+  </div>
+
+  <div class="tw-card">
+    <div class="tw-word">Two-word verbs — куда ставить объект?</div>
+    <div class="tw-mean">С существительным — можно и так, и так</div>
+    <div class="tw-ex">Turn off <b>the light</b>. = Turn <b>the light</b> off. — Выключи свет.</div>
+    <div class="tw-mean">С местоимением — ТОЛЬКО между частями глагола</div>
+    <div class="tw-ex">✅ Turn <b>it</b> off.</div>
+    <div class="tw-ex">❌ Turn off <b>it</b>.</div>
+    <div class="trick">🔑 he/she/it/me/us/them — всегда вставляются между глаголом и предлогом.</div>
+  </div>
+
+  <div class="tw-card">
+    <div class="tw-word">Наречия образа действия — в конце</div>
+    <div class="tw-mean">quickly / carefully / well / badly — обычно после глагола или в конце</div>
+    <div class="tw-ex">She speaks English <b>fluently</b>. — Она говорит по-английски свободно.</div>
+    <div class="tw-ex">He drives <b>carefully</b>. — Он водит осторожно.</div>
+    <div class="trick">❌ "She speaks fluently English" — неправильно!<br>✅ "She speaks English fluently" — наречие после объекта.</div>
+  </div>
+
+  <div class="tw-card">
+    <div class="tw-word">Два объекта (дать кому-то что-то)</div>
+    <div class="tw-mean">Вариант 1: глагол + человек + вещь</div>
+    <div class="tw-ex">Give <b>me</b> <b>the book</b>. — Дай мне книгу.</div>
+    <div class="tw-mean">Вариант 2: глагол + вещь + to + человек</div>
+    <div class="tw-ex">Give <b>the book</b> to <b>me</b>. — Дай книгу мне.</div>
+    <div class="trick">🔑 Оба варианта правильны! Глаголы: give, send, show, tell, bring, offer.</div>
+  </div>
+
+  <div class="tw-card">
+    <div class="tw-word">Either / Neither / Too / So — в конце фразы</div>
+    <div class="tw-mean">too — согласие в положительных</div>
+    <div class="tw-ex">I like coffee. — Me <b>too</b>. — Я тоже.</div>
+    <div class="tw-mean">either — согласие в отрицательных</div>
+    <div class="tw-ex">I don't like tea. — I don't <b>either</b>. — Я тоже не люблю.</div>
+    <div class="trick">🔑 too всегда в конце положительного, either — в конце отрицательного.</div>
+  </div>
+
+  <div class="tw-card">
+    <div class="tw-word">Restrictive adverbs (only, even)</div>
+    <div class="tw-mean">Ставятся прямо перед тем словом, к которому относятся</div>
+    <div class="tw-ex"><b>Only</b> she knows. — Только она знает. (никто другой)</div>
+    <div class="tw-ex">She <b>only</b> knows this. — Она знает только это. (не больше)</div>
+    <div class="trick">💡 Позиция "only" меняет смысл предложения! Ставь его рядом с тем, что хочешь выделить.</div>
   </div>
 </div>
 
@@ -1940,7 +2072,36 @@ const nativeThinking=[
   {ru:"Чувствовать себя хорошо.",en:"Feel good.",note:"'Feel' без 'myself'"},
   {ru:"Я не в настроении.",en:"I'm not in the mood.",note:"Нет настроения — not in the mood"},
   {ru:"Мне всё равно.",en:"I don't care.",note:"Не 'to me equally' — I don't care"},
+  {ru:"Я опоздал на работу.",en:"I was late for work.",note:"'Опоздать' = be late for, не 'late to'"},
+  {ru:"У меня нет времени.",en:"I don't have time.",note:"Просто don't have, без отдельного слова 'нет'"},
+  {ru:"Мне всё надоело.",en:"I'm sick of everything.",note:"'Sick of' = надоело, не 'tired from'"},
+  {ru:"Я в этом не разбираюсь.",en:"I'm not good at this.",note:"'Good at' = разбираюсь в, не 'understand in'"},
+  {ru:"У меня от этого мурашки.",en:"This gives me chills.",note:"'Give chills' — буквально 'дать мурашки'"},
+  {ru:"Я весь во внимании.",en:"I'm all ears.",note:"Идиома: 'я весь — уши'"},
+  {ru:"Меня это бесит.",en:"This drives me crazy.",note:"'Drive crazy' = сводить с ума / бесить"},
+  {ru:"Я подумаю об этом.",en:"I'll think about it.",note:"Think about, не 'think of it' в этом смысле"},
+  {ru:"Я в этом сомневаюсь.",en:"I doubt it.",note:"Doubt + it, без 'in this'"},
+  {ru:"Это меня не касается.",en:"It's none of my business.",note:"Идиома: 'это не моё дело'"},
+  {ru:"Я весь в делах.",en:"I'm swamped.",note:"'Swamped' = завален работой (разг.)"},
+  {ru:"Это того стоило.",en:"It was worth it.",note:"Worth + it, не 'cost itself'"},
+  {ru:"Я передумал.",en:"I changed my mind.",note:"'Change mind' — буквально 'изменить ум'"},
+  {ru:"У меня идея!",en:"I've got an idea!",note:"Got = есть, разговорный вариант have"},
+  {ru:"Я не при делах.",en:"I'm not involved.",note:"'Involved' = вовлечён / причастен"},
+  {ru:"Мне это снится.",en:"I'm dreaming about it.",note:"Dream about, не 'see in dream'"},
+  {ru:"У меня дежавю.",en:"I'm having déjà vu.",note:"Having — буквально 'имею' дежавю"},
+  {ru:"Мне нездоровится.",en:"I'm not feeling well.",note:"Feel well, не 'healthy myself'"},
+  {ru:"Я промахнулся.",en:"I missed.",note:"Miss = не попасть / пропустить"},
+  {ru:"У меня нет настроения говорить.",en:"I don't feel like talking.",note:"'Feel like' + V-ing = хотеть/быть в настроении"},
+  {ru:"Я весь горю от стыда.",en:"I'm burning with embarrassment.",note:"Burning with = пылать от (эмоции)"},
+  {ru:"Я держу кулачки.",en:"I'm keeping my fingers crossed.",note:"Cross fingers = держать кулачки (другой жест!)"},
+  {ru:"Не бери в голову.",en:"Don't take it to heart.",note:"'To heart', не 'to head'"},
+  {ru:"Я весь внимание.",en:"You have my full attention.",note:"Буквально 'у тебя моё полное внимание'"},
+  {ru:"Время лечит.",en:"Time heals everything.",note:"Heal = исцелять, время 'исцеляет'"},
+  {ru:"Я в шоке.",en:"I'm shocked. / I'm in shock.",note:"Оба варианта работают"},
+  {ru:"Я ни при чём.",en:"It's not my fault.",note:"'Fault' = вина, буквально 'это не моя вина'"},
+  {ru:"Мне нездоровится с утра.",en:"I've been feeling off since morning.",note:"'Feeling off' = что-то не так (разг.)"},
 ];
+
 
 const stories=[
   {title:"🛫 At the Airport",lines:[
@@ -3263,6 +3424,153 @@ var extraVocab3=[{en:"whisk",ru:"венчик",pron:"[wɪsk]",ex:"Whisk the eggs
 {en:"beige flag",ru:"нейтральная странность",pron:"[beɪʒ flæɡ]",ex:"That's a beige flag.",cat:"slang",type:"slang"},
 {en:"npc",ru:"фоновый незначительный персонаж",pron:"[ɛn piː siː]",ex:"Acting like an NPC.",cat:"slang",type:"slang"}];
 vocab.push.apply(vocab, extraVocab3);
+var extraVocab4=[{en:"avalanche",ru:"лавина",pron:"[ˈævəlæntʃ]",ex:"Avalanche warning.",cat:"world",type:"must"},
+{en:"tide",ru:"прилив/отлив",pron:"[taɪd]",ex:"High tide tonight.",cat:"world",type:"must"},
+{en:"wave",ru:"волна",pron:"[weɪv]",ex:"Big wave.",cat:"world",type:"must"},
+{en:"canyon",ru:"каньон",pron:"[ˈkænjən]",ex:"Grand Canyon.",cat:"world",type:"cognate"},
+{en:"cliff",ru:"утёс",pron:"[klɪf]",ex:"Steep cliff.",cat:"world",type:"must"},
+{en:"cave",ru:"пещера",pron:"[keɪv]",ex:"Dark cave.",cat:"world",type:"must"},
+{en:"volcano",ru:"вулкан",pron:"[vɒlˈkeɪnoʊ]",ex:"Active volcano.",cat:"world",type:"cognate"},
+{en:"island",ru:"остров",pron:"[ˈaɪlənd]",ex:"Tropical island.",cat:"world",type:"must"},
+{en:"peninsula",ru:"полуостров",pron:"[pəˈnɪnsjʊlə]",ex:"Coastal peninsula.",cat:"world",type:"cognate"},
+{en:"broom",ru:"веник/метла",pron:"[bruːm]",ex:"Sweep with a broom.",cat:"daily",type:"must"},
+{en:"mop",ru:"швабра",pron:"[mɒp]",ex:"Mop the floor.",cat:"daily",type:"must"},
+{en:"bucket",ru:"ведро",pron:"[ˈbʌkɪt]",ex:"Fill the bucket.",cat:"daily",type:"must"},
+{en:"sponge",ru:"губка",pron:"[spʌndʒ]",ex:"Use a sponge.",cat:"daily",type:"must"},
+{en:"bleach",ru:"отбеливатель",pron:"[bliːtʃ]",ex:"Use bleach carefully.",cat:"daily",type:"must"},
+{en:"clothespin",ru:"прищепка",pron:"[ˈkloʊzpɪn]",ex:"Clothespins for laundry.",cat:"daily",type:"must"},
+{en:"doorknob",ru:"ручка двери",pron:"[ˈdɔːrnɒb]",ex:"Turn the doorknob.",cat:"daily",type:"must"},
+{en:"ceiling fan",ru:"потолочный вентилятор",pron:"[ˈsiːlɪŋ fæn]",ex:"Turn on ceiling fan.",cat:"daily",type:"must"},
+{en:"air conditioner",ru:"кондиционер",pron:"[ɛər kənˈdɪʃənər]",ex:"Fix the air conditioner.",cat:"daily",type:"must"},
+{en:"smoke detector",ru:"датчик дыма",pron:"[smoʊk dɪˈtɛktər]",ex:"Check smoke detector.",cat:"daily",type:"must"},
+{en:"cardigan",ru:"кардиган",pron:"[ˈkɑːrdɪɡən]",ex:"Wool cardigan.",cat:"life",type:"must"},
+{en:"jumpsuit",ru:"комбинезон",pron:"[ˈdʒʌmpsuːt]",ex:"Stylish jumpsuit.",cat:"life",type:"must"},
+{en:"romper",ru:"комбинезон-шорты",pron:"[ˈrɒmpər]",ex:"Summer romper.",cat:"life",type:"must"},
+{en:"overalls",ru:"рабочий комбинезон",pron:"[ˈoʊvərɔːlz]",ex:"Denim overalls.",cat:"life",type:"must"},
+{en:"trench",ru:"тренч",pron:"[trɛntʃ]",ex:"Beige trench.",cat:"life",type:"must"},
+{en:"windbreaker",ru:"ветровка",pron:"[ˈwɪndbreɪkər]",ex:"Light windbreaker.",cat:"life",type:"must"},
+{en:"parka",ru:"парка",pron:"[ˈpɑːrkə]",ex:"Winter parka.",cat:"life",type:"cognate"},
+{en:"mittens",ru:"варежки",pron:"[ˈmɪtənz]",ex:"Warm mittens.",cat:"life",type:"must"},
+{en:"slippers",ru:"домашние тапочки",pron:"[ˈslɪpərz]",ex:"House slippers.",cat:"life",type:"must"},
+{en:"pajamas",ru:"пижама",pron:"[pəˈdʒɑːməz]",ex:"Comfortable pajamas.",cat:"life",type:"must"},
+{en:"bathrobe",ru:"халат",pron:"[ˈbæθroʊb]",ex:"Cozy bathrobe.",cat:"life",type:"must"},
+{en:"swimsuit",ru:"купальник",pron:"[ˈswɪmsuːt]",ex:"New swimsuit.",cat:"life",type:"must"},
+{en:"merger",ru:"слияние компаний",pron:"[ˈmɜːrdʒər]",ex:"Company merger.",cat:"work",type:"must"},
+{en:"acquisition",ru:"приобретение (компании)",pron:"[ˌækwɪˈzɪʃən]",ex:"Major acquisition.",cat:"work",type:"cognate"},
+{en:"shareholder",ru:"акционер",pron:"[ˈʃɛərhoʊldər]",ex:"Shareholder meeting.",cat:"money",type:"must"},
+{en:"IPO",ru:"первичное размещение акций",pron:"[aɪ piː oʊ]",ex:"Company's IPO.",cat:"money",type:"must"},
+{en:"liquidate",ru:"ликвидировать",pron:"[ˈlɪkwɪdeɪt]",ex:"Liquidate assets.",cat:"money",type:"must"},
+{en:"hedge fund",ru:"хедж-фонд",pron:"[hɛdʒ fʌnd]",ex:"Work at hedge fund.",cat:"money",type:"must"},
+{en:"compound interest",ru:"сложный процент",pron:"[ˈkɒmpaʊnd ˈɪntrəst]",ex:"Compound interest grows.",cat:"money",type:"must"},
+{en:"amortization",ru:"амортизация",pron:"[əˌmɔːrtɪˈzeɪʃən]",ex:"Loan amortization.",cat:"money",type:"cognate"},
+{en:"escrow",ru:"условное депонирование",pron:"[ɪˈskroʊ]",ex:"Funds in escrow.",cat:"money",type:"must"},
+{en:"underwriting",ru:"андеррайтинг",pron:"[ˈʌndəraɪtɪŋ]",ex:"Insurance underwriting.",cat:"money",type:"must"},
+{en:"firmware",ru:"прошивка",pron:"[ˈfɜːrmwɛər]",ex:"Update firmware.",cat:"tech",type:"must"},
+{en:"middleware",ru:"промежуточное ПО",pron:"[ˈmɪdəlwɛər]",ex:"Build middleware.",cat:"tech",type:"must"},
+{en:"sandbox",ru:"песочница (тест-среда)",pron:"[ˈsændbɒks]",ex:"Test in sandbox.",cat:"tech",type:"must"},
+{en:"rollback",ru:"откат изменений",pron:"[ˈroʊlbæk]",ex:"Perform a rollback.",cat:"tech",type:"must"},
+{en:"uptime",ru:"время работы без сбоев",pron:"[ˈʌptaɪm]",ex:"99% uptime.",cat:"tech",type:"must"},
+{en:"downtime",ru:"время простоя",pron:"[ˈdaʊntaɪm]",ex:"Scheduled downtime.",cat:"tech",type:"must"},
+{en:"throughput",ru:"пропускная способность",pron:"[ˈθruːpʊt]",ex:"High throughput.",cat:"tech",type:"must"},
+{en:"scalability",ru:"масштабируемость",pron:"[ˌskeɪləˈbɪlɪti]",ex:"Improve scalability.",cat:"tech",type:"must"},
+{en:"redundancy",ru:"резервирование",pron:"[rɪˈdʌndənsi]",ex:"Build in redundancy.",cat:"tech",type:"must"},
+{en:"checksum",ru:"контрольная сумма",pron:"[ˈtʃɛksʌm]",ex:"Verify checksum.",cat:"tech",type:"must"},
+{en:"payload",ru:"полезная нагрузка (данные)",pron:"[ˈpeɪloʊd]",ex:"Send the payload.",cat:"tech",type:"must"},
+{en:"daemon",ru:"фоновый процесс",pron:"[ˈdiːmən]",ex:"Run as a daemon.",cat:"tech",type:"must"},
+{en:"metadata",ru:"метаданные",pron:"[ˈmɛtədeɪtə]",ex:"Check the metadata.",cat:"tech",type:"cognate"},
+{en:"relief",ru:"облегчение",pron:"[rɪˈliːf]",ex:"Sigh of relief.",cat:"emotions",type:"must"},
+{en:"dread",ru:"страх / опасение",pron:"[drɛd]",ex:"Dread the meeting.",cat:"emotions",type:"must"},
+{en:"longing",ru:"тоска / желание",pron:"[ˈlɒŋɪŋ]",ex:"Longing for home.",cat:"emotions",type:"must"},
+{en:"apprehension",ru:"опасение",pron:"[ˌæprɪˈhɛnʃən]",ex:"Feel apprehension.",cat:"emotions",type:"cognate"},
+{en:"elation",ru:"восторг",pron:"[ɪˈleɪʃən]",ex:"Pure elation.",cat:"emotions",type:"must"},
+{en:"despair",ru:"отчаяние",pron:"[dɪˈspɛər]",ex:"Sense of despair.",cat:"emotions",type:"must"},
+{en:"serenity",ru:"умиротворение",pron:"[səˈrɛnɪti]",ex:"Find serenity.",cat:"emotions",type:"must"},
+{en:"agitation",ru:"волнение / раздражение",pron:"[ˌædʒɪˈteɪʃən]",ex:"Visible agitation.",cat:"emotions",type:"cognate"},
+{en:"indifference",ru:"равнодушие",pron:"[ɪnˈdɪfrəns]",ex:"Show indifference.",cat:"emotions",type:"must"},
+{en:"infatuation",ru:"влюблённость / увлечение",pron:"[ɪnˌfætʃuˈeɪʃən]",ex:"Teenage infatuation.",cat:"emotions",type:"must"},
+{en:"resentment",ru:"обида / возмущение",pron:"[rɪˈzɛntmənt]",ex:"Hold resentment.",cat:"emotions",type:"must"},
+{en:"vulnerability",ru:"уязвимость",pron:"[ˌvʌlnərəˈbɪlɪti]",ex:"Show vulnerability.",cat:"emotions",type:"cognate"},
+{en:"make progress",ru:"делать успехи",pron:"[meɪk ˈprɒɡrɛs]",ex:"Make good progress.",cat:"verbs",type:"must"},
+{en:"take action",ru:"принять меры",pron:"[teɪk ˈækʃən]",ex:"Take action now.",cat:"verbs",type:"must"},
+{en:"make an effort",ru:"прилагать усилия",pron:"[meɪk ən ˈɛfərt]",ex:"Make an effort to call.",cat:"verbs",type:"must"},
+{en:"have an impact",ru:"иметь влияние",pron:"[hæv ən ˈɪmpækt]",ex:"Have a big impact.",cat:"verbs",type:"must"},
+{en:"take a risk",ru:"рисковать",pron:"[teɪk ə rɪsk]",ex:"Take a calculated risk.",cat:"verbs",type:"must"},
+{en:"make a difference",ru:"менять ситуацию к лучшему",pron:"[meɪk ə ˈdɪfrəns]",ex:"You make a difference.",cat:"verbs",type:"must"},
+{en:"set a record",ru:"установить рекорд",pron:"[sɛt ə ˈrɛkərd]",ex:"Set a new record.",cat:"verbs",type:"must"},
+{en:"break a record",ru:"побить рекорд",pron:"[breɪk ə ˈrɛkərd]",ex:"Break the world record.",cat:"verbs",type:"must"},
+{en:"draw a conclusion",ru:"сделать вывод",pron:"[drɔː ə kənˈkluːʒən]",ex:"Draw a conclusion.",cat:"verbs",type:"must"},
+{en:"reach an agreement",ru:"достичь договорённости",pron:"[riːtʃ ən əˈɡriːmənt]",ex:"Reach an agreement.",cat:"verbs",type:"must"},
+{en:"pay attention",ru:"обратить внимание",pron:"[peɪ əˈtɛnʃən]",ex:"Pay close attention.",cat:"verbs",type:"must"},
+{en:"take notes",ru:"делать заметки",pron:"[teɪk noʊts]",ex:"Take notes during class.",cat:"verbs",type:"must"},
+{en:"ask a favor",ru:"попросить об одолжении",pron:"[ɑːsk ə ˈfeɪvər]",ex:"Ask a favor of you.",cat:"verbs",type:"must"},
+{en:"keep a secret",ru:"хранить секрет",pron:"[kiːp ə ˈsiːkrɪt]",ex:"Can you keep a secret?",cat:"verbs",type:"must"},
+{en:"tell a lie",ru:"солгать",pron:"[tɛl ə laɪ]",ex:"Don't tell a lie.",cat:"verbs",type:"must"},
+{en:"break a promise",ru:"нарушить обещание",pron:"[breɪk ə ˈprɒmɪs]",ex:"Never break a promise.",cat:"verbs",type:"must"},
+{en:"save time",ru:"экономить время",pron:"[seɪv taɪm]",ex:"This will save time.",cat:"verbs",type:"must"},
+{en:"waste money",ru:"тратить деньги впустую",pron:"[weɪst ˈmʌni]",ex:"Stop wasting money.",cat:"verbs",type:"must"},
+{en:"change your mind",ru:"изменить решение",pron:"[tʃeɪndʒ jɔːr maɪnd]",ex:"I changed my mind.",cat:"verbs",type:"must"},
+{en:"lose your temper",ru:"потерять терпение",pron:"[luːz jɔːr ˈtɛmpər]",ex:"Don't lose your temper.",cat:"verbs",type:"must"},
+{en:"keep calm",ru:"сохранять спокойствие",pron:"[kiːp kɑːm]",ex:"Keep calm and carry on.",cat:"verbs",type:"must"},
+{en:"make sense",ru:"иметь смысл",pron:"[meɪk sɛns]",ex:"That makes sense.",cat:"verbs",type:"must"},
+{en:"take place",ru:"происходить (о событии)",pron:"[teɪk pleɪs]",ex:"The event takes place tomorrow.",cat:"verbs",type:"must"},
+{en:"come true",ru:"осуществляться (о мечте)",pron:"[kʌm truː]",ex:"Dreams come true.",cat:"verbs",type:"must"},
+{en:"go wrong",ru:"пойти не так",pron:"[ɡoʊ rɒŋ]",ex:"Something went wrong.",cat:"verbs",type:"must"},
+{en:"fall apart",ru:"разваливаться",pron:"[fɔːl əˈpɑːrt]",ex:"The plan fell apart.",cat:"verbs",type:"must"},
+{en:"come to terms with",ru:"смириться с",pron:"[kʌm tə tɜːrmz wɪð]",ex:"Come to terms with it.",cat:"verbs",type:"must"},
+{en:"make ends meet",ru:"сводить концы с концами",pron:"[meɪk ɛndz miːt]",ex:"Struggling to make ends meet.",cat:"verbs",type:"must"},
+{en:"inevitable",ru:"неизбежный",pron:"[ɪnˈɛvɪtəbəl]",ex:"Inevitable outcome.",cat:"adj",type:"must"},
+{en:"plausible",ru:"вероятный / правдоподобный",pron:"[ˈplɔːzɪbəl]",ex:"Plausible explanation.",cat:"adj",type:"must"},
+{en:"redundant",ru:"избыточный / лишний",pron:"[rɪˈdʌndənt]",ex:"Redundant information.",cat:"adj",type:"must"},
+{en:"inherent",ru:"присущий / врождённый",pron:"[ɪnˈhɪərənt]",ex:"Inherent risk.",cat:"adj",type:"must"},
+{en:"ambiguous",ru:"неоднозначный",pron:"[æmˈbɪɡjuəs]",ex:"Ambiguous answer.",cat:"adj",type:"cognate"},
+{en:"arbitrary",ru:"произвольный",pron:"[ˈɑːrbɪtrɛri]",ex:"Arbitrary decision.",cat:"adj",type:"cognate"},
+{en:"coherent",ru:"последовательный / связный",pron:"[koʊˈhɪərənt]",ex:"Coherent argument.",cat:"adj",type:"must"},
+{en:"comprehensive",ru:"всеобъемлющий",pron:"[ˌkɒmprɪˈhɛnsɪv]",ex:"Comprehensive guide.",cat:"adj",type:"cognate"},
+{en:"consistent",ru:"последовательный / стабильный",pron:"[kənˈsɪstənt]",ex:"Consistent results.",cat:"adj",type:"cognate"},
+{en:"credible",ru:"достоверный",pron:"[ˈkrɛdɪbəl]",ex:"Credible source.",cat:"adj",type:"must"},
+{en:"detrimental",ru:"вредный",pron:"[ˌdɛtrɪˈmɛntəl]",ex:"Detrimental effect.",cat:"adj",type:"must"},
+{en:"dubious",ru:"сомнительный",pron:"[ˈdjuːbiəs]",ex:"Dubious claim.",cat:"adj",type:"must"},
+{en:"eminent",ru:"выдающийся",pron:"[ˈɛmɪnənt]",ex:"Eminent scientist.",cat:"adj",type:"must"},
+{en:"feasible",ru:"осуществимый",pron:"[ˈfiːzɪbəl]",ex:"Is it feasible?",cat:"adj",type:"must"},
+{en:"imminent",ru:"неминуемый",pron:"[ˈɪmɪnənt]",ex:"Imminent danger.",cat:"adj",type:"must"},
+{en:"legitimate",ru:"законный / обоснованный",pron:"[lɪˈdʒɪtɪmɪt]",ex:"Legitimate concern.",cat:"adj",type:"cognate"},
+{en:"notorious",ru:"известный (в плохом смысле)",pron:"[noʊˈtɔːriəs]",ex:"Notorious criminal.",cat:"adj",type:"must"},
+{en:"profound",ru:"глубокий (о смысле)",pron:"[prəˈfaʊnd]",ex:"Profound impact.",cat:"adj",type:"must"},
+{en:"rampant",ru:"безудержный / повальный",pron:"[ˈræmpənt]",ex:"Rampant inflation.",cat:"adj",type:"must"},
+{en:"sporadic",ru:"спорадический",pron:"[spəˈrædɪk]",ex:"Sporadic rain.",cat:"adj",type:"must"},
+{en:"tedious",ru:"утомительный / нудный",pron:"[ˈtiːdiəs]",ex:"Tedious task.",cat:"adj",type:"must"},
+{en:"volatile",ru:"нестабильный / непостоянный",pron:"[ˈvɒlətaɪl]",ex:"Volatile market.",cat:"adj",type:"cognate"},
+{en:"staggering",ru:"потрясающий (о размере)",pron:"[ˈstæɡərɪŋ]",ex:"Staggering amount.",cat:"adj",type:"must"},
+{en:"alleviate",ru:"облегчать (боль/проблему)",pron:"[əˈliːvieɪt]",ex:"Alleviate the pain.",cat:"verbs",type:"must"},
+{en:"amplify",ru:"усиливать",pron:"[ˈæmplɪfaɪ]",ex:"Amplify the message.",cat:"verbs",type:"must"},
+{en:"compile",ru:"составлять / компилировать",pron:"[kəmˈpaɪl]",ex:"Compile a list.",cat:"verbs",type:"must"},
+{en:"consolidate",ru:"объединять / укреплять",pron:"[kənˈsɒlɪdeɪt]",ex:"Consolidate your debts.",cat:"verbs",type:"must"},
+{en:"delineate",ru:"обозначать / описывать",pron:"[dɪˈlɪnieɪt]",ex:"Delineate the boundaries.",cat:"verbs",type:"must"},
+{en:"disseminate",ru:"распространять",pron:"[dɪˈsɛmɪneɪt]",ex:"Disseminate information.",cat:"verbs",type:"must"},
+{en:"elucidate",ru:"разъяснять",pron:"[ɪˈluːsɪdeɪt]",ex:"Elucidate the process.",cat:"verbs",type:"must"},
+{en:"fabricate",ru:"выдумывать / фабриковать",pron:"[ˈfæbrɪkeɪt]",ex:"Fabricate evidence.",cat:"verbs",type:"must"},
+{en:"formulate",ru:"формулировать",pron:"[ˈfɔːrmjʊleɪt]",ex:"Formulate a plan.",cat:"verbs",type:"must"},
+{en:"instigate",ru:"подстрекать / инициировать",pron:"[ˈɪnstɪɡeɪt]",ex:"Instigate change.",cat:"verbs",type:"must"},
+{en:"mitigate",ru:"смягчать / уменьшать",pron:"[ˈmɪtɪɡeɪt]",ex:"Mitigate the risk.",cat:"verbs",type:"must"},
+{en:"orchestrate",ru:"организовывать / устраивать",pron:"[ˈɔːrkɪstreɪt]",ex:"Orchestrate an event.",cat:"verbs",type:"must"},
+{en:"perpetuate",ru:"увековечивать / поддерживать",pron:"[pərˈpɛtʃueɪt]",ex:"Perpetuate the cycle.",cat:"verbs",type:"must"},
+{en:"reconcile",ru:"примирять / согласовывать",pron:"[ˈrɛkənsaɪl]",ex:"Reconcile differences.",cat:"verbs",type:"must"},
+{en:"rectify",ru:"исправлять",pron:"[ˈrɛktɪfaɪ]",ex:"Rectify the mistake.",cat:"verbs",type:"must"},
+{en:"substantiate",ru:"подтверждать / обосновывать",pron:"[səbˈstænʃieɪt]",ex:"Substantiate the claim.",cat:"verbs",type:"must"},
+{en:"transcend",ru:"превосходить / выходить за рамки",pron:"[trænˈsɛnd]",ex:"Transcend boundaries.",cat:"verbs",type:"must"},
+{en:"unveil",ru:"раскрывать / представлять",pron:"[ʌnˈveɪl]",ex:"Unveil the new product.",cat:"verbs",type:"must"},
+{en:"npc behavior",ru:"предсказуемое поведение",pron:"[ɛn piː siː bɪˈheɪvjər]",ex:"That's npc behavior.",cat:"slang",type:"slang"},
+{en:"core",ru:"суть / основа стиля",pron:"[kɔːr]",ex:"Cottage core aesthetic.",cat:"slang",type:"slang"},
+{en:"unalive",ru:"убить (эвфемизм)",pron:"[ʌnˈəlaɪv]",ex:"He got unalived in the show.",cat:"slang",type:"slang"},
+{en:"delusional",ru:"в иллюзиях",pron:"[dɪˈluːʒənəl]",ex:"You're delusional.",cat:"slang",type:"slang"},
+{en:"npc moment",ru:"скучный/предсказуемый момент",pron:"[ɛn piː siː ˈmoʊmənt]",ex:"Total npc moment.",cat:"slang",type:"slang"},
+{en:"girl dinner",ru:"лёгкий нестандартный ужин",pron:"[ɡɜːrl ˈdɪnər]",ex:"Having girl dinner tonight.",cat:"slang",type:"slang"},
+{en:"main character moment",ru:"момент когда ты в центре внимания",pron:"[meɪn ˈkærɪktər ˈmoʊmənt]",ex:"Main character moment fr.",cat:"slang",type:"slang"},
+{en:"unc",ru:"взрослый мужчина (сленг)",pron:"[ʌŋk]",ex:"He's giving unc energy.",cat:"slang",type:"slang"},
+{en:"hits like a truck",ru:"сильно бьёт по эмоциям",pron:"[hɪts laɪk ə trʌk]",ex:"That memory hits like a truck.",cat:"slang",type:"slang"},
+{en:"oof",ru:"ой (реакция на неловкость)",pron:"[uːf]",ex:"Oof, that's rough.",cat:"slang",type:"slang"},
+{en:"based and true",ru:"полностью согласен",pron:"[beɪst ænd truː]",ex:"Based and true.",cat:"slang",type:"slang"}];
+vocab.push.apply(vocab, extraVocab4);
 
 // ═══ DEDUP VOCAB ═══
 var seen=new Set();
@@ -3356,12 +3664,14 @@ function renderV(){
   var q=sQ.toLowerCase();
   var cat=document.getElementById("vcat")?document.getElementById("vcat").value:"all";
   var lvl=document.getElementById("vlevel")?document.getElementById("vlevel").value:"all";
+  var hideKnown=document.getElementById("vhideknown")?document.getElementById("vhideknown").checked:false;
 
   var f=uniq.filter(function(w){
     var matchCat=cat==="all"||w.cat===cat;
     var matchLvl=lvl==="all"||(catLevelMap[w.cat]||"b1")===lvl;
     var matchQ=!q||w.en.toLowerCase().indexOf(q)>=0||w.ru.toLowerCase().indexOf(q)>=0;
-    return matchCat&&matchLvl&&matchQ;
+    var matchKnown=!hideKnown||!known.has(w.en);
+    return matchCat&&matchLvl&&matchQ&&matchKnown;
   });
 
   document.getElementById("vstats").innerHTML='показано <b>'+f.length+'</b> из '+uniq.length+' · known: <b style="color:var(--accent)">'+known.size+'</b>';
@@ -3402,21 +3712,54 @@ function tkvBtn(btn){
     btn.closest(".vcard").classList.add("known");
   }
   sk();updateLevels();
+  var hideKnown=document.getElementById("vhideknown")?document.getElementById("vhideknown").checked:false;
+  if(hideKnown){renderV();}
+  if(document.getElementById("sec-favorites")&&document.getElementById("sec-favorites").classList.contains("active")){renderFavorites();}
 }
 
 document.getElementById("vsearch").addEventListener("input",function(e){sQ=e.target.value;renderV();});
 
 // ═══ IRREG VERBS ═══
+var knownIrreg=new Set();
+try{var iv=safeGet("ehirreg");if(iv)knownIrreg=new Set(JSON.parse(iv));}catch(e){}
+function siv(){try{safeSet("ehirreg",JSON.stringify(Array.from(knownIrreg)));}catch(e){}}
+
 function renderI(q){
   q=q||"";
-  var f=irregVerbs.filter(function(v){return !q||v.v1.indexOf(q)>=0||v.v2.indexOf(q)>=0||v.ru.indexOf(q)>=0;});
-  document.getElementById("istats").innerHTML="<b>"+f.length+"</b> verbs";
+  var hideKnown=document.getElementById("ihideknown")?document.getElementById("ihideknown").checked:false;
+  var f=irregVerbs.filter(function(v){
+    var matchQ=!q||v.v1.indexOf(q)>=0||v.v2.indexOf(q)>=0||v.ru.indexOf(q)>=0;
+    var matchKnown=!hideKnown||!knownIrreg.has(v.v1);
+    return matchQ&&matchKnown;
+  });
+  document.getElementById("istats").innerHTML="<b>"+f.length+"</b> verbs · известно: <b style=\"color:var(--accent)\">"+knownIrreg.size+"</b>";
   document.getElementById("itbody").innerHTML=f.map(function(v){
+    var isKnown=knownIrreg.has(v.v1);
     return '<tr><td><span class="v1c">'+v.v1+'</span> <button class="speak-btn" data-speak="'+v.v1+'">🔊</button><div class="v-example">'+v.e1+'</div></td>'+
     '<td><span class="v2c">'+v.v2+'</span><div class="v-example">'+v.e2+'</div></td>'+
     '<td><span class="v3c">'+v.v3+'</span><div class="v-example">'+v.e3+'</div></td>'+
-    '<td class="ruc">'+v.ru+'</td></tr>';
+    '<td class="ruc">'+v.ru+'</td>'+
+    '<td><button class="irr-know-btn'+(isKnown?' active':'')+'" data-verb="'+encodeURIComponent(v.v1)+'" onclick="toggleIrregKnown(this)">'+(isKnown?"✓":"+")+'</button></td></tr>';
   }).join("");
+}
+
+function toggleIrregKnown(btn){
+  var verb=decodeURIComponent(btn.getAttribute("data-verb"));
+  if(knownIrreg.has(verb)){
+    knownIrreg.delete(verb);
+    btn.textContent="+";
+    btn.classList.remove("active");
+  }else{
+    knownIrreg.add(verb);
+    btn.textContent="✓";
+    btn.classList.add("active");
+  }
+  siv();
+  var hideKnown=document.getElementById("ihideknown")?document.getElementById("ihideknown").checked:false;
+  if(hideKnown){renderI(document.getElementById("isearch").value.toLowerCase());}
+  else{
+    document.getElementById("istats").innerHTML=document.getElementById("itbody").children.length+" verbs · известно: <b style=\"color:var(--accent)\">"+knownIrreg.size+"</b>";
+  }
 }
 document.getElementById("isearch").addEventListener("input",function(e){renderI(e.target.value.toLowerCase());});
 
@@ -3727,9 +4070,9 @@ function sprintCheck(btn){
 function renderNative(){
   document.getElementById("native-list").innerHTML=nativeThinking.map(function(n){
     return '<div class="native-card">'+
-      '<div class="nt-side nt-ru"><div class="nt-label nt-ru-label">🇷🇺 Русский думает</div><div class="nt-text">'+n.ru+'</div></div>'+
+      '<div class="nt-side nt-ru"><div class="nt-label nt-ru-label">Как думаете вы</div><div class="nt-text">'+n.ru+'</div></div>'+
       '<div class="nt-divider"></div>'+
-      '<div class="nt-side nt-en"><div class="nt-label nt-en-label">🇺🇸 Носитель говорит</div>'+
+      '<div class="nt-side nt-en"><div class="nt-label nt-en-label">Как говорит носитель</div>'+
       '<div class="nt-text">'+n.en+' <button class="speak-btn" data-speak="'+n.en.replace(/"/g,'')+'">🔊</button></div>'+
       '<div class="nt-note">'+n.note+'</div></div></div>';
   }).join("");
