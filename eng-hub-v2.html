@@ -784,7 +784,7 @@ h1{
   <div class="hero">
     <h2>⏱ Времена через образы</h2>
     <p>Запоминай не правило — запоминай <b>картинку</b>. Один глагол EAT — пять времён:</p>
-    <div style="font-size:12px;line-height:2.3;color:var(--muted2);background:#0c0c0c;padding:10px;border-radius:7px;margin-top:6px;">
+    <div style="font-size:12px;line-height:2.3;color:var(--muted2);background:rgba(255,255,255,0.05);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);padding:10px;border-radius:12px;margin-top:6px;">
       <b style="color:var(--blue)">I eat at 8</b> → мой режим, всегда так ← Simple<br>
       <b style="color:var(--blue)">I am eating</b> → вижу это прямо сейчас ← Continuous<br>
       <b style="color:var(--blue)">I ate</b> → уже всё, прошло ← Past Simple<br>
@@ -3688,7 +3688,7 @@ function renderFavorites(){
   var gridEl=document.getElementById("fav-grid");
   if(!statsEl||!gridEl)return;
   var favWords=uniq.filter(function(w){return favorites.has(w.en);});
-  statsEl.innerHTML='в избранном: <b style="color:#f0c14b">'+favWords.length+'</b> слов'+(favWords.length?' · нажми ★ ещё раз чтобы убрать':'');
+  statsEl.innerHTML='в избранном: <b style="color:var(--accent)">'+favWords.length+'</b> слов'+(favWords.length?' · нажми ★ ещё раз чтобы убрать':'');
   if(!favWords.length){
     gridEl.innerHTML='<div class="empty">⭐ Пока пусто.<br>Нажми ☆ на любом слове в разделе "Слова", чтобы добавить сюда.</div>';
     return;
@@ -3882,7 +3882,7 @@ function renderMC(){
   var wrong=uniq.filter(function(x){return x.en!==w.en;}).sort(function(){return Math.random()-.5;}).slice(0,3);
   var opts=[w].concat(wrong).sort(function(){return Math.random()-.5;});
   var html='<div class="train-card"><div class="train-question">'+w.en+' <button class="speak-btn" data-speak="'+w.en+'">🔊</button></div>';
-  html+='<div class="train-hint" style="font-style:italic;color:#444">"'+w.ex+'"</div>';
+  html+='<div class="train-hint" style="font-style:italic;color:var(--muted2)">"'+w.ex+'"</div>';
   html+='<div class="mc-options">';
   opts.forEach(function(o){
     html+='<button class="mc-opt" data-ru="'+encodeURIComponent(o.ru)+'" data-correct="'+encodeURIComponent(w.ru)+'" onclick="checkMC(this)">'+o.ru+'</button>';
